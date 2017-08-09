@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C546AF7A1F35A8E6003C5B7E"
-               BuildableName = "ConnectorProtocol_iOS.framework"
+               BuildableName = "ConnectorProtocol.framework"
                BlueprintName = "ConnectorProtocol_iOS"
                ReferencedContainer = "container:ConnectorProtocol.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C546AF7A1F35A8E6003C5B7E"
-            BuildableName = "ConnectorProtocol_iOS.framework"
+            BuildableName = "ConnectorProtocol.framework"
             BlueprintName = "ConnectorProtocol_iOS"
             ReferencedContainer = "container:ConnectorProtocol.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C546AF7A1F35A8E6003C5B7E"
-            BuildableName = "ConnectorProtocol_iOS.framework"
+            BuildableName = "ConnectorProtocol.framework"
             BlueprintName = "ConnectorProtocol_iOS"
             ReferencedContainer = "container:ConnectorProtocol.xcodeproj">
          </BuildableReference>

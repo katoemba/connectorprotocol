@@ -40,7 +40,3 @@ public protocol ControlProtocol {
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
     func setVolume(volume: Float)
 }
-
-public class Controller <ControlProtocol> {
-    
-}

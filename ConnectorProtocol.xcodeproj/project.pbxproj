@@ -31,7 +31,19 @@
 		C546B1DF1F37AF15003C5B7E /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = C546AF901F35DBE9003C5B7E /* Album.swift */; };
 		C546B1E01F37AF15003C5B7E /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C546AF921F35E2BB003C5B7E /* Artist.swift */; };
 		C546B2541F38462C003C5B7E /* ConnectorProtocol_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = C546B2521F38462C003C5B7E /* ConnectorProtocol_iOS.h */; };
+		C546B2651F39B730003C5B7E /* PlayerStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C546B2641F39B730003C5B7E /* PlayerStatusTests.swift */; };
+		C546B2671F39B730003C5B7E /* ConnectorProtocol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C546AF7B1F35A8E6003C5B7E /* ConnectorProtocol.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C546B2681F39B730003C5B7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C546AF721F35A8E6003C5B7E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C546AF7A1F35A8E6003C5B7E;
+			remoteInfo = ConnectorProtocol_iOS;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		C546AF7B1F35A8E6003C5B7E /* ConnectorProtocol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ConnectorProtocol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,6 +62,9 @@
 		C546B1D51F37AD8C003C5B7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C546B2521F38462C003C5B7E /* ConnectorProtocol_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectorProtocol_iOS.h; sourceTree = "<group>"; };
 		C546B2531F38462C003C5B7E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C546B2621F39B730003C5B7E /* ConnectorProtocolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConnectorProtocolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C546B2641F39B730003C5B7E /* PlayerStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatusTests.swift; sourceTree = "<group>"; };
+		C546B2661F39B730003C5B7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +89,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C546B25F1F39B730003C5B7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C546B2671F39B730003C5B7E /* ConnectorProtocol.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -84,6 +107,7 @@
 				C546B2511F38462C003C5B7E /* ConnectorProtocol_iOS */,
 				C546B1411F37A3A2003C5B7E /* ConnectorProtocol_MacOS */,
 				C546B1D31F37AD8C003C5B7E /* ConnectorProtocol_tvOS */,
+				C546B2631F39B730003C5B7E /* ConnectorProtocolTests */,
 				C546AF7C1F35A8E6003C5B7E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,6 +118,7 @@
 				C546AF7B1F35A8E6003C5B7E /* ConnectorProtocol.framework */,
 				C546B1401F37A3A2003C5B7E /* ConnectorProtocol.framework */,
 				C546B1D21F37AD8C003C5B7E /* ConnectorProtocol.framework */,
+				C546B2621F39B730003C5B7E /* ConnectorProtocolTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -137,6 +162,15 @@
 				C546B2531F38462C003C5B7E /* Info.plist */,
 			);
 			path = ConnectorProtocol_iOS;
+			sourceTree = "<group>";
+		};
+		C546B2631F39B730003C5B7E /* ConnectorProtocolTests */ = {
+			isa = PBXGroup;
+			children = (
+				C546B2641F39B730003C5B7E /* PlayerStatusTests.swift */,
+				C546B2661F39B730003C5B7E /* Info.plist */,
+			);
+			path = ConnectorProtocolTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,6 +257,24 @@
 			productReference = C546B1D21F37AD8C003C5B7E /* ConnectorProtocol.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		C546B2611F39B730003C5B7E /* ConnectorProtocolTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C546B26C1F39B730003C5B7E /* Build configuration list for PBXNativeTarget "ConnectorProtocolTests" */;
+			buildPhases = (
+				C546B25E1F39B730003C5B7E /* Sources */,
+				C546B25F1F39B730003C5B7E /* Frameworks */,
+				C546B2601F39B730003C5B7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C546B2691F39B730003C5B7E /* PBXTargetDependency */,
+			);
+			name = ConnectorProtocolTests;
+			productName = ConnectorProtocolTests;
+			productReference = C546B2621F39B730003C5B7E /* ConnectorProtocolTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -249,6 +301,11 @@
 						DevelopmentTeam = N7DKJ3YJS4;
 						ProvisioningStyle = Automatic;
 					};
+					C546B2611F39B730003C5B7E = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = N7DKJ3YJS4;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = C546AF751F35A8E6003C5B7E /* Build configuration list for PBXProject "ConnectorProtocol" */;
@@ -266,6 +323,7 @@
 				C546AF7A1F35A8E6003C5B7E /* ConnectorProtocol_iOS */,
 				C546B13F1F37A3A2003C5B7E /* ConnectorProtocol_MacOS */,
 				C546B1D11F37AD8C003C5B7E /* ConnectorProtocol_tvOS */,
+				C546B2611F39B730003C5B7E /* ConnectorProtocolTests */,
 			);
 		};
 /* End PBXProject section */
@@ -286,6 +344,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C546B1D01F37AD8C003C5B7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C546B2601F39B730003C5B7E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -337,7 +402,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C546B25E1F39B730003C5B7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C546B2651F39B730003C5B7E /* PlayerStatusTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C546B2691F39B730003C5B7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C546AF7A1F35A8E6003C5B7E /* ConnectorProtocol_iOS */;
+			targetProxy = C546B2681F39B730003C5B7E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C546AF811F35A8E6003C5B7E /* Debug */ = {
@@ -572,6 +653,30 @@
 			};
 			name = Release;
 		};
+		C546B26A1F39B730003C5B7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = N7DKJ3YJS4;
+				INFOPLIST_FILE = ConnectorProtocolTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.katoemba.ConnectorProtocolTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		C546B26B1F39B730003C5B7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = N7DKJ3YJS4;
+				INFOPLIST_FILE = ConnectorProtocolTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.katoemba.ConnectorProtocolTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -600,12 +705,22 @@
 				C546B1471F37A3A2003C5B7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C546B1D71F37AD8C003C5B7E /* Build configuration list for PBXNativeTarget "ConnectorProtocol_tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C546B1D81F37AD8C003C5B7E /* Debug */,
 				C546B1D91F37AD8C003C5B7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C546B26C1F39B730003C5B7E /* Build configuration list for PBXNativeTarget "ConnectorProtocolTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C546B26A1F39B730003C5B7E /* Debug */,
+				C546B26B1F39B730003C5B7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

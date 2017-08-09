@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C546B1D11F37AD8C003C5B7E"
-               BuildableName = "ConnectorProtocol_tvOS.framework"
+               BuildableName = "ConnectorProtocol.framework"
                BlueprintName = "ConnectorProtocol_tvOS"
                ReferencedContainer = "container:ConnectorProtocol.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C546B1D11F37AD8C003C5B7E"
-            BuildableName = "ConnectorProtocol_tvOS.framework"
+            BuildableName = "ConnectorProtocol.framework"
             BlueprintName = "ConnectorProtocol_tvOS"
             ReferencedContainer = "container:ConnectorProtocol.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C546B1D11F37AD8C003C5B7E"
-            BuildableName = "ConnectorProtocol_tvOS.framework"
+            BuildableName = "ConnectorProtocol.framework"
             BlueprintName = "ConnectorProtocol_tvOS"
             ReferencedContainer = "container:ConnectorProtocol.xcodeproj">
          </BuildableReference>
