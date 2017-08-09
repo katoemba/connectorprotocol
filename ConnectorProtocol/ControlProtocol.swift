@@ -39,4 +39,10 @@ public protocol ControlProtocol {
     ///
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
     func setVolume(volume: Float)
+
+    /// Start listening for status updates, and send out notifications in case a status-value changes.
+    func startListeningForStatusUpdates()
+    
+    /// Stop listening for status updates, and stop sending notifications.
+    func stopListeningForStatusUpdates()
 }

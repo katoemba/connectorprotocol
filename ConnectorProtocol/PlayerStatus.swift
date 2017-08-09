@@ -40,7 +40,7 @@ public enum PlayerStatusChangeNotification: String {
 /// A class holding the current status of a player. PlayerStatusChangeNotification will be sent out when any of the values change.
 public class PlayerStatus {
     /// Private dictionary to hold a set of notifications to be sent after an update cycle is finished.
-    private var changeNotifications: [PlayerStatusChangeNotification: Int] = [:]
+    private var _changeNotifications: [PlayerStatusChangeNotification: Int] = [:]
     
     /// Initializer function.
     public init() {
@@ -51,7 +51,7 @@ public class PlayerStatus {
     public var playingStatus = PlayStatus.Paused {
         didSet {
             if playingStatus != oldValue {
-                changeNotifications[.PlayingStatus] = 1
+                _changeNotifications[.PlayingStatus] = 1
             }
         }
     }
@@ -61,7 +61,7 @@ public class PlayerStatus {
     public var volume = Float(0.0) {
         didSet {
             if volume != oldValue {
-                changeNotifications[.Volume] = 1
+                _changeNotifications[.Volume] = 1
             }
         }
     }
@@ -71,7 +71,7 @@ public class PlayerStatus {
     public var repeatMode = RepeatMode.Off {
         didSet {
             if repeatMode != oldValue {
-                changeNotifications[.RepeatMode] = 1
+                _changeNotifications[.RepeatMode] = 1
             }
         }
     }
@@ -81,7 +81,7 @@ public class PlayerStatus {
     public var shuffleMode = ShuffleMode.Off {
         didSet {
             if shuffleMode != oldValue {
-                changeNotifications[.ShuffleMode] = 1
+                _changeNotifications[.ShuffleMode] = 1
             }
         }
     }
@@ -91,7 +91,7 @@ public class PlayerStatus {
     public var songIndex = 0 {
         didSet {
             if songIndex != oldValue {
-                changeNotifications[.SongInfo] = 1
+                _changeNotifications[.SongInfo] = 1
             }
         }
     }
@@ -101,7 +101,7 @@ public class PlayerStatus {
     public var songID = "" {
         didSet {
             if songID != oldValue {
-                changeNotifications[.SongInfo] = 1
+                _changeNotifications[.SongInfo] = 1
             }
         }
     }
@@ -111,7 +111,7 @@ public class PlayerStatus {
     public var artist = "" {
         didSet {
             if artist != oldValue {
-                changeNotifications[.SongInfo] = 1
+                _changeNotifications[.SongInfo] = 1
             }
         }
     }
@@ -121,7 +121,7 @@ public class PlayerStatus {
     public var album = "" {
         didSet {
             if album != oldValue {
-                changeNotifications[.SongInfo] = 1
+                _changeNotifications[.SongInfo] = 1
             }
         }
     }
@@ -131,7 +131,7 @@ public class PlayerStatus {
     public var song = "" {
         didSet {
             if song != oldValue {
-                changeNotifications[.SongInfo] = 1
+                _changeNotifications[.SongInfo] = 1
             }
         }
     }
@@ -141,7 +141,7 @@ public class PlayerStatus {
     public var station = "" {
         didSet {
             if station != oldValue {
-                changeNotifications[.StationInfo] = 1
+                _changeNotifications[.StationInfo] = 1
             }
         }
     }
@@ -151,7 +151,7 @@ public class PlayerStatus {
     public var trackTime = 0 {
         didSet {
             if trackTime != oldValue {
-                changeNotifications[.TrackTime] = 1
+                _changeNotifications[.TrackTime] = 1
             }
         }
     }
@@ -161,7 +161,7 @@ public class PlayerStatus {
     public var elapsedTime = 0 {
         didSet {
             if elapsedTime != oldValue {
-                changeNotifications[.TrackTime] = 1
+                _changeNotifications[.TrackTime] = 1
             }
         }
     }
@@ -171,7 +171,7 @@ public class PlayerStatus {
     public var bitrate = "" {
         didSet {
             if bitrate != oldValue {
-                changeNotifications[.Quality] = 1
+                _changeNotifications[.Quality] = 1
             }
         }
     }
@@ -181,23 +181,23 @@ public class PlayerStatus {
     public var encoding = "" {
         didSet {
             if encoding != oldValue {
-                changeNotifications[.Quality] = 1
+                _changeNotifications[.Quality] = 1
             }
         }
     }
     
     /// Start an update cycle of a PlayerStatus object. This will start collection update notifications.
     public func beginUpdate() {
-        self.changeNotifications = [:]
+        _changeNotifications = [:]
     }
     
     /// Complete an update cycle of a PlayerStatus object. This will send out any collected notifications.
     public func endUpdate() {
-        for notificationKey in self.changeNotifications.keys {
+        for notificationKey in _changeNotifications.keys {
             let notification = Notification.init(name: NSNotification.Name.init(notificationKey.rawValue), object: nil, userInfo: ["status": self])
             NotificationCenter.default.post(notification)
         }
-        self.changeNotifications = [:]
+        _changeNotifications = [:]
     }
 }
 

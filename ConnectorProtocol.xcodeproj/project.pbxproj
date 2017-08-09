@@ -33,6 +33,7 @@
 		C546B2541F38462C003C5B7E /* ConnectorProtocol_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = C546B2521F38462C003C5B7E /* ConnectorProtocol_iOS.h */; };
 		C546B2651F39B730003C5B7E /* PlayerStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C546B2641F39B730003C5B7E /* PlayerStatusTests.swift */; };
 		C546B2671F39B730003C5B7E /* ConnectorProtocol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C546AF7B1F35A8E6003C5B7E /* ConnectorProtocol.framework */; };
+		C546B2831F3B1407003C5B7E /* ConnectorProtocol.framework in Resources */ = {isa = PBXBuildFile; fileRef = C546AF7B1F35A8E6003C5B7E /* ConnectorProtocol.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -354,6 +355,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C546B2831F3B1407003C5B7E /* ConnectorProtocol.framework in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,6 +527,7 @@
 		C546AF841F35A8E6003C5B7E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -546,6 +549,7 @@
 		C546AF851F35A8E6003C5B7E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
