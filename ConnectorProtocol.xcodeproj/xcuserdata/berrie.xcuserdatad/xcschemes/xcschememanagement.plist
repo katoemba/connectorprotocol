@@ -7,7 +7,7 @@
 		<key>ConnectorProtocolTests.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>3</integer>
 		</dict>
 		<key>ConnectorProtocol_MacOS.xcscheme</key>
 		<dict>

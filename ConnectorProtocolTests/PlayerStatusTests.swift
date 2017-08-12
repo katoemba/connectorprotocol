@@ -34,13 +34,13 @@ class PlayerStatusTests: XCTestCase {
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-        
         for observer in self.observerArray {
             NotificationCenter.default.removeObserver(observer)
         }
-    }
+
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        super.tearDown()
+     }
     
     /// Test that no notifications are sent when not using beginUpdate / endUpdate
     func testNoNotification() {

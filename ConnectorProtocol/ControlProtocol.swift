@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
     /// Property to get the current PlayerStatus of a player.
@@ -18,6 +19,9 @@ public protocol ControlProtocol {
     
     /// Pause playback.
     func pause()
+    
+    /// Toggle between play and pause: when paused -> start to play, when playing -> pause.
+    func togglePlayPause()
     
     /// Skip to the next track.
     func skip()
