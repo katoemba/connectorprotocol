@@ -188,11 +188,21 @@ public class PlayerStatus {
     
     /// Start an update cycle of a PlayerStatus object. This will start collection update notifications.
     public func beginUpdate() {
+        // beginUpdate shall only be called from the main thread
+        guard Thread.current.isMainThread == true else {
+            return
+        }
+
         _changeNotifications = [:]
     }
     
     /// Complete an update cycle of a PlayerStatus object. This will send out any collected notifications.
     public func endUpdate() {
+        // endUpdate shall only be called from the main thread
+        guard Thread.current.isMainThread == true else {
+            return
+        }
+        
         for notificationKey in _changeNotifications.keys {
             let notification = Notification.init(name: NSNotification.Name.init(notificationKey.rawValue), object: nil, userInfo: ["status": self])
             NotificationCenter.default.post(notification)
