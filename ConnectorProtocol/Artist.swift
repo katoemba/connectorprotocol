@@ -9,7 +9,7 @@
 import Foundation
 
 /// A struct defining a generic Artist object.
-struct Artist {
+public struct Artist {
     /// A unique id for the artist. Usage depends on library implementation.
     var id = ""
     

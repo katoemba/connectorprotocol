@@ -9,7 +9,7 @@
 import Foundation
 
 /// A protocol to provide a generic interface to a music library.
-protocol LibraryProtocol {
+public protocol LibraryProtocol {
     /// Get a song by its unqiue ID.
     ///
     /// - Parameter songID: A string holding the unique ID of the song.

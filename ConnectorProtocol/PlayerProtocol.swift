@@ -32,4 +32,10 @@ public protocol PlayerProtocol {
     
     /// Attempt to connect to a player. No return value as the implementation is most likely asynchronous
     func connect(numberOfTries: Int)
+    
+    /// Get a controller object to control the player.
+    var controller: ControlProtocol { get }
+    
+    /// Get a library object to browse music on the player
+    //var library: LibraryProtocol { get }
 }

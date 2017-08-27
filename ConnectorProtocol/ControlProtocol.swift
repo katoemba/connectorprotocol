@@ -13,9 +13,19 @@ import Foundation
 public protocol ControlProtocol {
     /// Property to get the current PlayerStatus of a player.
     var playerStatus: PlayerStatus { get }
+    /// Property to get the length of the PlayQueue
+    var playqueueLength: Int { get }
+    /// Property to get the version number of the PlayQueue
+    var playqueueVersion: Int { get }
+    
+    /// Fetch the current status attributes of a player.
+    func fetchStatus()
     
     /// Start playback.
     func play()
+    
+    /// Start playback of a specific track in the playqueue
+    func play(index: Int)
     
     /// Pause playback.
     func pause()
@@ -49,4 +59,14 @@ public protocol ControlProtocol {
     
     /// Stop listening for status updates, and stop sending notifications.
     func stopListeningForStatusUpdates()
+    
+    /// Get a block of songs from the playqueue
+    ///
+    /// - Parameters:
+    ///   - start: the start position of the requested block
+    ///   - end: the end position of the requested block
+    ///   - songsFound: block that will be called upon completion. The [Song] parameter is not guaranteed to have the same number
+    ///     of songs as requested.
+    func getPlayqueueSongs(start: Int, end: Int,
+                           songsFound: @escaping (([Song]) -> Void))
 }

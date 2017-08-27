@@ -9,7 +9,7 @@
 import Foundation
 
 /// A struct defining a generic Album object.
-struct Album {
+public struct Album {
     /// A unique id for the album. Usage depends on library implementation.
     var id = ""
     
