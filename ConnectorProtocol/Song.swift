@@ -10,9 +10,6 @@ import Foundation
 
 /// A struct defining a generic Song object.
 public struct Song {
-    public init() {
-    }
-    
     /// A unique id for the song. Usage depends on library implementation.
     public var id = ""
     
@@ -48,6 +45,40 @@ public struct Song {
     
     /// A string describing the encoding of the song.
     public var encoding = ""
+    
+    public init() {
+    }
+    
+    public init(id: String,
+                location: String,
+                title: String,
+                album: String,
+                artist: String,
+                albumartist: String,
+                composer: String,
+                year: Int,
+                genre: String,
+                length: Int,
+                bitrate: String,
+                encoding: String) {
+        self.id = id
+        self.location = location
+        self.title = title
+        self.album = album
+        self.artist = artist
+        self.albumartist = albumartist
+        self.composer = composer
+        self.year = year
+        self.genre = genre
+        self.length = length
+        self.bitrate = bitrate
+        self.encoding = encoding
+    }
+}
+
+extension Song: Equatable {}
+public func ==(lhs: Song, rhs: Song) -> Bool {
+    return lhs.id == rhs.id
 }
 
 extension Song: CustomStringConvertible {

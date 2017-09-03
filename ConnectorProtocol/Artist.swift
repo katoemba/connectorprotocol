@@ -15,6 +15,20 @@ public struct Artist {
     
     /// The name of the artist.
     var name = ""
+    
+    public init() {
+    }
+    
+    public init(id: String,
+                name: String) {
+        self.id = id
+        self.name = name
+    }
+}
+
+extension Artist: Equatable {}
+public func ==(lhs: Artist, rhs: Artist) -> Bool {
+    return lhs.id == rhs.id
 }
 
 extension Artist: CustomStringConvertible {

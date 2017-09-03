@@ -30,6 +30,30 @@ public struct Album {
 
     /// The total duration of the album in seconds.
     var length = 0
+    
+    public init() {
+    }
+    
+    public init(id: String,
+                location: String,
+                title: String,
+                artist: String,
+                year: Int,
+                genre: String,
+                length: Int) {
+        self.id = id
+        self.location = location
+        self.title = title
+        self.artist = artist
+        self.year = year
+        self.genre = genre
+        self.length = length
+    }
+}
+
+extension Album: Equatable {}
+public func ==(lhs: Album, rhs: Album) -> Bool {
+    return lhs.id == rhs.id
 }
 
 extension Album: CustomStringConvertible {

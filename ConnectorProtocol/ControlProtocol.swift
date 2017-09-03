@@ -7,19 +7,12 @@
 //
 
 import Foundation
-
+import RxSwift
 
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
-    /// Property to get the current PlayerStatus of a player.
-    var playerStatus: PlayerStatus { get }
-    /// Property to get the length of the PlayQueue
-    var playqueueLength: Int { get }
-    /// Property to get the version number of the PlayQueue
-    var playqueueVersion: Int { get }
-    
-    /// Fetch the current status attributes of a player.
-    func fetchStatus()
+    /// A playerStatus object with observable sub-elements
+    var observablePlayerStatus: ObservablePlayerStatus { get }
     
     /// Start playback.
     func play()
@@ -54,12 +47,6 @@ public protocol ControlProtocol {
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
     func setVolume(volume: Float)
 
-    /// Start listening for status updates, and send out notifications in case a status-value changes.
-    func startListeningForStatusUpdates()
-    
-    /// Stop listening for status updates, and stop sending notifications.
-    func stopListeningForStatusUpdates()
-    
     /// Get a block of songs from the playqueue
     ///
     /// - Parameters:
@@ -69,4 +56,6 @@ public protocol ControlProtocol {
     ///     of songs as requested.
     func getPlayqueueSongs(start: Int, end: Int,
                            songsFound: @escaping (([Song]) -> Void))
+    
+    func playqueueSongs(start: Int, fetchSize: Int) -> Observable<[Song]>
 }

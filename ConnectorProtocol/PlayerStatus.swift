@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
-public enum PlayStatus {
+public enum PlayPauseMode {
     case Paused
     case Playing
     case Stopped
@@ -37,216 +39,225 @@ public enum PlayerStatusChangeNotification: String {
     case Quality = "PlayerStatusChangeQuality"
 }
 
-/// A class holding the current status of a player. PlayerStatusChangeNotification will be sent out when any of the values change.
-public class PlayerStatus {
-    /// Private dictionary to hold a set of notifications to be sent after an update cycle is finished.
-    private var _changeNotifications: [PlayerStatusChangeNotification: Int] = [:]
+// MARK: - TimeStatus struct
+
+public struct TimeStatus {
+    public var elapsedTime = Int(0)
+    public var trackTime = Int(0)
     
-    /// Initializer function.
+    public var elapsedTimeString : String {
+        get {
+            return "\(Int(elapsedTime / 60)):\(String(format: "%02d", Int(elapsedTime % 60)))"
+        }
+    }
+    public var trackTimeString : String {
+        get {
+            return "\(Int(trackTime / 60)):\(String(format: "%02d", Int(trackTime % 60)))"
+        }
+    }
+    public var remainingTimeString : String {
+        get {
+            let remainingTime = trackTime - elapsedTime
+            return "\(Int(remainingTime / 60)):\(String(format: "%02d", Int(remainingTime % 60)))"
+        }
+    }
+    
     public init() {
     }
-    
-    /// The current playing status of a player.
-    /// When changed a notification PlayerStatusChangeNotification.PlayingStatus will be sent.
-    public var playingStatus = PlayStatus.Paused {
-        didSet {
-            if playingStatus != oldValue {
-                _changeNotifications[.PlayingStatus] = 1
-            }
-        }
+}
+extension TimeStatus: Equatable {}
+public func ==(lhs: TimeStatus, rhs: TimeStatus) -> Bool {
+    return lhs.elapsedTime == rhs.elapsedTime &&
+        lhs.trackTime == rhs.trackTime
+}
+extension TimeStatus: CustomStringConvertible {
+    public var description: String {
+        return "> Time\n" +
+            "    trackTime = \(trackTime)\n" +
+            "    elapsedTime = \(elapsedTime)\n"
     }
-    
-    /// The current volume at which a player is playing. Contains a value between 0.0 and 1.0.
-    /// When changed a notification PlayerStatusChangeNotification.Volume will be sent.
-    public var volume = Float(0.0) {
-        didSet {
-            if volume != oldValue {
-                _changeNotifications[.Volume] = 1
-            }
-        }
-    }
-    
-    /// The currently active repeat mode of a player.
-    /// When changed a notification PlayerStatusChangeNotification.RepeatMode will be sent.
-    public var repeatMode = RepeatMode.Off {
-        didSet {
-            if repeatMode != oldValue {
-                _changeNotifications[.RepeatMode] = 1
-            }
-        }
-    }
-    
-    /// The currently active shuffle mode of a player.
-    /// When changed a notification PlayerStatusChangeNotification.ShuffleMode will be sent.
-    public var shuffleMode = ShuffleMode.Off {
-        didSet {
-            if shuffleMode != oldValue {
-                _changeNotifications[.ShuffleMode] = 1
-            }
-        }
-    }
-    
-    /// The index (position) of the currently playing song in the playqueue.
-    /// When changed a notification PlayerStatusChangeNotification.SongInfo will be sent.
-    public var songIndex = 0 {
-        didSet {
-            if songIndex != oldValue {
-                _changeNotifications[.SongInfo] = 1
-            }
-        }
-    }
-    
-    /// A unique identifier for the currently playing song. Implementation is depending on the library implementation.
-    /// When changed a notification PlayerStatusChangeNotification.SongInfo will be sent.
-    public var songID = "" {
-        didSet {
-            if songID != oldValue {
-                _changeNotifications[.SongInfo] = 1
-            }
-        }
-    }
-    
-    /// The name of the artist(s) that perform the currently playing song.
-    /// When changed a notification PlayerStatusChangeNotification.SongInfo will be sent.
-    public var artist = "" {
-        didSet {
-            if artist != oldValue {
-                _changeNotifications[.SongInfo] = 1
-            }
-        }
-    }
-    
-    /// The title of the album on which the currently playing song appears.
-    /// When changed a notification PlayerStatusChangeNotification.SongInfo will be sent.
-    public var album = "" {
-        didSet {
-            if album != oldValue {
-                _changeNotifications[.SongInfo] = 1
-            }
-        }
-    }
-
-    /// The title of the currently playing song.
-    /// When changed a notification PlayerStatusChangeNotification.SongInfo will be sent.
-    public var song = "" {
-        didSet {
-            if song != oldValue {
-                _changeNotifications[.SongInfo] = 1
-            }
-        }
-    }
-    
-    /// The name of the currently playing station. Empty in case not playing a station.
-    /// When changed a notification PlayerStatusChangeNotification.StationInfo will be sent.
-    public var station = "" {
-        didSet {
-            if station != oldValue {
-                _changeNotifications[.StationInfo] = 1
-            }
-        }
-    }
-
-    /// The duration of the currently playing song in seconds.
-    /// When changed a notification PlayerStatusChangeNotification.TrackTime will be sent.
-    public var trackTime = 0 {
-        didSet {
-            if trackTime != oldValue {
-                _changeNotifications[.TrackTime] = 1
-            }
-        }
-    }
-    
-    /// The elapsed time within the currently playing song in seconds.
-    /// When changed a notification PlayerStatusChangeNotification.TrackTime will be sent.
-    public var elapsedTime = 0 {
-        didSet {
-            if elapsedTime != oldValue {
-                _changeNotifications[.TrackTime] = 1
-            }
-        }
-    }
-    
-    /// A string describing the bitrate of the currently playing song.
-    /// When changed a notification PlayerStatusChangeNotification.Quality will be sent.
-    public var bitrate = "" {
-        didSet {
-            if bitrate != oldValue {
-                _changeNotifications[.Quality] = 1
-            }
-        }
-    }
-    
-    /// A string describing the encoding of the currently playing song.
-    /// When changed a notification PlayerStatusChangeNotification.Quality will be sent.
-    public var encoding = "" {
-        didSet {
-            if encoding != oldValue {
-                _changeNotifications[.Quality] = 1
-            }
-        }
-    }
-    
-    /// Start an update cycle of a PlayerStatus object. This will start collection update notifications.
-    public func beginUpdate() {
-        // beginUpdate shall only be called from the main thread
-        guard Thread.current.isMainThread == true else {
-            return
-        }
-
-        _changeNotifications = [:]
-    }
-    
-    /// Complete an update cycle of a PlayerStatus object. This will send out any collected notifications.
-    public func endUpdate() {
-        // endUpdate shall only be called from the main thread
-        guard Thread.current.isMainThread == true else {
-            return
-        }
-        
-        for notificationKey in _changeNotifications.keys {
-            let notification = Notification.init(name: NSNotification.Name.init(notificationKey.rawValue), object: nil, userInfo: ["status": self])
-            NotificationCenter.default.post(notification)
-        }
-        _changeNotifications = [:]
+}
+extension TimeStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "> PlayerStatus\n" +
+            "    trackTime = \(trackTime)\n" +
+            "    elapsedTime = \(elapsedTime)\n"
     }
 }
 
+// MARK: - QualityStatus Struct
+
+public struct QualityStatus {
+    public var bitrate = ""
+    public var encoding = ""
+}
+extension QualityStatus: Equatable {}
+public func ==(lhs: QualityStatus, rhs: QualityStatus) -> Bool {
+    return lhs.bitrate == rhs.bitrate &&
+        lhs.encoding == rhs.encoding
+}
+extension QualityStatus: CustomStringConvertible {
+    public var description: String {
+        return "> QualityStatus\n" +
+            "    bitrate = \(bitrate)\n" +
+        "    encoding = \(encoding)\n"
+    }
+}
+extension QualityStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "> QualityStatus\n" +
+            "    bitrate = \(bitrate)\n" +
+        "    encoding = \(encoding)\n"
+    }
+}
+
+// MARK: - PlayqueueStatus Struct
+
+public struct PlayqueueStatus {
+    public var songIndex = 0
+    public var version = 0
+    public var length = 0
+}
+extension PlayqueueStatus: Equatable {}
+public func ==(lhs: PlayqueueStatus, rhs: PlayqueueStatus) -> Bool {
+    return lhs.songIndex == rhs.songIndex &&
+        lhs.version == rhs.version &&
+        lhs.length == rhs.length
+}
+extension PlayqueueStatus: CustomStringConvertible {
+    public var description: String {
+        return "> PlayqueueStatus\n" +
+            "    songIndex = \(songIndex)\n" +
+            "    version = \(version)\n" +
+        "    length = \(length)\n"
+    }
+}
+extension PlayqueueStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "> PlayqueueStatus\n" +
+            "    songIndex = \(songIndex)\n" +
+            "    version = \(version)\n" +
+        "    length = \(length)\n"
+    }
+}
+
+// MARK: - PlayStatus Struct
+
+public struct PlayStatus {
+    public var playPauseMode = PlayPauseMode.Paused
+    public var shuffleMode = ShuffleMode.Off
+    public var repeatMode = RepeatMode.Off
+}
+extension PlayStatus: Equatable {}
+public func ==(lhs: PlayStatus, rhs: PlayStatus) -> Bool {
+    return lhs.playPauseMode == rhs.playPauseMode &&
+        lhs.shuffleMode == rhs.shuffleMode &&
+        lhs.repeatMode == rhs.repeatMode
+}
+extension PlayStatus: CustomStringConvertible {
+    public var description: String {
+        return "> PlayStatus\n" +
+            "    playingStatus = \(playPauseMode)\n" +
+            "    repeatMode = \(repeatMode)\n" +
+        "    shuffleMode = \(shuffleMode)\n"
+    }
+}
+extension PlayStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "> PlayStatus\n" +
+            "    playingStatus = \(playPauseMode)\n" +
+            "    repeatMode = \(repeatMode)\n" +
+        "    shuffleMode = \(shuffleMode)\n"
+    }
+}
+
+/// A PlayerStatus class where all elements are exposed as Drivers.
+/// Elements are logically grouped so that subscriptions can be made to individual areas of interest.
+public class ObservablePlayerStatus {
+    private var _time = Variable<TimeStatus>(TimeStatus())
+    public var time: Driver<TimeStatus> {
+        get {
+            return _time.asDriver()
+        }
+    }
+    
+    private var _currentSong = Variable<Song>(Song())
+    public var currentSong: Driver<Song> {
+        get {
+            return _currentSong.asDriver()
+        }
+    }
+    
+    private var _quality = Variable<QualityStatus>(QualityStatus())
+    public var quality: Driver<QualityStatus> {
+        get {
+            return _quality.asDriver()
+        }
+    }
+
+    public var _volume = Variable<Float>(0)
+    public var volume: Driver<Float> {
+        get {
+            return _volume.asDriver()
+        }
+    }
+
+    public var _playqueue = Variable<PlayqueueStatus>(PlayqueueStatus())
+    public var playqueue: Driver<PlayqueueStatus> {
+        get {
+            return _playqueue.asDriver()
+        }
+    }
+
+    public var _playing = Variable<PlayStatus>(PlayStatus())
+    public var playing: Driver<PlayStatus> {
+        get {
+            return _playing.asDriver()
+        }
+    }
+
+    public init() {}
+    
+    public func set(playerStatus: PlayerStatus) {
+        _time.value = playerStatus.time
+        _currentSong.value = playerStatus.currentSong
+        _quality.value = playerStatus.quality
+        _volume.value = playerStatus.volume
+        _playqueue.value = playerStatus.playqueue
+        _playing.value = playerStatus.playing
+    }
+}
+
+/// A PlayerStatus object containing all relevant status elements
+public struct PlayerStatus {
+    public var time = TimeStatus()
+    public var currentSong = Song()
+    public var quality = QualityStatus()
+    public var volume = Float(0)
+    public var playqueue = PlayqueueStatus()
+    public var playing = PlayStatus()
+    
+    public init() {}
+}
 extension PlayerStatus: CustomStringConvertible {
     public var description: String {
         return "> PlayerStatus\n" +
-        "    playingStatus = \(playingStatus)\n" +
-        "    volume = \(volume)\n" +
-        "    repeatMode = \(repeatMode)\n" +
-        "    shuffleMode = \(shuffleMode)\n" +
-        "    songIndex = \(songIndex)\n" +
-        "    songID = \(songID)\n" +
-        "    artist = \(artist)\n" +
-        "    album = \(album)\n" +
-        "    song = \(song)\n" +
-        "    station = \(station)\n" +
-        "    trackTime = \(trackTime)\n" +
-        "    elapsedTime = \(elapsedTime)\n" +
-        "    bitrate = \(bitrate)\n" +
-        "    encoding = \(encoding)\n"
+            "   \(time)" +
+            "   \(currentSong)" +
+            "   \(quality)" +
+            "   \(playqueue)" +
+            "   \(playing)" +
+        "    volume = \(volume)\n"
     }
 }
-
 extension PlayerStatus: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "> PlayerStatus\n" +
-            "    playingStatus = \(playingStatus)\n" +
-            "    volume = \(volume)\n" +
-            "    repeatMode = \(repeatMode)\n" +
-            "    shuffleMode = \(shuffleMode)\n" +
-            "    songIndex = \(songIndex)\n" +
-            "    songID = \(songID)\n" +
-            "    artist = \(artist)\n" +
-            "    album = \(album)\n" +
-            "    song = \(song)\n" +
-            "    station = \(station)\n" +
-            "    trackTime = \(trackTime)\n" +
-            "    elapsedTime = \(elapsedTime)\n" +
-            "    bitrate = \(bitrate)\n" +
-        "    encoding = \(encoding)\n"
+            "   \(time)" +
+            "   \(currentSong)" +
+            "   \(quality)" +
+            "   \(playqueue)" +
+            "   \(playing)" +
+        "    volume = \(volume)\n"
     }
 }
