@@ -28,17 +28,6 @@ public enum RepeatMode {
     case Album
 }
 
-public enum PlayerStatusChangeNotification: String {
-    case PlayingStatus = "PlayerStatusChangePlayingStatus"
-    case Volume = "PlayerStatusChangeVolume"
-    case RepeatMode = "PlayerStatusChangeRepeatMode"
-    case ShuffleMode = "PlayerStatusChangeShuffleMode"
-    case SongInfo = "PlayerStatusChangeSongInfo"
-    case StationInfo = "PlayerStatusChangeStationInfo"
-    case TrackTime = "PlayerStatusChangeTrackTime"
-    case Quality = "PlayerStatusChangeQuality"
-}
-
 // MARK: - TimeStatus struct
 
 public struct TimeStatus {
@@ -168,63 +157,6 @@ extension PlayStatus: CustomDebugStringConvertible {
             "    playingStatus = \(playPauseMode)\n" +
             "    repeatMode = \(repeatMode)\n" +
         "    shuffleMode = \(shuffleMode)\n"
-    }
-}
-
-/// A PlayerStatus class where all elements are exposed as Drivers.
-/// Elements are logically grouped so that subscriptions can be made to individual areas of interest.
-public class ObservablePlayerStatus {
-    private var _time = Variable<TimeStatus>(TimeStatus())
-    public var time: Driver<TimeStatus> {
-        get {
-            return _time.asDriver()
-        }
-    }
-    
-    private var _currentSong = Variable<Song>(Song())
-    public var currentSong: Driver<Song> {
-        get {
-            return _currentSong.asDriver()
-        }
-    }
-    
-    private var _quality = Variable<QualityStatus>(QualityStatus())
-    public var quality: Driver<QualityStatus> {
-        get {
-            return _quality.asDriver()
-        }
-    }
-
-    public var _volume = Variable<Float>(0)
-    public var volume: Driver<Float> {
-        get {
-            return _volume.asDriver()
-        }
-    }
-
-    public var _playqueue = Variable<PlayqueueStatus>(PlayqueueStatus())
-    public var playqueue: Driver<PlayqueueStatus> {
-        get {
-            return _playqueue.asDriver()
-        }
-    }
-
-    public var _playing = Variable<PlayStatus>(PlayStatus())
-    public var playing: Driver<PlayStatus> {
-        get {
-            return _playing.asDriver()
-        }
-    }
-
-    public init() {}
-    
-    public func set(playerStatus: PlayerStatus) {
-        _time.value = playerStatus.time
-        _currentSong.value = playerStatus.currentSong
-        _quality.value = playerStatus.quality
-        _volume.value = playerStatus.volume
-        _playqueue.value = playerStatus.playqueue
-        _playing.value = playerStatus.playing
     }
 }
 

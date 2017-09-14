@@ -46,6 +46,9 @@ public struct Song {
     /// A string describing the encoding of the song.
     public var encoding = ""
     
+    /// The position of the track within a playlist, album or playqueue
+    public var position = 0
+    
     public init() {
     }
     
@@ -60,7 +63,8 @@ public struct Song {
                 genre: String,
                 length: Int,
                 bitrate: String,
-                encoding: String) {
+                encoding: String,
+                position: Int = 0) {
         self.id = id
         self.location = location
         self.title = title
@@ -73,6 +77,7 @@ public struct Song {
         self.length = length
         self.bitrate = bitrate
         self.encoding = encoding
+        self.position = position
     }
 }
 

@@ -8,11 +8,15 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
-    /// A playerStatus object with observable sub-elements
-    var observablePlayerStatus: ObservablePlayerStatus { get }
+    /// An observable playerStatus object
+    var playerStatus : Driver<PlayerStatus> { get }
+    
+    /// A serial scheduler to allow performing serialized requests over a connection
+    var serialScheduler: SerialDispatchQueueScheduler { get }
     
     /// Start playback.
     func play()
@@ -47,15 +51,16 @@ public protocol ControlProtocol {
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
     func setVolume(volume: Float)
 
+    /// Get the current player status
+    ///
+    /// - Returns: a filled PlayerStatus object
+    func getPlayerStatus() -> PlayerStatus
+    
     /// Get a block of songs from the playqueue
     ///
     /// - Parameters:
     ///   - start: the start position of the requested block
     ///   - end: the end position of the requested block
-    ///   - songsFound: block that will be called upon completion. The [Song] parameter is not guaranteed to have the same number
-    ///     of songs as requested.
-    func getPlayqueueSongs(start: Int, end: Int,
-                           songsFound: @escaping (([Song]) -> Void))
-    
-    func playqueueSongs(start: Int, fetchSize: Int) -> Observable<[Song]>
+    /// - Returns: Array of songs, not guaranteed to have the same number of songs as requested.
+    func getPlayqueueSongs(start: Int, end: Int) -> [Song]
 }
