@@ -36,16 +36,22 @@ public protocol ControlProtocol {
     /// Go back to the previous track.
     func back()
     
-    /// Set the shuffle mode of the player.
+    /// Set the random mode of the player.
     ///
-    /// - Parameter shuffleMode: The shuffle mode to use.
-    func setShuffle(shuffleMode: ShuffleMode)
+    /// - Parameter randomMode: The random mode to use.
+    func setRandom(randomMode: RandomMode)
+    
+    /// Toggle the random mode (off -> on -> off)
+    func toggleRandom()
     
     /// Set the repeat mode of the player.
     ///
     /// - Parameter repeatMode: The repeat mode to use.
     func setRepeat(repeatMode: RepeatMode)
 
+    /// Toggle the repeat mode (off -> all -> single -> off)
+    func toggleRepeat()
+    
     /// Set the volume of the player.
     ///
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.

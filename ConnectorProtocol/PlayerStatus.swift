@@ -16,7 +16,7 @@ public enum PlayPauseMode {
     case Stopped
 }
 
-public enum ShuffleMode {
+public enum RandomMode {
     case Off
     case On
 }
@@ -134,13 +134,13 @@ extension PlayqueueStatus: CustomDebugStringConvertible {
 
 public struct PlayStatus {
     public var playPauseMode = PlayPauseMode.Paused
-    public var shuffleMode = ShuffleMode.Off
+    public var randomMode = RandomMode.Off
     public var repeatMode = RepeatMode.Off
 }
 extension PlayStatus: Equatable {}
 public func ==(lhs: PlayStatus, rhs: PlayStatus) -> Bool {
     return lhs.playPauseMode == rhs.playPauseMode &&
-        lhs.shuffleMode == rhs.shuffleMode &&
+        lhs.randomMode == rhs.randomMode &&
         lhs.repeatMode == rhs.repeatMode
 }
 extension PlayStatus: CustomStringConvertible {
@@ -148,7 +148,7 @@ extension PlayStatus: CustomStringConvertible {
         return "> PlayStatus\n" +
             "    playingStatus = \(playPauseMode)\n" +
             "    repeatMode = \(repeatMode)\n" +
-        "    shuffleMode = \(shuffleMode)\n"
+        "    randomMode = \(randomMode)\n"
     }
 }
 extension PlayStatus: CustomDebugStringConvertible {
@@ -156,7 +156,7 @@ extension PlayStatus: CustomDebugStringConvertible {
         return "> PlayStatus\n" +
             "    playingStatus = \(playPauseMode)\n" +
             "    repeatMode = \(repeatMode)\n" +
-        "    shuffleMode = \(shuffleMode)\n"
+        "    randomMode = \(randomMode)\n"
     }
 }
 
