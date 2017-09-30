@@ -22,6 +22,9 @@ public protocol PlayerProtocol {
     /// String that uniquely identifies a player. Implementation will be backend specific.
     var uniqueID: String { get }
     
+    /// Name of a player. Implementation will be backend specific.
+    var name: String { get }
+    
     /// Property to get the connection
     var connectionStatus: Driver<ConnectionStatus> { get }
 
@@ -36,4 +39,29 @@ public protocol PlayerProtocol {
     
     /// Get a library object to browse music on the player
     //var library: LibraryProtocol { get }
+}
+
+public protocol PlayerBrowserProtocol {
+    var addPlayerObservable : Observable<PlayerProtocol> { get }
+    var removePlayerObservable : Observable<PlayerProtocol> { get }
+
+    /// Start listening for players on the network.
+    func startListening()
+    
+    /// Stop listening for players on the network.
+    func stopListening()
+}
+
+/// This wrapper class is a work-around for Swift restrictions on Protocols and Associated Types.
+public class PlayerWrapper {
+    public let player: PlayerProtocol
+    public init(player: PlayerProtocol) {
+        self.player = player
+    }
+}
+
+extension PlayerWrapper: Equatable {
+    public static func ==(lhs: PlayerWrapper, rhs: PlayerWrapper) -> Bool {
+        return lhs.player.uniqueID == rhs.player.uniqueID
+    }
 }
