@@ -40,6 +40,7 @@
 		C57433351F3E10D000615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
 		C57433361F3E10D100615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
 		C57433371F3E10D100615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
+		C5F569431F7FC48D00D53500 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F569421F7FC48D00D53500 /* SearchResult.swift */; };
 		E89F2C4C3526474621F786E7 /* Pods_ConnectorProtocolTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E1D40428D1683992433830 /* Pods_ConnectorProtocolTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +84,7 @@
 		C546B2641F39B730003C5B7E /* DataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTests.swift; sourceTree = "<group>"; };
 		C546B2661F39B730003C5B7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C57433311F3E0EC000615237 /* PlayerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerProtocol.swift; sourceTree = "<group>"; };
+		C5F569421F7FC48D00D53500 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		DCB7C89486279D95541DF9EE /* Pods_ConnectorProtocol_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ConnectorProtocol_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DAD91A6F62B18FAC8B3E82 /* Pods-ConnectorProtocolTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConnectorProtocolTests.release.xcconfig"; path = "../Pods/Target Support Files/Pods-ConnectorProtocolTests/Pods-ConnectorProtocolTests.release.xcconfig"; sourceTree = "<group>"; };
 		F3E85DCE0E4316E669D8377F /* Pods-ConnectorProtocol_MacOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConnectorProtocol_MacOS.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-ConnectorProtocol_MacOS/Pods-ConnectorProtocol_MacOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				C546AF901F35DBE9003C5B7E /* Album.swift */,
 				C546AF921F35E2BB003C5B7E /* Artist.swift */,
 				C546AF8C1F35B3F8003C5B7E /* PlayerStatus.swift */,
+				C5F569421F7FC48D00D53500 /* SearchResult.swift */,
 			);
 			path = ConnectorProtocol;
 			sourceTree = "<group>";
@@ -586,6 +589,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C546AF8B1F35A93E003C5B7E /* PlayqueueProtocol.swift in Sources */,
+				C5F569431F7FC48D00D53500 /* SearchResult.swift in Sources */,
 				C546AF871F35A90A003C5B7E /* ControlProtocol.swift in Sources */,
 				C546AF8D1F35B3F8003C5B7E /* PlayerStatus.swift in Sources */,
 				C546AF891F35A921003C5B7E /* LibraryProtocol.swift in Sources */,

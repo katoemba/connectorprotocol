@@ -13,6 +13,9 @@ public struct Song {
     /// A unique id for the song. Usage depends on library implementation.
     public var id = ""
     
+    /// The source of this song (i.e. the service like Spotify, LocalMusic etc).
+    public var source = SourceType.Unknown
+    
     /// The location of the song. Usage depends on library implementation.
     public var location = ""
     
@@ -49,10 +52,39 @@ public struct Song {
     /// The position of the track within a playlist, album or playqueue
     public var position = 0
     
+    public var name = ""
+    
+    public var date = ""
+    
+    public var performer = ""
+    
+    public var comment = ""
+    
+    public var disc = ""
+    
+    public var musicbrainzArtistId = ""
+    
+    public var musicbrainzAlbumId = ""
+    
+    public var musicbrainzAlbumArtistId = ""
+    
+    public var musicbrainzTrackId = ""
+    
+    public var musicbrainzReleaseId = ""
+    
+    public var originalDate = ""
+    
+    public var sortArtist = ""
+    
+    public var sortAlbumArtist = ""
+    
+    public var sortAlbum = ""
+    
     public init() {
     }
     
     public init(id: String,
+                source: SourceType,
                 location: String,
                 title: String,
                 album: String,
@@ -66,6 +98,7 @@ public struct Song {
                 encoding: String,
                 position: Int = 0) {
         self.id = id
+        self.source = source
         self.location = location
         self.title = title
         self.album = album
@@ -83,13 +116,20 @@ public struct Song {
 
 extension Song: Equatable {}
 public func ==(lhs: Song, rhs: Song) -> Bool {
-    return lhs.id == rhs.id
+    return lhs.id == rhs.id && lhs.source == rhs.source
+}
+
+extension Song: Hashable {
+    public var hashValue: Int {
+        return id.hashValue
+    }
 }
 
 extension Song: CustomStringConvertible {
     public var description: String {
         return "> Song\n" +
             "    id = \(id)\n" +
+            "    source = \(source)\n" +
             "    title = \(title)\n"
     }
 }
@@ -98,6 +138,7 @@ extension Song: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "> Song\n" +
             "    id = \(id)\n" +
+            "    source = \(source)\n" +
             "    title = \(title)\n" +
             "    location = \(location)\n" +
             "    album = \(album)\n" +

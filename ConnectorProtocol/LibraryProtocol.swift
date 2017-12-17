@@ -7,9 +7,19 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
+
+public enum SourceType {
+    case Unknown, Local, Spotify, TuneIn, Podcast
+}
 
 /// A protocol to provide a generic interface to a music library.
 public protocol LibraryProtocol {
+    /// A serial scheduler to allow performing serialized requests over a connection
+    var serialScheduler: SerialDispatchQueueScheduler { get }
+
+    /*
     /// Get a song by its unqiue ID.
     ///
     /// - Parameter songID: A string holding the unique ID of the song.
@@ -63,4 +73,11 @@ public protocol LibraryProtocol {
     /// - Parameter artist: An Artist object.
     /// - Returns: An array of fully populated Song objects.
     func songsByArtist(_ artist: Artist) -> [Song]
+     */
+    
+    /// Get the songs performed by an artist.
+    ///
+    /// - Parameter search: The text to search on.
+    /// - Returns: A search object containing search results of different types.
+    func search(_ search: String, limit: Int, filter: [SourceType]) -> SearchResult
 }

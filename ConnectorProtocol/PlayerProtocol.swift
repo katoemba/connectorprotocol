@@ -38,7 +38,7 @@ public protocol PlayerProtocol {
     var controller: ControlProtocol { get }
     
     /// Get a library object to browse music on the player
-    //var library: LibraryProtocol { get }
+    var library: LibraryProtocol { get }
 }
 
 public protocol PlayerBrowserProtocol {

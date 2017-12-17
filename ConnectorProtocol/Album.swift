@@ -11,30 +11,34 @@ import Foundation
 /// A struct defining a generic Album object.
 public struct Album {
     /// A unique id for the album. Usage depends on library implementation.
-    var id = ""
+    public var id = ""
+    
+    /// The source of this song (i.e. the service like Spotify, LocalMusic etc).
+    public var source = SourceType.Unknown
     
     /// The location of the album. Usage depends on library implementation.
-    var location = ""
+    public var location = ""
 
     /// The title of the album.
-    var title = ""
+    public var title = ""
     
     /// The name of the artist(s) that released the album.
-    var artist = ""
+    public var artist = ""
 
     /// The year the album was released.
-    var year = 0
+    public var year = 0
     
     /// The name of the genre to which the album belongs.
-    var genre = ""
+    public var genre = ""
 
     /// The total duration of the album in seconds.
-    var length = 0
+    public var length = 0
     
     public init() {
     }
     
     public init(id: String,
+                source: SourceType,
                 location: String,
                 title: String,
                 artist: String,
@@ -42,6 +46,7 @@ public struct Album {
                 genre: String,
                 length: Int) {
         self.id = id
+        self.source = source
         self.location = location
         self.title = title
         self.artist = artist
@@ -53,13 +58,20 @@ public struct Album {
 
 extension Album: Equatable {}
 public func ==(lhs: Album, rhs: Album) -> Bool {
-    return lhs.id == rhs.id
+    return lhs.id == rhs.id && lhs.source == rhs.source
+}
+
+extension Album: Hashable {
+    public var hashValue: Int {
+        return id.hashValue
+    }
 }
 
 extension Album: CustomStringConvertible {
     public var description: String {
         return "> Album\n" +
             "    id = \(id)\n" +
+            "    source = \(source)\n" +
             "    title = \(title)\n"
     }
 }
@@ -68,6 +80,7 @@ extension Album: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "> Album\n" +
             "    id = \(id)\n" +
+            "    source = \(source)\n" +
             "    title = \(title)\n" +
             "    location = \(location)\n" +
             "    artist = \(artist)\n" +
