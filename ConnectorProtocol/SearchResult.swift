@@ -8,29 +8,10 @@
 
 import Foundation
 
-public enum LibraryItemType {
-    case Song,
-    Album,
-    Artist
-}
-
-public struct LibraryItem {
-    public var itemType: LibraryItemType
-    public var song: Song?
-    public var album: Album?
-    public var artist: Artist?
-
-    public static func Song(_ song: Song) -> LibraryItem {
-        return LibraryItem(itemType: .Song, song: song, album: nil, artist: nil)
-    }
-
-    public static func Album(_ album: Album) -> LibraryItem {
-        return LibraryItem(itemType: .Album, song: nil, album: album, artist: nil)
-    }
-
-    public static func Artist(_ artist: Artist) -> LibraryItem {
-        return LibraryItem(itemType: .Artist, song: nil, album: nil, artist: artist)
-    }
+public enum LibraryItem {
+    case song(Song)
+    case album(Album)
+    case artist(Artist)
 }
 
 public struct SearchResult {
