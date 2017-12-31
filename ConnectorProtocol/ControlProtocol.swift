@@ -69,4 +69,16 @@ public protocol ControlProtocol {
     ///   - end: the end position of the requested block
     /// - Returns: Array of songs, not guaranteed to have the same number of songs as requested.
     func getPlayqueueSongs(start: Int, end: Int) -> [Song]
+    
+    /// Add a song to the play queue
+    ///
+    /// - Parameters:
+    ///   - song: the song to add
+    func addSong(_ song: Song)
+
+    /// Add an album to the play queue
+    ///
+    /// - Parameters:
+    ///   - album: the album to add
+    func addAlbum(_ album: Album)
 }

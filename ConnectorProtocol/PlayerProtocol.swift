@@ -17,6 +17,13 @@ public enum ConnectionStatus {
     case Connected
 }
 
+public enum ConnectionProperties: String {
+    case Name = "Name"
+    case Host = "Host"
+    case Port = "Port"
+    case Password = "Password"
+}
+
 /// A protocol to provide a generic interface to control a network music player.
 public protocol PlayerProtocol {
     /// String that uniquely identifies a player. Implementation will be backend specific.
@@ -34,11 +41,11 @@ public protocol PlayerProtocol {
     /// Attempt to connect to a player. No return value as the implementation is most likely asynchronous
     func connect(numberOfRetries: Int)
     
-    /// Get a controller object to control the player.
+    /// Get a shared controller object to control the player.
     var controller: ControlProtocol { get }
     
     /// Get a library object to browse music on the player
-    var library: LibraryProtocol { get }
+    func libraryAccess() -> LibraryProtocol?
 }
 
 public protocol PlayerBrowserProtocol {

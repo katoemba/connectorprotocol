@@ -34,7 +34,7 @@ public struct Song {
     /// The name of the composer of the song.
     public var composer = ""
     
-    /// The year the song was released.
+    /// The song's release date. This is usually a 4-digit year.
     public var year = 0
     
     /// The name of the genre to which the song belongs.
@@ -52,33 +52,49 @@ public struct Song {
     /// The position of the track within a playlist, album or playqueue
     public var position = 0
     
+    /// The name of the track.
     public var name = ""
     
+    /// The (release)date of the track. This is a string value and often contains just the year.
     public var date = ""
     
+    /// The performer of the track.
     public var performer = ""
     
+    /// A human-readable comment about this song. The exact meaning of this tag is not well-defined.
     public var comment = ""
     
+    /// The decimal disc number in a multi-disc album.
     public var disc = ""
-    
+
+    /// The Musicbrainz Artist Id for the artist of the track.
     public var musicbrainzArtistId = ""
     
+    /// The Musicbrainz Album Id for the album of the track.
     public var musicbrainzAlbumId = ""
     
+    /// The Musicbrainz Artist Id for the album-artist of the track.
     public var musicbrainzAlbumArtistId = ""
     
+    /// The Musicbrainz Track Id of the track.
     public var musicbrainzTrackId = ""
     
+    /// The Musicbrainz Release Id of the track.
     public var musicbrainzReleaseId = ""
     
     public var originalDate = ""
     
+    /// Alternative value to sort by when sorting by artist (like Rolling Stones, The).
     public var sortArtist = ""
     
+    /// Alternative value to sort by when sorting by album-artist (like Rolling Stones, The).
     public var sortAlbumArtist = ""
     
+    /// Alternative value to sort by when sorting by album.
     public var sortAlbum = ""
+    
+    /// URI through which cover art can be fetched.
+    public var coverURI = ""
     
     public init() {
     }

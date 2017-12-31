@@ -16,9 +16,6 @@ public enum SourceType {
 
 /// A protocol to provide a generic interface to a music library.
 public protocol LibraryProtocol {
-    /// A serial scheduler to allow performing serialized requests over a connection
-    var serialScheduler: SerialDispatchQueueScheduler { get }
-
     /*
     /// Get a song by its unqiue ID.
     ///

@@ -34,6 +34,9 @@ public struct Album {
     /// The total duration of the album in seconds.
     public var length = 0
     
+    /// URI through which cover art can be fetched.
+    public var coverURI = ""
+    
     public init() {
     }
     
@@ -86,6 +89,7 @@ extension Album: CustomDebugStringConvertible {
             "    artist = \(artist)\n" +
             "    year = \(year)\n" +
             "    genre = \(genre)\n" +
-            "    length = \(length)\n"
+            "    length = \(length)\n" +
+            "    coverURI = \(coverURI)\n"
     }
 }
