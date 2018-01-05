@@ -10,13 +10,6 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-public enum ConnectionStatus {
-    case Unknown
-    case Disconnected
-    case Connecting
-    case Connected
-}
-
 public enum ConnectionProperties: String {
     case Name = "Name"
     case Host = "Host"
@@ -25,27 +18,33 @@ public enum ConnectionProperties: String {
 }
 
 /// A protocol to provide a generic interface to control a network music player.
-public protocol PlayerProtocol {
+public protocol PlayerProtocol: class {
     /// String that uniquely identifies a player. Implementation will be backend specific.
     var uniqueID: String { get }
     
     /// Name of a player. Implementation will be backend specific.
     var name: String { get }
     
-    /// Property to get the connection
-    var connectionStatus: Driver<ConnectionStatus> { get }
-
     /// Property to get the connection parameters so they can be stored in User Defaults
     var connectionProperties: [String: Any] { get }
     
-    /// Attempt to connect to a player. No return value as the implementation is most likely asynchronous
-    func connect(numberOfRetries: Int)
+    /// Activate a player. It shall initiate (long-)polling of status updates.
+    func activate()
     
-    /// Get a shared controller object to control the player.
-    var controller: ControlProtocol { get }
+    /// Deactivate a plaer. It shall stop (long-)polling of status updates and close any open connections.
+    func deactivate()
     
-    /// Get a library object to browse music on the player
-    func libraryAccess() -> LibraryProtocol?
+    /// Get a shared status object to monitor the player.
+    var status: StatusProtocol { get }
+    
+    /// Get a control object to control the player.
+    var control: ControlProtocol { get }
+    
+    /// Get a browse object to browse music on the player.
+    var browse: BrowseProtocol { get }
+
+    /// Get a copy of the player object.
+    func copy() -> PlayerProtocol
 }
 
 public protocol PlayerBrowserProtocol {
@@ -62,7 +61,7 @@ public protocol PlayerBrowserProtocol {
 /// This wrapper class is a work-around for Swift restrictions on Protocols and Associated Types.
 public class PlayerWrapper {
     public let player: PlayerProtocol
-    public init(player: PlayerProtocol) {
+    public init(_ player: PlayerProtocol) {
         self.player = player
     }
 }

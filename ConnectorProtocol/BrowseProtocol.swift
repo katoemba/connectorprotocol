@@ -1,5 +1,5 @@
 //
-//  LibraryProtocol.swift
+//  BrowseProtocol.swift
 //  ConnectorProtocol
 //
 //  Created by Berrie Kremers on 05-08-17.
@@ -15,7 +15,7 @@ public enum SourceType {
 }
 
 /// A protocol to provide a generic interface to a music library.
-public protocol LibraryProtocol {
+public protocol BrowseProtocol {
     /*
     /// Get a song by its unqiue ID.
     ///
@@ -76,5 +76,6 @@ public protocol LibraryProtocol {
     ///
     /// - Parameter search: The text to search on.
     /// - Returns: A search object containing search results of different types.
-    func search(_ search: String, limit: Int, filter: [SourceType]) -> SearchResult
+    //func search(_ search: String, limit: Int, filter: [SourceType]) -> SearchResult
+    func searchrx(_ search: String, limit: Int, filter: [SourceType]) -> Observable<SearchResult>
 }

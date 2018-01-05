@@ -8,12 +8,6 @@
 
 import Foundation
 
-public enum LibraryItem {
-    case song(Song)
-    case album(Album)
-    case artist(Artist)
-}
-
 public struct SearchResult {
     public var songs = [Song]()
     public var albums = [Album]()

@@ -12,12 +12,6 @@ import RxCocoa
 
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
-    /// An observable playerStatus object
-    var playerStatus : Driver<PlayerStatus> { get }
-    
-    /// A serial scheduler to allow performing serialized requests over a connection
-    var serialScheduler: SerialDispatchQueueScheduler { get }
-    
     /// Start playback.
     func play()
     
@@ -42,7 +36,7 @@ public protocol ControlProtocol {
     func setRandom(randomMode: RandomMode)
     
     /// Toggle the random mode (off -> on -> off)
-    func toggleRandom()
+    func toggleRandom(from: RandomMode)
     
     /// Set the repeat mode of the player.
     ///
@@ -50,26 +44,13 @@ public protocol ControlProtocol {
     func setRepeat(repeatMode: RepeatMode)
 
     /// Toggle the repeat mode (off -> all -> single -> off)
-    func toggleRepeat()
+    func toggleRepeat(from: RepeatMode)
     
     /// Set the volume of the player.
     ///
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
     func setVolume(volume: Float)
 
-    /// Get the current player status
-    ///
-    /// - Returns: a filled PlayerStatus object
-    func getPlayerStatus() -> PlayerStatus
-    
-    /// Get a block of songs from the playqueue
-    ///
-    /// - Parameters:
-    ///   - start: the start position of the requested block
-    ///   - end: the end position of the requested block
-    /// - Returns: Array of songs, not guaranteed to have the same number of songs as requested.
-    func getPlayqueueSongs(start: Int, end: Int) -> [Song]
-    
     /// Add a song to the play queue
     ///
     /// - Parameters:
