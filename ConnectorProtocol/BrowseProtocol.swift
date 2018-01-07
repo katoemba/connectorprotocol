@@ -72,10 +72,18 @@ public protocol BrowseProtocol {
     func songsByArtist(_ artist: Artist) -> [Song]
      */
     
-    /// Get the songs performed by an artist.
+    /// Get the songs on an album
     ///
-    /// - Parameter search: The text to search on.
-    /// - Returns: A search object containing search results of different types.
-    //func search(_ search: String, limit: Int, filter: [SourceType]) -> SearchResult
-    func searchrx(_ search: String, limit: Int, filter: [SourceType]) -> Observable<SearchResult>
+    /// - Parameter album: An Album object.
+    /// - Returns: An array of fully populated Song objects.
+    func songsOnAlbum(_ album: Album) -> Observable<[Song]>
+
+    /// Search across artists, songs and albums.
+    ///
+    /// - Parameters:
+    ///   - search: The text to search on.
+    ///   - limit: The maximum number of items to return
+    ///   - filter: The sources to filter on
+    /// - Returns: An observable search object containing search results of different types.
+    func search(_ search: String, limit: Int, filter: [SourceType]) -> Observable<SearchResult>
 }
