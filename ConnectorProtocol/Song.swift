@@ -132,7 +132,7 @@ public struct Song {
 
 extension Song: Equatable {}
 public func ==(lhs: Song, rhs: Song) -> Bool {
-    return lhs.id == rhs.id && lhs.source == rhs.source
+    return lhs.id == rhs.id && lhs.source == rhs.source && lhs.position == rhs.position
 }
 
 extension Song: Hashable {

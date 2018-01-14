@@ -21,6 +21,11 @@ public enum RandomMode {
     case On
 }
 
+public enum ShuffleMode {
+    case Off
+    case On
+}
+
 public enum RepeatMode {
     case Off
     case Single

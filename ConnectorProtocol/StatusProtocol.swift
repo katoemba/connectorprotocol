@@ -27,7 +27,7 @@ public protocol StatusProtocol {
     var connectionStatusObservable: Driver<ConnectionStatus> { get }
     
     /// An observable PlayerStatus object
-    var playerStatusObservable : Driver<PlayerStatus> { get }
+    var playerStatusObservable : Observable<PlayerStatus> { get }
     
     /// Get a block of songs from the playqueue
     ///

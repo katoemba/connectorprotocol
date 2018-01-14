@@ -38,6 +38,9 @@ public protocol ControlProtocol {
     /// Toggle the random mode (off -> on -> off)
     func toggleRandom(from: RandomMode)
     
+    /// Shuffle the contents of the current playqueue.
+    func shufflePlayqueue()
+    
     /// Set the repeat mode of the player.
     ///
     /// - Parameter repeatMode: The repeat mode to use.
