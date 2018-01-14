@@ -10,6 +10,13 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+public enum AddMode {
+    case replace
+    case addNext
+    case addNextAndPlay
+    case addAtEnd
+}
+
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
     /// Start playback.
@@ -58,11 +65,14 @@ public protocol ControlProtocol {
     ///
     /// - Parameters:
     ///   - song: the song to add
-    func addSong(_ song: Song)
+    ///   - addMode: how to add the song to the playqueue
+    func addSong(_ song: Song, addMode: AddMode)
 
     /// Add an album to the play queue
     ///
     /// - Parameters:
     ///   - album: the album to add
-    func addAlbum(_ album: Album)
+    ///   - addMode: how to add the song to the playqueue
+    ///   - shuffle: whether or not to shuffle the album
+    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool)
 }
