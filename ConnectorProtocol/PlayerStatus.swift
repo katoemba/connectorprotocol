@@ -58,6 +58,11 @@ public struct TimeStatus {
     
     public init() {
     }
+    
+    public init(_ from: TimeStatus) {
+        elapsedTime = from.elapsedTime
+        trackTime = from.trackTime
+    }
 }
 extension TimeStatus: Equatable {}
 public func ==(lhs: TimeStatus, rhs: TimeStatus) -> Bool {
@@ -84,6 +89,14 @@ extension TimeStatus: CustomDebugStringConvertible {
 public struct QualityStatus {
     public var bitrate = ""
     public var encoding = ""
+
+    public init() {
+    }
+
+    public init(_ from: QualityStatus) {
+        bitrate = from.bitrate
+        encoding = from.encoding
+    }
 }
 extension QualityStatus: Equatable {}
 public func ==(lhs: QualityStatus, rhs: QualityStatus) -> Bool {
@@ -111,6 +124,15 @@ public struct PlayqueueStatus {
     public var songIndex = 0
     public var version = 0
     public var length = 0
+
+    public init() {
+    }
+
+    public init(_ from: PlayqueueStatus) {
+        songIndex = from.songIndex
+        version = from.version
+        length = from.length
+    }
 }
 extension PlayqueueStatus: Equatable {}
 public func ==(lhs: PlayqueueStatus, rhs: PlayqueueStatus) -> Bool {
@@ -141,6 +163,15 @@ public struct PlayStatus {
     public var playPauseMode = PlayPauseMode.Paused
     public var randomMode = RandomMode.Off
     public var repeatMode = RepeatMode.Off
+
+    public init() {
+    }
+
+    public init(_ from: PlayStatus) {
+        playPauseMode = from.playPauseMode
+        randomMode = from.randomMode
+        repeatMode = from.repeatMode
+    }
 }
 extension PlayStatus: Equatable {}
 public func ==(lhs: PlayStatus, rhs: PlayStatus) -> Bool {
@@ -175,6 +206,16 @@ public struct PlayerStatus {
     public var playing = PlayStatus()
     
     public init() {}
+    
+    public init(_ from: PlayerStatus) {
+        time = from.time
+        currentSong = from.currentSong
+        quality = from.quality
+        volume = from.volume
+        playqueue = from.playqueue
+        playing = from.playing
+    }
+
 }
 extension PlayerStatus: CustomStringConvertible {
     public var description: String {

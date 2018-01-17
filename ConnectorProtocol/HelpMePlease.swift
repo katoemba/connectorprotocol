@@ -9,16 +9,22 @@
 import Foundation
 
 public class HelpMePlease {
-    static var allocCounter = [String: Int]()
+    public static var logAllocations = false
+    private static var allocCounter = [String: Int]()
+    
     public static func allocUp(name: String) {
-        //let count = allocCounter[name] ?? 0
-        //allocCounter[name] = count + 1
-        //print("allocUp(\(name)) -> \(count + 1)")
+        if logAllocations {
+            let count = allocCounter[name] ?? 0
+            allocCounter[name] = count + 1
+            print("allocUp(\(name)) -> \(count + 1)")
+        }
     }
     public static func allocDown(name: String) {
-        //let count = allocCounter[name] ?? 0
-        //allocCounter[name] = count - 1
-        //print("allocDown(\(name)) -> \(count - 1)")
+        if logAllocations {
+            let count = allocCounter[name] ?? 0
+            allocCounter[name] = count - 1
+            print("allocDown(\(name)) -> \(count - 1)")
+        }
     }
 }
 
