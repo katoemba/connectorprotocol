@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-public enum AddMode {
+public enum AddMode: String {
     case replace
     case addNext
     case addNextAndPlay
@@ -43,7 +43,7 @@ public protocol ControlProtocol {
     func setRandom(randomMode: RandomMode)
     
     /// Toggle the random mode (off -> on -> off)
-    func toggleRandom(from: RandomMode)
+    func toggleRandom()
     
     /// Shuffle the contents of the current playqueue.
     func shufflePlayqueue()
@@ -54,7 +54,7 @@ public protocol ControlProtocol {
     func setRepeat(repeatMode: RepeatMode)
 
     /// Toggle the repeat mode (off -> all -> single -> off)
-    func toggleRepeat(from: RepeatMode)
+    func toggleRepeat()
     
     /// Set the volume of the player.
     ///
@@ -68,6 +68,13 @@ public protocol ControlProtocol {
     ///   - addMode: how to add the song to the playqueue
     func addSong(_ song: Song, addMode: AddMode)
 
+    /// Add a batch of songs to the play queue
+    ///
+    /// - Parameters:
+    ///   - songs: array of songs to add
+    ///   - addMode: how to add the song to the playqueue
+    func addSongs(_ songs: [Song], addMode: AddMode)
+    
     /// Add an album to the play queue
     ///
     /// - Parameters:
@@ -75,4 +82,12 @@ public protocol ControlProtocol {
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the album
     func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool)
+
+    /// Add an artist to the play queue
+    ///
+    /// - Parameters:
+    ///   - artist: the artist to add
+    ///   - addMode: how to add the song to the playqueue
+    ///   - shuffle: whether or not to shuffle the album
+    func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool)
 }

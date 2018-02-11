@@ -64,14 +64,26 @@ public protocol BrowseProtocol {
     /// - Parameter artist: An Artist object.
     /// - Returns: An array of fully populated Album objects.
     func albumsOnWhichArtistAppears(_ artist: Artist) -> [Album]
-    
+     */
+
     /// Get the songs performed by an artist.
     ///
     /// - Parameter artist: An Artist object.
-    /// - Returns: An array of fully populated Song objects.
-    func songsByArtist(_ artist: Artist) -> [Song]
-     */
-    
+    /// - Returns: An observable array of fully populated Song objects.
+    func songsByArtist(_ artist: Artist) -> Observable<[Song]>
+ 
+    /// Get the albums released by an artist (based on albumartist).
+    ///
+    /// - Parameter artist: An Artist object.
+    /// - Returns: An observable array of fully populated Album objects.
+    func albumsByArtist(_ artist: Artist) -> Observable<[Album]>
+
+    /// Get the albums on which an artist appears.
+    ///
+    /// - Parameter artist: An Artist object.
+    /// - Returns: An observable array of fully populated Album objects.
+    func albumsOnWhichArtistAppears(_ artist: Artist) -> Observable<[Album]>
+
     /// Get the songs on an album
     ///
     /// - Parameter album: An Album object.
