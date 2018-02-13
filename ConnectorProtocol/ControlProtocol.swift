@@ -81,7 +81,7 @@ public protocol ControlProtocol {
     ///   - album: the album to add
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the album
-    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool)
+    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
 
     /// Add an artist to the play queue
     ///
