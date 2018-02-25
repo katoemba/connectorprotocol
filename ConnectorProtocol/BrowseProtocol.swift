@@ -14,6 +14,28 @@ public enum SourceType {
     case Unknown, Local, Spotify, TuneIn, Podcast
 }
 
+public enum SortType: String {
+    case artist
+    case year
+    case yearReverse
+    case recent
+}
+
+public enum BrowseFilter {
+    case genre(String)
+    case artist(Artist)
+}
+
+public protocol AlbumBrowseViewModel {
+    var albumsObservable: Driver<[Album]> { get }
+    var filters: [BrowseFilter] { get }
+    var sort: SortType { get }
+    var availableSortOptions: [SortType] { get }
+    
+    func load(sort: SortType)
+    func extend()
+}
+
 /// A protocol to provide a generic interface to a music library.
 public protocol BrowseProtocol {
     /*
@@ -52,18 +74,6 @@ public protocol BrowseProtocol {
     /// - Parameter artistID: A string holding the unique ID of the artist.
     /// - Returns: A fully populated Artist object, or null in case no artist is found for the provided id.
     func artistById(_ artistID: String) -> Artist?
-    
-    /// Get the albums released by an artist (based on albumartist).
-    ///
-    /// - Parameter artist: An Artist object.
-    /// - Returns: An array of fully populated Album objects.
-    func albumsByArtist(_ artist: Artist) -> [Album]
-
-    /// Get the albums on which an artist appears.
-    ///
-    /// - Parameter artist: An Artist object.
-    /// - Returns: An array of fully populated Album objects.
-    func albumsOnWhichArtistAppears(_ artist: Artist) -> [Album]
      */
 
     /// Get the songs performed by an artist.
@@ -98,4 +108,27 @@ public protocol BrowseProtocol {
     ///   - filter: The sources to filter on
     /// - Returns: An observable search object containing search results of different types.
     func search(_ search: String, limit: Int, filter: [SourceType]) -> Observable<SearchResult>
+    
+    /// Return a view model for a list of albums, which can return albums in batches.
+    ///
+    /// - Returns: an AlbumBrowseViewModel instance
+    func albumBrowseViewModel() -> AlbumBrowseViewModel
+
+    /// Return a view model for a list of albums filtered by artist, which can return albums in batches.
+    ///
+    /// - Parameter artist: artist to filter on
+    /// - Returns: an AlbumBrowseViewModel instance
+    func albumBrowseViewModel(_ artist: Artist) -> AlbumBrowseViewModel
+
+    /// Return a view model for a list of albums filtered by artist, which can return albums in batches.
+    ///
+    /// - Parameter genre: genre to filter on
+    /// - Returns: an AlbumBrowseViewModel instance
+    func albumBrowseViewModel(_ genre: String) -> AlbumBrowseViewModel
+
+    /// Return a view model for a preloaded list of albums.
+    ///
+    /// - Parameter albums: list of albums to show
+    /// - Returns: an AlbumBrowseViewModel instance
+    func albumBrowseViewModel(_ albums: [Album]) -> AlbumBrowseViewModel
 }
