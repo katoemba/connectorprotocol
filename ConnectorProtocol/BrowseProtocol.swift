@@ -36,6 +36,14 @@ public protocol AlbumBrowseViewModel {
     func extend()
 }
 
+public protocol ArtistBrowseViewModel {
+    var artistsObservable: Driver<[Artist]> { get }
+    var filters: [BrowseFilter] { get }
+    
+    func load()
+    func extend()
+}
+
 /// A protocol to provide a generic interface to a music library.
 public protocol BrowseProtocol {
     /*
@@ -88,12 +96,6 @@ public protocol BrowseProtocol {
     /// - Returns: An observable array of fully populated Album objects.
     func albumsByArtist(_ artist: Artist) -> Observable<[Album]>
 
-    /// Get the albums on which an artist appears.
-    ///
-    /// - Parameter artist: An Artist object.
-    /// - Returns: An observable array of fully populated Album objects.
-    func albumsOnWhichArtistAppears(_ artist: Artist) -> Observable<[Album]>
-
     /// Get the songs on an album
     ///
     /// - Parameter album: An Album object.
@@ -120,7 +122,7 @@ public protocol BrowseProtocol {
     /// - Returns: an AlbumBrowseViewModel instance
     func albumBrowseViewModel(_ artist: Artist) -> AlbumBrowseViewModel
 
-    /// Return a view model for a list of albums filtered by artist, which can return albums in batches.
+    /// Return a view model for a list of albums filtered by genre, which can return albums in batches.
     ///
     /// - Parameter genre: genre to filter on
     /// - Returns: an AlbumBrowseViewModel instance
@@ -131,4 +133,21 @@ public protocol BrowseProtocol {
     /// - Parameter albums: list of albums to show
     /// - Returns: an AlbumBrowseViewModel instance
     func albumBrowseViewModel(_ albums: [Album]) -> AlbumBrowseViewModel
+
+    /// Return a view model for a list of artists, which can return artists in batches.
+    ///
+    /// - Returns: an ArtistBrowseViewModel instance
+    func artistBrowseViewModel() -> ArtistBrowseViewModel
+    
+    /// Return a view model for a list of artists filtered by genre, which can return artist in batches.
+    ///
+    /// - Parameter genre: genre to filter on
+    /// - Returns: an ArtistBrowseViewModel instance
+    func artistBrowseViewModel(_ genre: String) -> ArtistBrowseViewModel
+    
+    /// Return a view model for a preloaded list of artists.
+    ///
+    /// - Parameter artists: list of artists to show
+    /// - Returns: an ArtistBrowseViewModel instance
+    func artistBrowseViewModel(_ artists: [Artist]) -> ArtistBrowseViewModel
 }
