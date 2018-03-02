@@ -90,4 +90,16 @@ public protocol ControlProtocol {
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the album
     func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool)
+    
+    /// Move a song in the playqueue to a different position
+    ///
+    /// - Parameters:
+    ///   - from: the position of the song to change
+    ///   - to: the position to move the song to
+    func moveSong(from: Int, to: Int)
+    
+    /// Remove song from the playqueue
+    ///
+    /// - Parameter at: the position of the song to remove
+    func deleteSong(_ at: Int)
 }
