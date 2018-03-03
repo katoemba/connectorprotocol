@@ -60,6 +60,16 @@ public protocol ControlProtocol {
     ///
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
     func setVolume(volume: Float)
+    
+    /// Seek to a position in the current song
+    ///
+    /// - Parameter seconds: seconds in the current song, must be <= length of the song
+    func setSeek(seconds: UInt32)
+    
+    /// Seek to a relative position in the current song
+    ///
+    /// - Parameter percentage: relative position in the current song, must be between 0.0 and 1.0
+    func setSeek(percentage: Float)
 
     /// Add a song to the play queue
     ///
