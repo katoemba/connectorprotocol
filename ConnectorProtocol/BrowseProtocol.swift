@@ -24,6 +24,8 @@ public enum SortType: String {
 public enum BrowseFilter {
     case genre(String)
     case artist(Artist)
+    case album(Album)
+    case playlist(Playlist)
 }
 
 public protocol AlbumBrowseViewModel {
@@ -40,6 +42,21 @@ public protocol ArtistBrowseViewModel {
     var artistsObservable: Driver<[Artist]> { get }
     var filters: [BrowseFilter] { get }
     
+    func load()
+    func extend()
+}
+
+public protocol PlaylistBrowseViewModel {
+    var playlistsObservable: Driver<[Playlist]> { get }
+    
+    func load()
+    func extend()
+}
+
+public protocol SongBrowseViewModel {
+    var songsObservable: Driver<[Song]> { get }
+    var filters: [BrowseFilter] { get }
+
     func load()
     func extend()
 }
@@ -102,6 +119,12 @@ public protocol BrowseProtocol {
     /// - Returns: An array of fully populated Song objects.
     func songsOnAlbum(_ album: Album) -> Observable<[Song]>
 
+    /// Get the songs in a playlist
+    ///
+    /// - Parameter playlist: A Playlist object.
+    /// - Returns: An array of fully populated Song objects.
+    func songsInPlaylist(_ playlist: Playlist) -> Observable<[Song]>
+    
     /// Search across artists, songs and albums.
     ///
     /// - Parameters:
@@ -150,4 +173,28 @@ public protocol BrowseProtocol {
     /// - Parameter artists: list of artists to show
     /// - Returns: an ArtistBrowseViewModel instance
     func artistBrowseViewModel(_ artists: [Artist]) -> ArtistBrowseViewModel
+
+    /// Return a view model for a list of playlists, which can return playlists in batches.
+    ///
+    /// - Returns: an PlaylistBrowseViewModel instance
+    func playlistBrowseViewModel() -> PlaylistBrowseViewModel
+    
+    /// Return a view model for a preloaded list of playlists.
+    ///
+    /// - Parameter playlists: list of playlists to show
+    /// - Returns: an PlaylistBrowseViewModel instance
+    func playlistBrowseViewModel(_ playlists: [Playlist]) -> PlaylistBrowseViewModel
+
+    /// Return a view model for a preloaded list of songs.
+    ///
+    /// - Parameter songs: list of songs to show
+    /// - Returns: a SongBrowseViewModel instance
+    func songBrowseViewModel(_ songs: [Song]) -> SongBrowseViewModel
+    
+    /// Return a view model for a list of songs in a playlist, which can return songs in batches.
+    ///
+    /// - Parameter playlist: playlist to filter on
+    /// - Returns: a SongBrowseViewModel instance
+    func songBrowseViewModel(_ playlist: Playlist) -> SongBrowseViewModel
+
 }

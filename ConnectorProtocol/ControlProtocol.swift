@@ -101,6 +101,14 @@ public protocol ControlProtocol {
     ///   - shuffle: whether or not to shuffle the album
     func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool)
     
+    /// Add a playlist to the play queue
+    ///
+    /// - Parameters:
+    ///   - playlist: the playlist to add
+    ///   - addMode: how to add the song to the playqueue
+    ///   - shuffle: whether or not to shuffle the playlist
+    func addPlaylist(_ playlist: Playlist, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
+    
     /// Move a song in the playqueue to a different position
     ///
     /// - Parameters:
