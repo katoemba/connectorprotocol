@@ -62,6 +62,9 @@ public protocol PlaylistBrowseViewModel {
     
     func load()
     func extend()
+    
+    func renamePlaylist(_ playlist: Playlist, to: String) -> Playlist
+    func deletePlaylist(_ playlist: Playlist)
 }
 
 public protocol SongBrowseViewModel {
@@ -195,7 +198,7 @@ public protocol BrowseProtocol {
     /// - Parameter playlists: list of playlists to show
     /// - Returns: an PlaylistBrowseViewModel instance
     func playlistBrowseViewModel(_ playlists: [Playlist]) -> PlaylistBrowseViewModel
-
+    
     /// Return a view model for a preloaded list of songs.
     ///
     /// - Parameter songs: list of songs to show

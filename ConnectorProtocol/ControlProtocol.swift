@@ -131,4 +131,9 @@ public protocol ControlProtocol {
     ///
     /// - Parameter at: the position of the song to remove
     func deleteSong(_ at: Int)
+    
+    /// Save the current playqueue as a playlist
+    ///
+    /// - Parameter name: name for the playlist
+    func savePlaylist(_ name: String)
 }
