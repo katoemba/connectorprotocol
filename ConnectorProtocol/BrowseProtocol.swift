@@ -47,6 +47,7 @@ public protocol AlbumBrowseViewModel {
     
     func load(sort: SortType)
     func extend()
+    func extend(to: Int)
 }
 
 public protocol ArtistBrowseViewModel {
