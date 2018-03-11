@@ -205,6 +205,12 @@ public protocol BrowseProtocol {
     /// - Returns: a SongBrowseViewModel instance
     func songBrowseViewModel(_ songs: [Song]) -> SongBrowseViewModel
     
+    /// Return a view model for a list of songs in an album, which can return songs in batches.
+    ///
+    /// - Parameter album: album to filter on
+    /// - Returns: a SongBrowseViewModel instance
+    func songBrowseViewModel(_ album: Album) -> SongBrowseViewModel
+
     /// Return a view model for a list of songs in a playlist, which can return songs in batches.
     ///
     /// - Parameter playlist: playlist to filter on
