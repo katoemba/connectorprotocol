@@ -107,6 +107,9 @@ public struct Song {
     /// URI through which cover art can be fetched.
     public var coverURI = ""
     
+    /// Date the album was last modified.
+    public var lastModified = Date(timeIntervalSince1970: 0)
+
     public init() {
     }
     
