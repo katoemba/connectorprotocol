@@ -29,7 +29,6 @@ public enum SortType: String {
     case artist
     case year
     case yearReverse
-    case recent
 }
 
 public enum BrowseFilter {
@@ -37,6 +36,7 @@ public enum BrowseFilter {
     case artist(Artist)
     case album(Album)
     case playlist(Playlist)
+    case recent(Int)
 }
 
 public protocol AlbumBrowseViewModel {
@@ -46,6 +46,7 @@ public protocol AlbumBrowseViewModel {
     var availableSortOptions: [SortType] { get }
     
     func load(sort: SortType)
+    func load(filters: [BrowseFilter])
     func extend()
     func extend(to: Int)
 }
