@@ -77,6 +77,13 @@ public protocol SongBrowseViewModel {
     func extend()
 }
 
+public protocol GenreBrowseViewModel {
+    var genresObservable: Driver<[String]> { get }
+    
+    func load()
+    func extend()
+}
+
 /// A protocol to provide a generic interface to a music library.
 public protocol BrowseProtocol {
     /*
@@ -219,4 +226,8 @@ public protocol BrowseProtocol {
     /// - Returns: a SongBrowseViewModel instance
     func songBrowseViewModel(_ playlist: Playlist) -> SongBrowseViewModel
 
+    /// Return a view model for a list of genres, which can return genres in batches.
+    ///
+    /// - Returns: an GenreBrowseViewModel instance
+    func genreBrowseViewModel() -> GenreBrowseViewModel
 }
