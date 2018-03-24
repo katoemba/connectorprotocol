@@ -39,6 +39,12 @@ public protocol PlayerProtocol: class {
     /// Property to get the connection parameters so they can be stored in User Defaults
     var connectionProperties: [String: Any] { get }
     
+    /// Optional description of the player
+    var description: String { get }
+    
+    /// Property to get the version of a specific player
+    var version: String { get }
+    
     /// Activate a player. It shall initiate (long-)polling of status updates.
     func activate()
     
