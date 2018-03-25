@@ -86,44 +86,6 @@ public protocol GenreBrowseViewModel {
 
 /// A protocol to provide a generic interface to a music library.
 public protocol BrowseProtocol {
-    /*
-    /// Get a song by its unqiue ID.
-    ///
-    /// - Parameter songID: A string holding the unique ID of the song.
-    /// - Returns: A fully populated Song object, or null in case no song is found for the provided id.
-    func songById(_ songID: String) -> Song?
-    
-    /// Get a song by its location.
-    ///
-    /// - Parameter location: A strong holding the location of the song.
-    /// - Returns: A fully populated Song object, or null in case no song is found for the provided location.
-    func songByLocation(_ location: String) -> Song?
-    
-    /// Get an album by its unique ID.
-    ///
-    /// - Parameter albumID: A string holding the unique ID of the album.
-    /// - Returns: A fully populated Album object, or null in case no album is found for the provided id.
-    func albumById(_ albumID: String) -> Album?
-    
-    /// Get an album by its location.
-    ///
-    /// - Parameter location: A string holding the location of the album.
-    /// - Returns: A fully populated Album object, or null in case no album is found for the provided location.
-    func albumByLocation(_ location: String) -> Album?
-    
-    /// Get the songs on an album
-    ///
-    /// - Parameter album: An Album object.
-    /// - Returns: An array of fully populated Song objects.
-    func songsOnAlbum(_ album: Album) -> [Song]
-
-    /// Get an artist by its unique ID.
-    ///
-    /// - Parameter artistID: A string holding the unique ID of the artist.
-    /// - Returns: A fully populated Artist object, or null in case no artist is found for the provided id.
-    func artistById(_ artistID: String) -> Artist?
-     */
-
     /// Get the songs performed by an artist.
     ///
     /// - Parameter artist: An Artist object.
@@ -230,4 +192,16 @@ public protocol BrowseProtocol {
     ///
     /// - Returns: an GenreBrowseViewModel instance
     func genreBrowseViewModel() -> GenreBrowseViewModel
+    
+    /// Get an Artist object for the artist performing a particular song
+    ///
+    /// - Parameter song: the song for which to get the artist
+    /// - Returns: an observable Artist
+    func artistFromSong(_ song: Song) -> Observable<Artist>
+
+    /// Get an Album object for the album on which a particular song appears
+    ///
+    /// - Parameter song: the song for which to get the album
+    /// - Returns: an observable Album
+    func albumFromSong(_ song: Song) -> Observable<Album>
 }

@@ -35,7 +35,7 @@ public enum ConnectionStatus {
 /// A protocol to provide a generic interface to observe / read the status from a music player.
 public protocol StatusProtocol {
     /// An observable ConnectionStatus value
-    var connectionStatusObservable: Driver<ConnectionStatus> { get }
+    var connectionStatusObservable: Observable<ConnectionStatus> { get }
     
     /// An observable PlayerStatus object
     var playerStatusObservable : Observable<PlayerStatus> { get }
