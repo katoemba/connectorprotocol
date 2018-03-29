@@ -62,6 +62,21 @@ public protocol PlayerProtocol: class {
 
     /// Get a copy of the player object.
     func copy() -> PlayerProtocol
+    
+    /// Get the player specific settings definitions.
+    /// A client can implement a generic settings page from these definitions.
+    var settings: [PlayerSetting] { get }
+    
+    /// Store setting.value into user-defaults and perform any other required actions
+    ///
+    /// - Parameter setting: the settings definition, including the value
+    func updateSetting(_ setting: PlayerSetting)
+    
+    /// Get data for a specific setting
+    ///
+    /// - Parameter id: the id of the setting to load
+    /// - Returns: a new PlayerSetting object containing the value of the requested setting, or nil if the setting is unknown
+    func loadSetting(id: String) -> PlayerSetting?
 }
 
 public protocol PlayerBrowserProtocol {

@@ -43,6 +43,7 @@
 		C57433351F3E10D000615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
 		C57433361F3E10D100615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
 		C57433371F3E10D100615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
+		C5DBB813206AC906006BBC92 /* PlayerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DBB812206AC906006BBC92 /* PlayerSettings.swift */; };
 		C5F569431F7FC48D00D53500 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F569421F7FC48D00D53500 /* SearchResult.swift */; };
 		E89F2C4C3526474621F786E7 /* Pods_ConnectorProtocolTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E1D40428D1683992433830 /* Pods_ConnectorProtocolTests.framework */; };
 /* End PBXBuildFile section */
@@ -90,6 +91,7 @@
 		C548EF3A1FFCDAC300FBE535 /* StatusProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusProtocol.swift; sourceTree = "<group>"; };
 		C54AFF7D204BF46A00CCAE3B /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		C57433311F3E0EC000615237 /* PlayerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerProtocol.swift; sourceTree = "<group>"; };
+		C5DBB812206AC906006BBC92 /* PlayerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettings.swift; sourceTree = "<group>"; };
 		C5F569421F7FC48D00D53500 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		DCB7C89486279D95541DF9EE /* Pods_ConnectorProtocol_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ConnectorProtocol_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DAD91A6F62B18FAC8B3E82 /* Pods-ConnectorProtocolTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConnectorProtocolTests.release.xcconfig"; path = "../Pods/Target Support Files/Pods-ConnectorProtocolTests/Pods-ConnectorProtocolTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 		C546AF7D1F35A8E6003C5B7E /* ConnectorProtocol */ = {
 			isa = PBXGroup;
 			children = (
+				C5DBB812206AC906006BBC92 /* PlayerSettings.swift */,
 				C57433311F3E0EC000615237 /* PlayerProtocol.swift */,
 				C548EF3A1FFCDAC300FBE535 /* StatusProtocol.swift */,
 				C546AF861F35A90A003C5B7E /* ControlProtocol.swift */,
@@ -605,6 +608,7 @@
 				C5F569431F7FC48D00D53500 /* SearchResult.swift in Sources */,
 				C546AF871F35A90A003C5B7E /* ControlProtocol.swift in Sources */,
 				C548EF3B1FFCDAC300FBE535 /* StatusProtocol.swift in Sources */,
+				C5DBB813206AC906006BBC92 /* PlayerSettings.swift in Sources */,
 				C5447EED1FFFF9CE00508649 /* HelpMePlease.swift in Sources */,
 				C546AF8D1F35B3F8003C5B7E /* PlayerStatus.swift in Sources */,
 				C546AF891F35A921003C5B7E /* BrowseProtocol.swift in Sources */,
