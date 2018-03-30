@@ -26,7 +26,6 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
 
 public enum ConnectionProperties: String {
     case Name = "Name"

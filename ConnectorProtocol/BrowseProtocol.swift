@@ -26,7 +26,6 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
 
 public enum SourceType {
     case Unknown, Local, Spotify, TuneIn, Podcast
@@ -47,7 +46,7 @@ public enum BrowseFilter {
 }
 
 public protocol AlbumBrowseViewModel {
-    var albumsObservable: Driver<[Album]> { get }
+    var albumsObservable: Observable<[Album]> { get }
     var filters: [BrowseFilter] { get }
     var sort: SortType { get }
     var availableSortOptions: [SortType] { get }
@@ -59,7 +58,7 @@ public protocol AlbumBrowseViewModel {
 }
 
 public protocol ArtistBrowseViewModel {
-    var artistsObservable: Driver<[Artist]> { get }
+    var artistsObservable: Observable<[Artist]> { get }
     var filters: [BrowseFilter] { get }
     
     func load()
@@ -67,7 +66,7 @@ public protocol ArtistBrowseViewModel {
 }
 
 public protocol PlaylistBrowseViewModel {
-    var playlistsObservable: Driver<[Playlist]> { get }
+    var playlistsObservable: Observable<[Playlist]> { get }
     
     func load()
     func extend()
@@ -77,7 +76,7 @@ public protocol PlaylistBrowseViewModel {
 }
 
 public protocol SongBrowseViewModel {
-    var songsObservable: Driver<[Song]> { get }
+    var songsObservable: Observable<[Song]> { get }
     var filters: [BrowseFilter] { get }
 
     func load()
@@ -85,7 +84,7 @@ public protocol SongBrowseViewModel {
 }
 
 public protocol GenreBrowseViewModel {
-    var genresObservable: Driver<[String]> { get }
+    var genresObservable: Observable<[String]> { get }
     
     func load()
     func extend()

@@ -26,7 +26,6 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
 
 /// The connection status
 ///

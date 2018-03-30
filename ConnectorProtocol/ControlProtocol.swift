@@ -26,7 +26,6 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
 
 public enum AddMode: String {
     case replace
