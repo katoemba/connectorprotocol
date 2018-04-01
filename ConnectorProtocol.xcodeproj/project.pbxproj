@@ -43,6 +43,7 @@
 		C57433351F3E10D000615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
 		C57433361F3E10D100615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
 		C57433371F3E10D100615237 /* PlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57433311F3E0EC000615237 /* PlayerProtocol.swift */; };
+		C5C73C7B2070EF60007DAC5F /* CoverURI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C73C7A2070EF60007DAC5F /* CoverURI.swift */; };
 		C5DBB813206AC906006BBC92 /* PlayerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DBB812206AC906006BBC92 /* PlayerSettings.swift */; };
 		C5F569431F7FC48D00D53500 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F569421F7FC48D00D53500 /* SearchResult.swift */; };
 		E89F2C4C3526474621F786E7 /* Pods_ConnectorProtocolTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E1D40428D1683992433830 /* Pods_ConnectorProtocolTests.framework */; };
@@ -91,6 +92,7 @@
 		C548EF3A1FFCDAC300FBE535 /* StatusProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusProtocol.swift; sourceTree = "<group>"; };
 		C54AFF7D204BF46A00CCAE3B /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		C57433311F3E0EC000615237 /* PlayerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerProtocol.swift; sourceTree = "<group>"; };
+		C5C73C7A2070EF60007DAC5F /* CoverURI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverURI.swift; sourceTree = "<group>"; };
 		C5DBB812206AC906006BBC92 /* PlayerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettings.swift; sourceTree = "<group>"; };
 		C5F569421F7FC48D00D53500 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		DCB7C89486279D95541DF9EE /* Pods_ConnectorProtocol_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ConnectorProtocol_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -195,6 +197,7 @@
 				C546AF861F35A90A003C5B7E /* ControlProtocol.swift */,
 				C546AF881F35A921003C5B7E /* BrowseProtocol.swift */,
 				C546AF8A1F35A93E003C5B7E /* PlayqueueProtocol.swift */,
+				C5C73C7A2070EF60007DAC5F /* CoverURI.swift */,
 				C546AF8E1F35D6EE003C5B7E /* Song.swift */,
 				C546AF901F35DBE9003C5B7E /* Album.swift */,
 				C546AF921F35E2BB003C5B7E /* Artist.swift */,
@@ -610,6 +613,7 @@
 				C57433351F3E10D000615237 /* PlayerProtocol.swift in Sources */,
 				C546AF911F35DBE9003C5B7E /* Album.swift in Sources */,
 				C546AF931F35E2BB003C5B7E /* Artist.swift in Sources */,
+				C5C73C7B2070EF60007DAC5F /* CoverURI.swift in Sources */,
 				C54AFF7E204BF46A00CCAE3B /* Playlist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -112,7 +112,7 @@ public struct Song {
     public var sortAlbum = ""
     
     /// URI through which cover art can be fetched.
-    public var coverURI = ""
+    public var coverURI = CoverURI.fullPathURI("")
     
     /// Date the album was last modified.
     public var lastModified = Date(timeIntervalSince1970: 0)
