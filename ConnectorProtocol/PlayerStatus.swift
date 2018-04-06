@@ -104,7 +104,7 @@ extension TimeStatus: CustomDebugStringConvertible {
 // MARK: - QualityStatus Struct
 
 public struct QualityStatus {
-    public var bitrate = ""
+    public var samplerate = ""
     public var encoding = ""
     public var channels = ""
 
@@ -112,21 +112,21 @@ public struct QualityStatus {
     }
 
     public init(_ from: QualityStatus) {
-        bitrate = from.bitrate
+        samplerate = from.samplerate
         encoding = from.encoding
         channels = from.channels
     }
 }
 extension QualityStatus: Equatable {}
 public func ==(lhs: QualityStatus, rhs: QualityStatus) -> Bool {
-    return lhs.bitrate == rhs.bitrate &&
+    return lhs.samplerate == rhs.samplerate &&
         lhs.encoding == rhs.encoding &&
         lhs.channels == rhs.channels
 }
 extension QualityStatus: CustomStringConvertible {
     public var description: String {
         return "> QualityStatus\n" +
-            "    bitrate = \(bitrate)\n" +
+            "    bitrate = \(samplerate)\n" +
             "    encoding = \(encoding)\n" +
         "    channels = \(channels)\n"
     }
@@ -134,7 +134,7 @@ extension QualityStatus: CustomStringConvertible {
 extension QualityStatus: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "> QualityStatus\n" +
-            "    bitrate = \(bitrate)\n" +
+            "    bitrate = \(samplerate)\n" +
             "    encoding = \(encoding)\n" +
         "    channels = \(channels)\n"
     }
