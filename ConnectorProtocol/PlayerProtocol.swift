@@ -42,6 +42,9 @@ public protocol PlayerProtocol: class {
     /// Name of a player. Implementation will be backend specific.
     var name: String { get }
     
+    /// Description of the model of player. Implementation will be backend specific.
+    var model: String { get }
+    
     /// Property to get the connection parameters so they can be stored in User Defaults
     var connectionProperties: [String: Any] { get }
     
