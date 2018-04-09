@@ -224,6 +224,7 @@ public struct PlayerStatus {
     public var currentSong = Song()
     public var quality = QualityStatus()
     public var volume = Float(0)
+    public var volumeEnabled = true
     public var playqueue = PlayqueueStatus()
     public var playing = PlayStatus()
     
@@ -234,6 +235,7 @@ public struct PlayerStatus {
         currentSong = from.currentSong
         quality = from.quality
         volume = from.volume
+        volumeEnabled = from.volumeEnabled
         playqueue = from.playqueue
         playing = from.playing
     }
@@ -247,6 +249,7 @@ extension PlayerStatus: CustomStringConvertible {
             "   \(quality)" +
             "   \(playqueue)" +
             "   \(playing)" +
+            "   volumeEnabled = \(volumeEnabled)" +
         "    volume = \(volume)\n"
     }
 }
@@ -258,6 +261,7 @@ extension PlayerStatus: CustomDebugStringConvertible {
             "   \(quality)" +
             "   \(playqueue)" +
             "   \(playing)" +
+            "   volumeEnabled = \(volumeEnabled)" +
         "    volume = \(volume)\n"
     }
 }
