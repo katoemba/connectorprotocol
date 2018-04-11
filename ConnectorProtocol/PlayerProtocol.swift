@@ -74,7 +74,7 @@ public protocol PlayerProtocol: class {
     
     /// Get the player specific settings definitions.
     /// A client can implement a generic settings page from these definitions.
-    var settings: [PlayerSetting] { get }
+    var settings: [PlayerSettingGroup] { get }
     
     /// Store setting.value into user-defaults and perform any other required actions
     ///

@@ -25,11 +25,14 @@
 //
 
 import Foundation
+import RxSwift
 
 public enum PlayerSettingType {
     case string
     case selection
     case toggle
+    case action
+    case dynamic
 }
 
 /// Base class for player specific settings.
@@ -78,5 +81,37 @@ public class SelectionSetting: PlayerSetting {
         self.items = items
         self.value = value
         super.init(type: .selection, id: id, description: description)
+    }
+}
+
+/// A setting that holds a single selection from a list of options.
+public class ActionSetting: PlayerSetting {
+    public var action: () -> Void
+
+    public init(id: String, description: String, action: @escaping () -> Void) {
+        self.action = action
+        super.init(type: .action, id: id, description: description)
+    }
+}
+
+/// A setting that holds a single selection from a list of options.
+public class DynamicSetting: PlayerSetting {
+    public var titleObservable: Observable<String>
+    
+    public init(id: String, description: String, titleObservable: Observable<String>) {
+        self.titleObservable = titleObservable
+        super.init(type: .dynamic, id: id, description: description)
+    }
+}
+
+public class PlayerSettingGroup {
+    public var title: String
+    public var description: String
+    public var settings: [PlayerSetting]
+    
+    public init(title: String, description: String, settings: [PlayerSetting]) {
+        self.title = title
+        self.description = description
+        self.settings = settings
     }
 }
