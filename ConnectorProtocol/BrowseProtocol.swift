@@ -45,7 +45,16 @@ public enum BrowseFilter {
     case recent(Int)
 }
 
+public enum LoadProgress {
+    case notStarted
+    case loading
+    case dataAvailable
+    case noDataFound
+    case allDataLoaded
+}
+
 public protocol AlbumBrowseViewModel {
+    var loadProgressObservable: Observable<LoadProgress> { get }
     var albumsObservable: Observable<[Album]> { get }
     var filters: [BrowseFilter] { get }
     var sort: SortType { get }
@@ -58,6 +67,7 @@ public protocol AlbumBrowseViewModel {
 }
 
 public protocol ArtistBrowseViewModel {
+    var loadProgressObservable: Observable<LoadProgress> { get }
     var artistsObservable: Observable<[Artist]> { get }
     var filters: [BrowseFilter] { get }
     
@@ -66,6 +76,7 @@ public protocol ArtistBrowseViewModel {
 }
 
 public protocol PlaylistBrowseViewModel {
+    var loadProgressObservable: Observable<LoadProgress> { get }
     var playlistsObservable: Observable<[Playlist]> { get }
     
     func load()
@@ -76,6 +87,7 @@ public protocol PlaylistBrowseViewModel {
 }
 
 public protocol SongBrowseViewModel {
+    var loadProgressObservable: Observable<LoadProgress> { get }
     var songsObservable: Observable<[Song]> { get }
     var filters: [BrowseFilter] { get }
 
@@ -84,6 +96,7 @@ public protocol SongBrowseViewModel {
 }
 
 public protocol GenreBrowseViewModel {
+    var loadProgressObservable: Observable<LoadProgress> { get }
     var genresObservable: Observable<[String]> { get }
     
     func load()
