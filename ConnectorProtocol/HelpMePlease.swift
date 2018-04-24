@@ -25,23 +25,33 @@
 //
 
 import Foundation
+import RxSwift
 
 public class HelpMePlease {
     public static var logAllocations = false
     private static var allocCounter = [String: Int]()
+    private static var serialScheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "HelpMe")
     
     public static func allocUp(name: String) {
         if logAllocations {
-            let count = allocCounter[name] ?? 0
-            allocCounter[name] = count + 1
-            print("allocUp(\(name)) -> \(count + 1)")
+            _ = Observable.just(1)
+                .observeOn(serialScheduler)
+                .subscribe(onNext: { (_) in
+                    let count = allocCounter[name] ?? 0
+                    allocCounter[name] = count + 1
+                    print("allocUp(\(name)) -> \(count + 1)")
+                })
         }
     }
     public static func allocDown(name: String) {
         if logAllocations {
-            let count = allocCounter[name] ?? 0
-            allocCounter[name] = count - 1
-            print("allocDown(\(name)) -> \(count - 1)")
+            _ = Observable.just(1)
+                .observeOn(serialScheduler)
+                .subscribe(onNext: { (_) in
+                    let count = allocCounter[name] ?? 0
+                    allocCounter[name] = count - 1
+                    print("allocDown(\(name)) -> \(count - 1)")
+                })
         }
     }
 }
