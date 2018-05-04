@@ -108,6 +108,7 @@ public protocol ControlProtocol {
     ///   - album: the album to add
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the album
+    ///   - startWithSong: the position of the song (within the album) to start playing
     func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
 
     /// Add an artist to the play queue
@@ -124,6 +125,7 @@ public protocol ControlProtocol {
     ///   - playlist: the playlist to add
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the playlist
+    ///   - startWithSong: the position of the song (within the playlist) to start playing
     func addPlaylist(_ playlist: Playlist, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
     
     /// Add a genre to the play queue
@@ -133,6 +135,15 @@ public protocol ControlProtocol {
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the genre
     func addGenre(_ genre: String, addMode: AddMode, shuffle: Bool)
+    
+    /// Add a folder to the play queue
+    ///
+    /// - Parameters:
+    ///   - folder: the folder to add
+    ///   - addMode: how to add the folder to the playqueue
+    ///   - shuffle: whether or not to shuffle the folder
+    ///   - startWithSong: the position of the song (within the folder) to start playing
+    func addFolder(_ folder: Folder, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
     
     /// Move a song in the playqueue to a different position
     ///

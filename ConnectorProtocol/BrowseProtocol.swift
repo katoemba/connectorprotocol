@@ -43,6 +43,7 @@ public enum BrowseFilter {
     case album(Album)
     case playlist(Playlist)
     case recent(Int)
+    case folder(Folder)
 }
 
 public enum LoadProgress {
@@ -51,6 +52,11 @@ public enum LoadProgress {
     case dataAvailable
     case noDataFound
     case allDataLoaded
+}
+
+public enum FolderContent {
+    case folder(Folder)
+    case song(Song)
 }
 
 public protocol AlbumBrowseViewModel {
@@ -99,6 +105,15 @@ public protocol GenreBrowseViewModel {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var genresObservable: Observable<[String]> { get }
     
+    func load()
+    func extend()
+}
+
+public protocol FolderBrowseViewModel {
+    var loadProgressObservable: Observable<LoadProgress> { get }
+    var folderContentsObservable: Observable<[FolderContent]> { get }
+    var parentFolder: Folder? { get }
+
     func load()
     func extend()
 }
@@ -212,6 +227,17 @@ public protocol BrowseProtocol {
     /// - Returns: an GenreBrowseViewModel instance
     func genreBrowseViewModel() -> GenreBrowseViewModel
     
+    /// Return a view model for a list of items in the root folder. Contents might be returned in batches.
+    ///
+    /// - Returns: an observable FolderContent
+    func folderContentsBrowseViewModel() -> FolderBrowseViewModel
+    
+    /// Return a view model for a list of items in a folder. Contents might be returned in batches.
+    ///
+    /// - Parameter folder: folder for which to get the contents. May be left empty to start from the root.
+    /// - Returns: an observable FolderContent
+    func folderContentsBrowseViewModel(_ parentFolder: Folder) -> FolderBrowseViewModel
+
     /// Get an Artist object for the artist performing a particular song
     ///
     /// - Parameter song: the song for which to get the artist
