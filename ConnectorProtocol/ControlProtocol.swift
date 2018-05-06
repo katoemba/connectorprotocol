@@ -161,4 +161,7 @@ public protocol ControlProtocol {
     ///
     /// - Parameter name: name for the playlist
     func savePlaylist(_ name: String)
+    
+    /// Clear the active playqueue
+    func clearPlayqueue()
 }
