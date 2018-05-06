@@ -34,8 +34,19 @@ public enum ConnectionProperties: String {
     case Password = "Password"
 }
 
+public enum DiscoverMode: String {
+    case automatic = "automatic"
+    case manual = "manual"
+}
+
 /// A protocol to provide a generic interface to control a network music player.
 public protocol PlayerProtocol: class {
+    /// String that identifies the Controller Type.
+    var controllerType: String { get }
+    
+    /// How the player was discovered.
+    var discoverMode: DiscoverMode { get }
+    
     /// String that uniquely identifies a player. Implementation will be backend specific.
     var uniqueID: String { get }
     
@@ -97,6 +108,22 @@ public protocol PlayerBrowserProtocol {
     
     /// Stop listening for players on the network.
     func stopListening()
+
+    /// Manually create a player based on the connection properties
+    ///
+    /// - Parameter connectionProperties: dictionary of connection properties
+    /// - Returns: An observable on which a created Player can published.
+    func playerForConnectionProperties(_ connectionProperties: [String: Any]) -> Observable<PlayerProtocol?>
+    
+    /// Persist a manually added player in user defaults
+    ///
+    /// - Parameter connectionProperties: the connection properties for the player
+    func persistPlayer(_ connectionProperties: [String: Any])
+
+    /// Remove a manually added player from user defaults
+    ///
+    /// - Parameter player: the player to remove
+    func removePlayer(_ player: PlayerProtocol)
 }
 
 /// This wrapper class is a work-around for Swift restrictions on Protocols and Associated Types.
