@@ -10,40 +10,33 @@ a single client that supports multiple player types.
 
 ### What are the building blocks of this Protocol? ###
 
-* The protocol uses reactive constructs, based on RxSwift.
+* The protocol relies heavily on reactive constructs, using RxSwift.
 * ConnectorProtocol consist of five sub-protocols:
-  * PlayerProtocol defines a basic player, access status, control and browse implementation, 
-    plus functions to maintain player-specific settings.
-  * PlayerBrowserProtocol is a generic protocol to detect players on the network.
-  * StatusProtocol is a protocol through which the connection status of a player, 
-    as well as the music-playing status can be monitored.
-  * ControlProtocol is a protocol through which commands can be sent to a player, like play, pause, add a song etc.
-  * BrowseProtocol is a protocol through which you can browse through the music on a player. 
-    It defines various ViewModels for artists, albums, genres etc.
+	  * PlayerProtocol defines a basic player, access status, control and browse implementation, plus functions to maintain player-specific settings.
+	  * PlayerBrowserProtocol is a generic protocol to detect players on the network.
+	  * StatusProtocol is a protocol through which the connection status of a player, as well as the music-playing status can be monitored.
+	  * ControlProtocol is a protocol through which commands can be sent to a player, like play, pause, add a song etc.
+	  * BrowseProtocol is a protocol through which you can browse through the music on a player. It defines various ViewModels for artists, albums, genres etc.
 * A number of basic objects are defined:
-  * Album
-  * Artist
-  * Song
-  * Playlist
-  * Folder
-  * PlayerStatus
-
+	* Album
+	* Artist
+	* Song
+	* Playlist
+	* Folder
+	* PlayerStatus
+* The protocol is meant to be independent of the target platform (iOS, MacOS, tvOS). However testing is only done on iOS.
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* For now you will have to manually copy the ConnectorProtocol into a project.
+* ConnectorProtocol depends on the following libraries:
+	* RxSwift v4
+	* RxBlocking v4 for the unit test part
 
-### Contribution guidelines ###
+### Testing ###
 
-* Writing tests
-* Code review
-* Other guidelines
+* A very limited set of unit tests is included.
 
 ### Who do I talk to? ###
 
-* In case of questions you can contact berrie @ rigelian dot net
+* In case of questions you can contact berrie at rigelian dot net
