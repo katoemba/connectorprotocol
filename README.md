@@ -5,8 +5,8 @@
 * ConnectorProtocol is a generic protocol specification to control a network based music player for Swift.
 The protocol abstracts a player specific implementation from a client implementation, which allows to have
 a single client that supports multiple player types.
-* MPDConnector is a full implementation of this protocol for the MPD protocol.
-* These two libraries are the foundation of the Rigelian MPD client, for more info see http://www.rigelian.net
+* MPDConnector is a full implementation of this protocol for the MPD protocol: https://bitbucket.org/musicremote/mpdconnector/
+* These two frameworks are the foundation of the Rigelian MPD client, for more info see http://www.rigelian.net
 
 ### What are the building blocks of this Protocol? ###
 
@@ -28,7 +28,7 @@ a single client that supports multiple player types.
 
 ### How do I get set up? ###
 
-* For now you will have to manually copy the ConnectorProtocol into a project.
+* For now you will have to manually copy ConnectorProtocol into a project.
 * ConnectorProtocol depends on the following libraries:
 	* RxSwift v4
 	* RxBlocking v4 for the unit test part
