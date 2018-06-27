@@ -28,14 +28,14 @@ import Foundation
 
 public enum CoverURI {
     case fullPathURI(String)
-    case filenameOptionsURI(String, [String])
+    case filenameOptionsURI(String, String, [String])
     
     public var baseUri: String {
         get {
             switch self {
             case let .fullPathURI(uri):
                 return uri
-            case let .filenameOptionsURI(baseUri, _):
+            case let .filenameOptionsURI(baseUri, _, _):
                 return baseUri
             }
         }
@@ -46,10 +46,21 @@ public enum CoverURI {
             switch self {
             case let .fullPathURI(uri):
                 return [uri]
-            case let .filenameOptionsURI(baseUri, possibleFilenames):
+            case let .filenameOptionsURI(baseUri, _, possibleFilenames):
                 return possibleFilenames.map({ (possibleFilename) -> String in
                     "\(baseUri)\(possibleFilename)"
                 })
+            }
+        }
+    }
+    
+    public var path: String {
+        get {
+            switch self {
+            case .fullPathURI(_):
+                return ""
+            case let .filenameOptionsURI(_, path, _):
+                return path
             }
         }
     }
@@ -60,7 +71,7 @@ public func ==(lhs: CoverURI, rhs: CoverURI) -> Bool {
     switch (lhs, rhs) {
     case let (.fullPathURI(uriB), .fullPathURI(uriA)):
         return uriA == uriB
-    case let (.filenameOptionsURI(baseUriA, possibleFilenamesA), .filenameOptionsURI(baseUriB, possibleFilenamesB)):
+    case let (.filenameOptionsURI(baseUriA, _, possibleFilenamesA), .filenameOptionsURI(baseUriB, _, possibleFilenamesB)):
         return baseUriA == baseUriB && possibleFilenamesA == possibleFilenamesB
     default:
         return false

@@ -251,4 +251,10 @@ public protocol BrowseProtocol {
     /// - Parameter song: the song for which to get the album
     /// - Returns: an observable Album
     func albumFromSong(_ song: Song) -> Observable<Album>
+    
+    /// Preprocess a CoverURI. This allows additional processing of base URI data.
+    ///
+    /// - Parameter coverURI: the CoverURI to pre-process
+    /// - Returns: the processed cover URI
+    func preprocessCoverURI(_ coverURI: CoverURI) -> Observable<CoverURI>
 }
