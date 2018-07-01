@@ -35,6 +35,7 @@ public enum SortType: String {
     case artist
     case year
     case yearReverse
+    case title
 }
 
 public enum BrowseFilter {
