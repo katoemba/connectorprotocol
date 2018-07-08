@@ -26,10 +26,20 @@
 
 import Foundation
 
+public enum ArtistType {
+    case artist
+    case albumArtist
+    case performer
+    case composer
+}
+
 /// A struct defining a generic Artist object.
 public struct Artist {
     /// A unique id for the artist. Usage depends on library implementation.
     public var id = ""
+    
+    /// The type of artist, this type is used generically for artists, performers and composers
+    public var type = ArtistType.artist
     
     /// The source of this song (i.e. the service like Spotify, LocalMusic etc).
     public var source = SourceType.Unknown
@@ -41,9 +51,11 @@ public struct Artist {
     }
     
     public init(id: String,
+                type: ArtistType = .artist,
                 source: SourceType,
                 name: String) {
         self.id = id
+        self.type = type
         self.source = source
         self.name = name
     }
@@ -51,7 +63,7 @@ public struct Artist {
 
 extension Artist: Equatable {}
 public func ==(lhs: Artist, rhs: Artist) -> Bool {
-    return lhs.id == rhs.id && lhs.source == rhs.source
+    return lhs.id == rhs.id && lhs.source == rhs.source && lhs.type == rhs.type
 }
 
 extension Artist: Hashable {
@@ -64,6 +76,7 @@ extension Artist: CustomStringConvertible {
     public var description: String {
         return "> Artist\n" +
             "    id = \(id)\n" +
+            "    type = \(type)\n" +
             "    source = \(source)\n" +
             "    name = \(name)\n"
     }
@@ -73,6 +86,7 @@ extension Artist: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "> Artist\n" +
             "    id = \(id)\n" +
+            "    type = \(type)\n" +
             "    source = \(source)\n" +
             "    name = \(name)\n"
     }

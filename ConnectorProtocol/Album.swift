@@ -47,7 +47,7 @@ public struct Album {
     public var year = 0
     
     /// The name of the genre to which the album belongs.
-    public var genre = ""
+    public var genre = [] as [String]
 
     /// The total duration of the album in seconds.
     public var length = 0
@@ -67,7 +67,7 @@ public struct Album {
                 title: String,
                 artist: String,
                 year: Int,
-                genre: String,
+                genre: [String],
                 length: Int) {
         self.id = id
         self.source = source

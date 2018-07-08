@@ -45,7 +45,7 @@ public enum BrowseFilter {
     case playlist(Playlist)
     case recent(Int)
     case folder(Folder)
-    case albumArtist
+    case type(ArtistType)
 }
 
 public enum LoadProgress {
@@ -182,13 +182,13 @@ public protocol BrowseProtocol {
     /// Return a view model for a list of artists, which can return artists in batches.
     ///
     /// - Returns: an ArtistBrowseViewModel instance
-    func artistBrowseViewModel(albumArtist: Bool) -> ArtistBrowseViewModel
+    func artistBrowseViewModel(type: ArtistType) -> ArtistBrowseViewModel
     
     /// Return a view model for a list of artists filtered by genre, which can return artist in batches.
     ///
     /// - Parameter genre: genre to filter on
     /// - Returns: an ArtistBrowseViewModel instance
-    func artistBrowseViewModel(_ genre: String, albumArtist: Bool) -> ArtistBrowseViewModel
+    func artistBrowseViewModel(_ genre: String, type: ArtistType) -> ArtistBrowseViewModel
     
     /// Return a view model for a preloaded list of artists.
     ///

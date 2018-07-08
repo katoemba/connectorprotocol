@@ -56,7 +56,7 @@ public struct Song {
     public var year = 0
     
     /// The name of the genre to which the song belongs.
-    public var genre = ""
+    public var genre = [] as [String]
     
     /// The duration of the song in seconds.
     public var length = 0
@@ -129,7 +129,7 @@ public struct Song {
                 albumartist: String,
                 composer: String,
                 year: Int,
-                genre: String,
+                genre: [String],
                 length: Int,
                 bitrate: String,
                 encoding: String,
