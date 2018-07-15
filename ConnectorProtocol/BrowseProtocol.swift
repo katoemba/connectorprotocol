@@ -132,9 +132,11 @@ public protocol BrowseProtocol {
  
     /// Get the albums released by an artist (based on albumartist).
     ///
-    /// - Parameter artist: An Artist object.
+    /// - Parameters:
+    ///   - artist: An Artist object.
+    ///   - sort: How to sort the albums.
     /// - Returns: An observable array of fully populated Album objects.
-    func albumsByArtist(_ artist: Artist) -> Observable<[Album]>
+    func albumsByArtist(_ artist: Artist, sort: SortType) -> Observable<[Album]>
 
     /// Get the songs on an album
     ///
