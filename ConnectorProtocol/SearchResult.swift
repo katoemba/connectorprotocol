@@ -30,7 +30,9 @@ public struct SearchResult {
     public var songs = [Song]()
     public var albums = [Album]()
     public var artists = [Artist]()
-    
+    public var composers = [Artist]()
+    public var performers = [Artist]()
+
     public init() {
     }
 }

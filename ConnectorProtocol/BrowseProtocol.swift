@@ -78,6 +78,7 @@ public protocol ArtistBrowseViewModel {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var artistsObservable: Observable<[Artist]> { get }
     var filters: [BrowseFilter] { get }
+    var artistType: ArtistType { get }
     
     func load()
     func load(filters: [BrowseFilter])
