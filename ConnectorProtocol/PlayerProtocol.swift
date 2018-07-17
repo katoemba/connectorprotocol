@@ -65,6 +65,9 @@ public protocol PlayerProtocol: class {
     /// Property to get the version of a specific player
     var version: String { get }
     
+    /// Property to get an optional connection warning of a specific player, like incompatible version
+    var connectionWarning: String? { get }
+    
     /// Activate a player. It shall initiate (long-)polling of status updates.
     func activate()
     

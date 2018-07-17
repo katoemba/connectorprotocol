@@ -54,10 +54,12 @@ public class PlayerSetting {
 public class StringSetting: PlayerSetting {
     public var placeholder: String
     public var value: String
+    public var conceil: Bool
     
-    public init(id: String, description: String, placeholder: String, value: String) {
+    public init(id: String, description: String, placeholder: String, value: String, conceil: Bool = false) {
         self.placeholder = placeholder
         self.value = value
+        self.conceil = conceil
         super.init(type: .string, id: id, description: description)
     }
 }
