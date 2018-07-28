@@ -47,17 +47,36 @@ public struct Artist {
     /// The name of the artist.
     public var name = ""
     
+    /// The sortation name of the artist.
+    public var sortName = ""
+    
     public init() {
     }
     
     public init(id: String,
                 type: ArtistType = .artist,
                 source: SourceType,
-                name: String) {
+                name: String,
+                sortName: String = "") {
         self.id = id
         self.type = type
         self.source = source
         self.name = name
+        self.sortName = Artist.sortName(sortName: sortName, name: name)
+    }
+    
+    static func sortName(sortName: String, name: String) -> String {
+        if sortName != "" {
+            return sortName
+        }
+        else {
+            if name != "The The" && (name.starts(with: "The ") || name.starts(with: "the ")) {
+                return "\(name.dropFirst(4)), The"
+            }
+            else {
+                return name
+            }
+        }
     }
 }
 
@@ -78,7 +97,8 @@ extension Artist: CustomStringConvertible {
             "    id = \(id)\n" +
             "    type = \(type)\n" +
             "    source = \(source)\n" +
-            "    name = \(name)\n"
+            "    name = \(name)\n" +
+            "    sortName = \(sortName)\n"
     }
 }
 
@@ -87,7 +107,7 @@ extension Artist: CustomDebugStringConvertible {
         return "> Artist\n" +
             "    id = \(id)\n" +
             "    type = \(type)\n" +
-            "    source = \(source)\n" +
-            "    name = \(name)\n"
+            "    name = \(name)\n" +
+            "    sortName = \(sortName)\n"
     }
 }

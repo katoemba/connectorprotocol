@@ -50,7 +50,7 @@ class DataTests: XCTestCase {
                          albumartist: "albumartist",
                          composer: "composer",
                          year: 1000,
-                         genre: "genre",
+                         genre: ["genre"],
                          length: 100,
                          bitrate: "bitrate",
                          encoding: "encoding")
@@ -63,7 +63,7 @@ class DataTests: XCTestCase {
                          albumartist: "albumartistx",
                          composer: "composerx",
                          year: 1001,
-                         genre: "genrex",
+                         genre: ["genrex"],
                          length: 101,
                          bitrate: "bitratex",
                          encoding: "encodingx")
@@ -83,7 +83,7 @@ class DataTests: XCTestCase {
                          albumartist: "albumartist",
                          composer: "composer",
                          year: 1000,
-                         genre: "genre",
+                         genre: ["genre"],
                          length: 100,
                          bitrate: "bitrate",
                          encoding: "encoding")
@@ -96,7 +96,7 @@ class DataTests: XCTestCase {
                          albumartist: "albumartist",
                          composer: "composer",
                          year: 1000,
-                         genre: "genrex=",
+                         genre: ["genrex="],
                          length: 100,
                          bitrate: "bitrate",
                          encoding: "encoding")
@@ -116,7 +116,7 @@ class DataTests: XCTestCase {
                          albumartist: "albumartist",
                          composer: "composer",
                          year: 1000,
-                         genre: "genre",
+                         genre: ["genre"],
                          length: 100,
                          bitrate: "bitrate",
                          encoding: "encoding")
@@ -129,7 +129,7 @@ class DataTests: XCTestCase {
                          albumartist: "albumartist",
                          composer: "composer",
                          year: 1000,
-                         genre: "genrex=",
+                         genre: ["genrex="],
                          length: 100,
                          bitrate: "bitrate",
                          encoding: "encoding")
@@ -146,7 +146,7 @@ class DataTests: XCTestCase {
                          title: "title",
                          artist: "artist",
                          year: 1000,
-                         genre: "genre",
+                         genre: ["genre"],
                          length: 100)
         let album2 = Album(id: "123",
                            source: .Local,
@@ -154,7 +154,7 @@ class DataTests: XCTestCase {
                          title: "titlex",
                          artist: "artistx",
                          year: 1001,
-                         genre: "genrex",
+                         genre: ["genrex"],
                          length: 101)
         
         // Then they are treated equal
@@ -169,7 +169,7 @@ class DataTests: XCTestCase {
                            title: "title",
                            artist: "artist",
                            year: 1000,
-                           genre: "genre",
+                           genre: ["genre"],
                            length: 100)
         let artist2 = Album(id: "345",
                             source: .Local,
@@ -177,7 +177,7 @@ class DataTests: XCTestCase {
                            title: "title",
                            artist: "artist",
                            year: 1000,
-                           genre: "genre",
+                           genre: ["genre"],
                            length: 100)
         
         // Then they are treated as not equal
@@ -192,7 +192,7 @@ class DataTests: XCTestCase {
                             title: "title",
                             artist: "artist",
                             year: 1000,
-                            genre: "genre",
+                            genre: ["genre"],
                             length: 100)
         let artist2 = Album(id: "123",
                             source: .Spotify,
@@ -200,7 +200,7 @@ class DataTests: XCTestCase {
                             title: "title",
                             artist: "artist",
                             year: 1000,
-                            genre: "genre",
+                            genre: ["genre"],
                             length: 100)
         
         // Then they are treated as not equal
@@ -268,5 +268,37 @@ class DataTests: XCTestCase {
         XCTAssert(time.elapsedTimeString == "16:40", "ElapsedTimeString: expected 16:40, got \(time.elapsedTimeString)")
         XCTAssert(time.trackTimeString == "41:40", "TrackTimeString: expected 41:40, got \(time.trackTimeString)")
         XCTAssert(time.remainingTimeString == "25:00", "RemainingTimeString: expected 25:00, got \(time.remainingTimeString)")
+    }
+    
+    func testArtistSort() {
+        let arcadeFire = Artist(id: "Arcade Fire", type: .artist, source: .Local, name: "Arcade Fire", sortName: "Arcade Fire")
+        XCTAssert(arcadeFire.sortName == "Arcade Fire", "sortName: expected 'Arcade Fire', got \(arcadeFire.sortName)")
+
+        let foetus = Artist(id: "Scraping Foetus off the Wheel", type: .artist, source: .Local, name: "Scraping Foetus off the Wheel", sortName: "Foetus")
+        XCTAssert(foetus.sortName == "Foetus", "sortName: expected 'Foetus', got \(foetus.sortName)")
+
+        let replacements = Artist(id: "The Replacements", type: .artist, source: .Local, name: "The Replacements", sortName: "")
+        XCTAssert(replacements.sortName == "Replacements, The", "sortName: expected 'Replacements, The', got \(replacements.sortName)")
+
+        let huskerdu = Artist(id: "Hüsker Dü", type: .artist, source: .Local, name: "Hüsker Dü", sortName: "")
+        XCTAssert(huskerdu.sortName == "Hüsker Dü", "sortName: expected 'Hüsker Dü', got \(huskerdu.sortName)")
+    }
+    
+    func testAlbumSort() {
+        let arcadeFire = Album(id: "Everything Now", source: .Local, location: "/a/b", title: "Everything Now", artist: "Everything Now", year: 2000, genre: ["Alternative"], length: 3000, sortTitle: "Everything Now", sortArtist: "Arcade Fire")
+        XCTAssert(arcadeFire.sortArtist == "Arcade Fire", "sortName: expected 'Arcade Fire', got \(arcadeFire.sortArtist)")
+        XCTAssert(arcadeFire.sortTitle == "Everything Now", "sortName: expected 'Everything Now', got \(arcadeFire.sortTitle)")
+
+        let foetus = Album(id: "Nail", source: .Local, location: "/a/b", title: "Nail", artist: "Scraping Foetus off the Wheel", year: 2000, genre: ["Alternative"], length: 3000, sortTitle: "Hole", sortArtist: "Foetus")
+        XCTAssert(foetus.sortArtist == "Foetus", "sortName: expected 'Foetus', got \(foetus.sortArtist)")
+        XCTAssert(foetus.sortTitle == "Hole", "sortName: expected 'Hole', got \(foetus.sortTitle)")
+
+        let replacements = Album(id: "Tim", source: .Local, location: "/a/b", title: "Tim", artist: "The Replacements", year: 2000, genre: ["Alternative"], length: 3000, sortTitle: "", sortArtist: "")
+        XCTAssert(replacements.sortArtist == "Replacements, The", "sortName: expected 'Replacements, The', got \(replacements.sortArtist)")
+        XCTAssert(replacements.sortTitle == "Tim", "sortName: expected 'Tim', got \(replacements.sortTitle)")
+
+        let huskerdu = Album(id: "Flip your Wig", source: .Local, location: "/a/b", title: "Flip your Wig", artist: "Hüsker Dü", year: 2000, genre: ["Alternative"], length: 3000, sortTitle: "", sortArtist: "")
+        XCTAssert(huskerdu.sortArtist == "Hüsker Dü", "sortName: expected 'Hüsker Dü', got \(huskerdu.sortArtist)")
+        XCTAssert(huskerdu.sortTitle == "Flip your Wig", "sortName: expected 'Flip your Wig', got \(huskerdu.sortTitle)")
     }
 }

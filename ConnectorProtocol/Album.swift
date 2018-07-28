@@ -40,9 +40,15 @@ public struct Album {
     /// The title of the album.
     public var title = ""
     
+    /// The sortation title of the album.
+    public var sortTitle = ""
+    
     /// The name of the artist(s) that released the album.
     public var artist = ""
 
+    /// The sortation version of the artist(s) that released the album.
+    public var sortArtist = ""
+    
     /// The year the album was released.
     public var year = 0
     
@@ -68,7 +74,9 @@ public struct Album {
                 artist: String,
                 year: Int,
                 genre: [String],
-                length: Int) {
+                length: Int,
+                sortTitle: String = "",
+                sortArtist: String = "") {
         self.id = id
         self.source = source
         self.location = location
@@ -77,6 +85,8 @@ public struct Album {
         self.year = year
         self.genre = genre
         self.length = length
+        self.sortTitle = sortTitle != "" ? sortTitle : title
+        self.sortArtist = Artist.sortName(sortName: sortArtist, name: artist)
     }
 }
 
@@ -111,6 +121,8 @@ extension Album: CustomDebugStringConvertible {
             "    year = \(year)\n" +
             "    genre = \(genre)\n" +
             "    length = \(length)\n" +
-            "    coverURI = \(coverURI)\n"
+            "    coverURI = \(coverURI)\n" +
+            "    sortTitle = \(sortTitle)\n" +
+            "    sortArtist = \(sortArtist)\n"
     }
 }
