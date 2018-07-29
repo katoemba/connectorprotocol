@@ -59,6 +59,7 @@ public enum LoadProgress {
 public enum FolderContent {
     case folder(Folder)
     case song(Song)
+    case playlist(Playlist)
 }
 
 public protocol AlbumBrowseViewModel {
