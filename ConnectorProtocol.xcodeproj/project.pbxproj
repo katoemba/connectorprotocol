@@ -287,7 +287,6 @@
 				C546AF771F35A8E6003C5B7E /* Frameworks */,
 				C546AF781F35A8E6003C5B7E /* Headers */,
 				C546AF791F35A8E6003C5B7E /* Resources */,
-				2E8902C95E7A57D598442B06 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -307,7 +306,6 @@
 				C546B13C1F37A3A2003C5B7E /* Frameworks */,
 				C546B13D1F37A3A2003C5B7E /* Headers */,
 				C546B13E1F37A3A2003C5B7E /* Resources */,
-				C1095FA9FCCCD7B3CF3E4989 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -327,7 +325,6 @@
 				C546B1CE1F37AD8C003C5B7E /* Frameworks */,
 				C546B1CF1F37AD8C003C5B7E /* Headers */,
 				C546B1D01F37AD8C003C5B7E /* Resources */,
-				A9EAA49B177611E4335EFCCA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -347,7 +344,6 @@
 				C546B25F1F39B730003C5B7E /* Frameworks */,
 				C546B2601F39B730003C5B7E /* Resources */,
 				DB966E87ED9A6D66E297110C /* [CP] Embed Pods Frameworks */,
-				B1076BD8DC09505A17506DC4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -463,21 +459,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2E8902C95E7A57D598442B06 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-ConnectorProtocol_iOS/Pods-ConnectorProtocol_iOS-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		5FD5D8DCD54D563A350072AF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -494,51 +475,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A9EAA49B177611E4335EFCCA /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-ConnectorProtocol_tvOS/Pods-ConnectorProtocol_tvOS-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B1076BD8DC09505A17506DC4 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-ConnectorProtocolTests/Pods-ConnectorProtocolTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C1095FA9FCCCD7B3CF3E4989 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-ConnectorProtocol_MacOS/Pods-ConnectorProtocol_MacOS-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D030C1F71AFC6ADBF5C63471 /* [CP] Check Pods Manifest.lock */ = {
