@@ -164,4 +164,9 @@ public protocol ControlProtocol {
     
     /// Clear the active playqueue
     func clearPlayqueue()
+    
+    /// Play a station
+    ///
+    /// - Parameter station: the station that has to be played
+    func playStation(_ station: Station)
 }

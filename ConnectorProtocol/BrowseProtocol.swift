@@ -28,7 +28,7 @@ import Foundation
 import RxSwift
 
 public enum SourceType {
-    case Unknown, Local, Spotify, TuneIn, Podcast
+    case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast
 }
 
 public enum SortType: String {
