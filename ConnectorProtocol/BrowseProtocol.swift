@@ -108,8 +108,9 @@ public protocol SongBrowseViewModel {
 
 public protocol GenreBrowseViewModel {
     var loadProgressObservable: Observable<LoadProgress> { get }
-    var genresObservable: Observable<[String]> { get }
-    
+    var genresObservable: Observable<[Genre]> { get }
+    var parentGenre: Genre? { get }
+
     func load()
     func extend()
 }

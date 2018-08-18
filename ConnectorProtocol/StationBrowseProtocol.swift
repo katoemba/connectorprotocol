@@ -28,7 +28,7 @@ import Foundation
 import RxSwift
 
 public enum StationBrowseFilter {
-    case genre(String)
+    case genre(Genre)
     case search(String)
 }
 
@@ -55,7 +55,7 @@ public protocol StationBrowseProtocol {
     ///
     /// - Parameter genre: genre to filter on
     /// - Returns: a StationBrowseViewModel instance
-    func stationBrowseViewModel(genre: String) -> StationBrowseViewModel
+    func stationBrowseViewModel(genre: Genre) -> StationBrowseViewModel
     
     /// Return a view model for a preloaded list of stations.
     ///
@@ -67,4 +67,10 @@ public protocol StationBrowseProtocol {
     ///
     /// - Returns: a GenreBrowseViewModel instance
     func genreBrowseViewModel() -> GenreBrowseViewModel    
+
+    /// Return a view model for a list of genres, which can return genres in batches.
+    ///
+    /// - Parameter parentGenre: get subgenres of this genre
+    /// - Returns: a GenreBrowseViewModel instance
+    func genreBrowseViewModel(parentGenre: Genre) -> GenreBrowseViewModel
 }
