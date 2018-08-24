@@ -26,13 +26,6 @@
 
 import Foundation
 
-public enum StationPlaylist {
-    case unknown
-    case m3u(String)
-    case pls(String)
-    case xspf(String)
-}
-
 /// A struct defining a generic Album object.
 public struct Station {
     /// A unique id for the station. Usage depends on library implementation.
@@ -44,9 +37,6 @@ public struct Station {
     /// The url of the station.
     public var url = ""
 
-    /// The playlist url of the station, from which more info can be fetched
-    public var stationPlaylist = StationPlaylist.unknown
-    
     /// The name of the station.
     public var title = ""
     
@@ -71,7 +61,6 @@ public struct Station {
     public init(id: String,
                 source: SourceType,
                 url: String,
-                stationPlaylist: StationPlaylist,
                 title: String,
                 descr: String,
                 nowPlaying: String,
@@ -81,7 +70,6 @@ public struct Station {
         self.id = id
         self.source = source
         self.url = url
-        self.stationPlaylist = stationPlaylist
         self.title = title
         self.descr = descr
         self.nowPlaying = nowPlaying
@@ -108,9 +96,7 @@ extension Station: CustomStringConvertible {
             "    id = \(id)\n" +
             "    source = \(source)\n" +
             "    title = \(title)\n" +
-            "    url = \(url)\n" +
-        "    stationPlaylist = \(stationPlaylist)\n"
-        
+            "    url = \(url)\n"
     }
 }
 
@@ -121,7 +107,6 @@ extension Station: CustomDebugStringConvertible {
             "    source = \(source)\n" +
             "    title = \(title)\n" +
             "    url = \(url)\n" +
-            "    stationPlaylist = \(stationPlaylist)\n" +
             "    descr = \(descr)\n" +
             "    nowPlaying = \(nowPlaying)\n" +
             "    genre = \(genre)\n" +
