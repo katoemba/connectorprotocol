@@ -102,6 +102,13 @@ public protocol ControlProtocol {
     ///   - addMode: how to add the song to the playqueue
     func addSongs(_ songs: [Song], addMode: AddMode)
     
+    /// Add a song to a playlist
+    ///
+    /// - Parameters:
+    ///   - song: the song to add
+    ///   - playlist: the playlist to add the song to
+    func addSongToPlaylist(_ song: Song, playlist: Playlist)
+
     /// Add an album to the play queue
     ///
     /// - Parameters:
