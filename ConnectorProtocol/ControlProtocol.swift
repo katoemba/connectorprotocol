@@ -45,6 +45,9 @@ public protocol ControlProtocol {
     /// Pause playback.
     func pause()
     
+    /// Stop playback.
+    func stop()
+    
     /// Toggle between play and pause: when paused -> start to play, when playing -> pause.
     func togglePlayPause()
     
