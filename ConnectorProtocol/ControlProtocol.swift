@@ -76,6 +76,14 @@ public protocol ControlProtocol {
     /// Toggle the repeat mode (off -> all -> single -> off)
     func toggleRepeat()
     
+    /// Set the consume mode of the player.
+    ///
+    /// - Parameter consumeMode: The consume mode to use.
+    func setConsume(consumeMode: ConsumeMode)
+    
+    /// Toggle the consume mode (off -> on -> off)
+    func toggleConsume()
+    
     /// Set the volume of the player.
     ///
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.

@@ -50,6 +50,11 @@ public enum RepeatMode {
     case Album
 }
 
+public enum ConsumeMode {
+    case Off
+    case On
+}
+
 // MARK: - TimeStatus struct
 
 public struct TimeStatus {
@@ -185,6 +190,7 @@ public struct PlayStatus {
     public var playPauseMode = PlayPauseMode.Paused
     public var randomMode = RandomMode.Off
     public var repeatMode = RepeatMode.Off
+    public var consumeMode = ConsumeMode.Off
 
     public init() {
     }
@@ -193,20 +199,23 @@ public struct PlayStatus {
         playPauseMode = from.playPauseMode
         randomMode = from.randomMode
         repeatMode = from.repeatMode
+        consumeMode = from.consumeMode
     }
 }
 extension PlayStatus: Equatable {}
 public func ==(lhs: PlayStatus, rhs: PlayStatus) -> Bool {
     return lhs.playPauseMode == rhs.playPauseMode &&
         lhs.randomMode == rhs.randomMode &&
-        lhs.repeatMode == rhs.repeatMode
+        lhs.repeatMode == rhs.repeatMode &&
+        lhs.consumeMode == rhs.consumeMode
 }
 extension PlayStatus: CustomStringConvertible {
     public var description: String {
         return "> PlayStatus\n" +
             "    playingStatus = \(playPauseMode)\n" +
             "    repeatMode = \(repeatMode)\n" +
-        "    randomMode = \(randomMode)\n"
+            "    randomMode = \(randomMode)\n" +
+        "    consumeMode = \(consumeMode)\n"
     }
 }
 extension PlayStatus: CustomDebugStringConvertible {
@@ -214,7 +223,8 @@ extension PlayStatus: CustomDebugStringConvertible {
         return "> PlayStatus\n" +
             "    playingStatus = \(playPauseMode)\n" +
             "    repeatMode = \(repeatMode)\n" +
-        "    randomMode = \(randomMode)\n"
+            "    randomMode = \(randomMode)\n" +
+        "    consumeMode = \(consumeMode)\n"
     }
 }
 
@@ -239,8 +249,8 @@ public struct PlayerStatus {
         playqueue = from.playqueue
         playing = from.playing
     }
-
 }
+
 extension PlayerStatus: CustomStringConvertible {
     public var description: String {
         return "> PlayerStatus\n" +
@@ -250,7 +260,7 @@ extension PlayerStatus: CustomStringConvertible {
             "   \(playqueue)" +
             "   \(playing)" +
             "   volumeEnabled = \(volumeEnabled)" +
-        "    volume = \(volume)\n"
+            "   volume = \(volume)\n"
     }
 }
 extension PlayerStatus: CustomDebugStringConvertible {
