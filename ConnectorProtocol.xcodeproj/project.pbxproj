@@ -377,7 +377,7 @@
 					C546AF7A1F35A8E6003C5B7E = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = N7DKJ3YJS4;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 					C546B13F1F37A3A2003C5B7E = {
@@ -758,8 +758,7 @@
 				PRODUCT_NAME = ConnectorProtocol;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -782,8 +781,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.katoemba.ConnectorProtocol-iOS";
 				PRODUCT_NAME = ConnectorProtocol;
 				SKIP_INSTALL = YES;
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
