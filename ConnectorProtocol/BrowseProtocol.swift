@@ -104,6 +104,7 @@ public protocol SongBrowseViewModel {
 
     func load()
     func extend()
+    func removeSong(at: Int)
 }
 
 public protocol GenreBrowseViewModel {

@@ -175,6 +175,21 @@ public protocol ControlProtocol {
     /// - Parameter at: the position of the song to remove
     func deleteSong(_ at: Int)
     
+    /// Move a song in a playlist to a different position
+    ///
+    /// - Parameters:
+    ///   - playlist: the playlist in which to make the move
+    ///   - from: the position of the song to change
+    ///   - to: the position to move the song to
+    func moveSong(playlist: Playlist, from: Int, to: Int)
+    
+    /// Remove song from a playlist
+    ///
+    /// - Parameters:
+    ///   - playlist: the playlist from which to remove the song
+    ///   - at: the position of the song to remove
+    func deleteSong(playlist: Playlist, at: Int)
+    
     /// Save the current playqueue as a playlist
     ///
     /// - Parameter name: name for the playlist
