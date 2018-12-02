@@ -29,6 +29,7 @@ import RxSwift
 
 public enum PlayerSettingType {
     case string
+    case int
     case selection
     case toggle
     case action
@@ -61,6 +62,16 @@ public class StringSetting: PlayerSetting {
         self.value = value
         self.conceil = conceil
         super.init(type: .string, id: id, description: description)
+    }
+}
+
+/// A setting that holds an integer value.
+public class IntSetting: PlayerSetting {
+    public var value: Int
+    
+    public init(id: String, description: String, value: Int) {
+        self.value = value
+        super.init(type: .int, id: id, description: description)
     }
 }
 
