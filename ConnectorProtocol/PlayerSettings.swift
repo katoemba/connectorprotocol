@@ -29,11 +29,17 @@ import RxSwift
 
 public enum PlayerSettingType {
     case string
-    case int
     case selection
     case toggle
     case action
     case dynamic
+}
+
+public enum StringSettingRestriction {
+    case regular
+    case password
+    case numeric
+    case email
 }
 
 /// Base class for player specific settings.
@@ -55,23 +61,13 @@ public class PlayerSetting {
 public class StringSetting: PlayerSetting {
     public var placeholder: String
     public var value: String
-    public var conceil: Bool
+    public var restriction: StringSettingRestriction
     
-    public init(id: String, description: String, placeholder: String, value: String, conceil: Bool = false) {
+    public init(id: String, description: String, placeholder: String, value: String, restriction: StringSettingRestriction = .regular) {
         self.placeholder = placeholder
         self.value = value
-        self.conceil = conceil
+        self.restriction = restriction
         super.init(type: .string, id: id, description: description)
-    }
-}
-
-/// A setting that holds an integer value.
-public class IntSetting: PlayerSetting {
-    public var value: Int
-    
-    public init(id: String, description: String, value: Int) {
-        self.value = value
-        super.init(type: .int, id: id, description: description)
     }
 }
 
