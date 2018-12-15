@@ -46,6 +46,7 @@ public enum BrowseFilter {
     case recent(Int)
     case folder(Folder)
     case type(ArtistType)
+    case random(Int)
 }
 
 public enum LoadProgress {
