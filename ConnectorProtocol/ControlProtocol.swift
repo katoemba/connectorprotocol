@@ -202,4 +202,16 @@ public protocol ControlProtocol {
     ///
     /// - Parameter station: the station that has to be played
     func playStation(_ station: Station)
+    
+    /// Enable or disable an output
+    ///
+    /// - Parameters:
+    ///   - output: the output to set
+    ///   - enabled: true to enable the output, false to disable it
+    func setOutput(_ output: Output, enabled: Bool)
+
+    /// Toggle an output on or off
+    ///
+    /// - Parameter output: the output to toggle
+    func toggleOutput(_ output: Output)
 }

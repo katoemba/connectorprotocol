@@ -228,6 +228,52 @@ extension PlayStatus: CustomDebugStringConvertible {
     }
 }
 
+// MARK: - Output Struct
+
+public struct Output {
+    /// A unique id for the output. Usage depends on library implementation.
+    public var id = ""
+    
+    /// The name of the output.
+    public var name = ""
+    
+    /// Whether or not this output is currently enabled.
+    public var enabled = true
+    
+    public init() {
+        
+    }
+
+    public init(_ from: Output) {
+        id = from.id
+        name = from.name
+        enabled = from.enabled
+    }    
+}
+extension Output: Equatable {}
+public func ==(lhs: Output, rhs: Output) -> Bool {
+    return lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.enabled == rhs.enabled
+}
+extension Output: CustomStringConvertible {
+    public var description: String {
+        return "> Output\n" +
+            "    id = \(id)\n" +
+            "    name = \(name)\n" +
+        "    enabled = \(enabled)\n"
+    }
+}
+extension Output: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "> Output\n" +
+            "    id = \(id)\n" +
+            "    name = \(name)\n" +
+        "    enabled = \(enabled)\n"
+    }
+}
+
+
 /// A PlayerStatus object containing all relevant status elements
 public struct PlayerStatus {
     public var time = TimeStatus()
@@ -237,6 +283,7 @@ public struct PlayerStatus {
     public var volumeEnabled = true
     public var playqueue = PlayqueueStatus()
     public var playing = PlayStatus()
+    public var outputs = [Output]()
     
     public init() {}
     
@@ -248,6 +295,7 @@ public struct PlayerStatus {
         volumeEnabled = from.volumeEnabled
         playqueue = from.playqueue
         playing = from.playing
+        outputs = from.outputs
     }
 }
 
@@ -272,6 +320,7 @@ extension PlayerStatus: CustomDebugStringConvertible {
             "   \(playqueue)" +
             "   \(playing)" +
             "   volumeEnabled = \(volumeEnabled)" +
-        "    volume = \(volume)\n"
+            "   volume = \(volume)\n" +
+            "   outputs = \(outputs.debugDescription)"
     }
 }
