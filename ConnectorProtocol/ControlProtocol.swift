@@ -163,6 +163,14 @@ public protocol ControlProtocol {
     ///   - startWithSong: the position of the song (within the folder) to start playing
     func addFolder(_ folder: Folder, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
     
+    /// Add a folder recursively to the play queue
+    ///
+    /// - Parameters:
+    ///   - folder: the folder to add
+    ///   - addMode: how to add the songs to the playqueue
+    ///   - shuffle: whether or not to shuffle the songs before adding them
+    func addRecursiveFolder(_ folder: Folder, addMode: AddMode, shuffle: Bool)
+
     /// Move a song in the playqueue to a different position
     ///
     /// - Parameters:
