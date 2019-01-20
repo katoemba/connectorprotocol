@@ -31,6 +31,12 @@ public enum SourceType {
     case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast
 }
 
+public enum LoadStatus {
+    case initial                // Only initial key information (like an id or artist/album combination) is present.
+    case completionInProgress   // A request to complete all data in progress
+    case complete               // All data is available
+}
+
 public enum SortType: String {
     case artist
     case year
@@ -61,6 +67,22 @@ public enum FolderContent {
     case folder(Folder)
     case song(Song)
     case playlist(Playlist)
+}
+
+public protocol AlbumSections {
+    var numberOfSections: Int { get }
+    func rowsInSection(_ section: Int) -> Int
+    var sectionTitles: [String] { get }
+    func getAlbumObservable(indexPath: IndexPath) -> Observable<Album>
+}
+
+public protocol AlbumSectionBrowseViewModel {
+    var loadProgressObservable: Observable<LoadProgress> { get }
+    var albumSectionsObservable: Observable<AlbumSections> { get }
+    var sort: SortType { get }
+    var availableSortOptions: [SortType] { get }
+    
+    func load(sort: SortType)
 }
 
 public protocol AlbumBrowseViewModel {
@@ -163,6 +185,11 @@ public protocol BrowseProtocol {
     /// - Returns: An observable search object containing search results of different types.
     func search(_ search: String, limit: Int, filter: [SourceType]) -> Observable<SearchResult>
     
+    /// Return a view model for a sectioned list of albums.
+    ///
+    /// - Returns: an AlbumSectionBrowseViewModel instance
+    func albumSectionBrowseViewModel() -> AlbumSectionBrowseViewModel
+
     /// Return a view model for a list of albums, which can return albums in batches.
     ///
     /// - Returns: an AlbumBrowseViewModel instance
