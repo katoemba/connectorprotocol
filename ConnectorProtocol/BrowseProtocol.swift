@@ -292,4 +292,10 @@ public protocol BrowseProtocol {
     /// - Parameter coverURI: the CoverURI to pre-process
     /// - Returns: the processed cover URI
     func preprocessCoverURI(_ coverURI: CoverURI) -> Observable<CoverURI>
+    
+    /// Create a diagnostics string that can help troubleshooting data issues
+    ///
+    /// - Parameter album: an album for which to get diagnostics
+    /// - Returns: an observable String containing the diagnostics data
+    func diagnostics(album: Album) -> Observable<String>
 }
