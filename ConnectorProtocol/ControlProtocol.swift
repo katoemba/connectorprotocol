@@ -37,25 +37,25 @@ public enum AddMode: String {
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
     /// Start playback.
-    func play()
+    func play() -> Observable<PlayerStatus>
     
     /// Start playback of a specific track in the playqueue
-    func play(index: Int)
+    func play(index: Int)  -> Observable<PlayerStatus>
     
     /// Pause playback.
-    func pause()
+    func pause() -> Observable<PlayerStatus>
     
     /// Stop playback.
-    func stop()
+    func stop() -> Observable<PlayerStatus>
     
     /// Toggle between play and pause: when paused -> start to play, when playing -> pause.
-    func togglePlayPause()
+    func togglePlayPause() -> Observable<PlayerStatus>
     
     /// Skip to the next track.
-    func skip()
+    func skip() -> Observable<PlayerStatus>
     
     /// Go back to the previous track.
-    func back()
+    func back() -> Observable<PlayerStatus>
     
     /// Set the random mode of the player.
     ///
@@ -104,14 +104,14 @@ public protocol ControlProtocol {
     /// - Parameters:
     ///   - song: the song to add
     ///   - addMode: how to add the song to the playqueue
-    func addSong(_ song: Song, addMode: AddMode)
+    func addSong(_ song: Song, addMode: AddMode) -> Observable<PlayerStatus>
 
     /// Add a batch of songs to the play queue
     ///
     /// - Parameters:
     ///   - songs: array of songs to add
     ///   - addMode: how to add the song to the playqueue
-    func addSongs(_ songs: [Song], addMode: AddMode)
+    func addSongs(_ songs: [Song], addMode: AddMode) -> Observable<PlayerStatus>
     
     /// Add a song to a playlist
     ///
@@ -127,7 +127,7 @@ public protocol ControlProtocol {
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the album
     ///   - startWithSong: the position of the song (within the album) to start playing
-    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
+    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool, startWithSong: UInt32) -> Observable<PlayerStatus>
 
     /// Add an artist to the play queue
     ///
@@ -135,7 +135,7 @@ public protocol ControlProtocol {
     ///   - artist: the artist to add
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the artist
-    func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool)
+    func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool) -> Observable<PlayerStatus>
     
     /// Add a playlist to the play queue
     ///
