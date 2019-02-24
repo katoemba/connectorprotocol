@@ -141,10 +141,9 @@ public protocol ControlProtocol {
     ///
     /// - Parameters:
     ///   - playlist: the playlist to add
-    ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the playlist
     ///   - startWithSong: the position of the song (within the playlist) to start playing
-    func addPlaylist(_ playlist: Playlist, addMode: AddMode, shuffle: Bool, startWithSong: UInt32)
+    func addPlaylist(_ playlist: Playlist, shuffle: Bool, startWithSong: UInt32) -> Observable<(Playlist, Song, Bool, PlayerStatus)>
     
     /// Add a genre to the play queue
     ///
