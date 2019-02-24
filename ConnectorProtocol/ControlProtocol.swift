@@ -104,14 +104,14 @@ public protocol ControlProtocol {
     /// - Parameters:
     ///   - song: the song to add
     ///   - addMode: how to add the song to the playqueue
-    func addSong(_ song: Song, addMode: AddMode) -> Observable<PlayerStatus>
+    func addSong(_ song: Song, addMode: AddMode) -> Observable<(Song, AddMode, PlayerStatus)>
 
     /// Add a batch of songs to the play queue
     ///
     /// - Parameters:
     ///   - songs: array of songs to add
     ///   - addMode: how to add the song to the playqueue
-    func addSongs(_ songs: [Song], addMode: AddMode) -> Observable<PlayerStatus>
+    func addSongs(_ songs: [Song], addMode: AddMode) -> Observable<([Song], AddMode, PlayerStatus)>
     
     /// Add a song to a playlist
     ///
@@ -127,7 +127,7 @@ public protocol ControlProtocol {
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the album
     ///   - startWithSong: the position of the song (within the album) to start playing
-    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool, startWithSong: UInt32) -> Observable<PlayerStatus>
+    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool, startWithSong: UInt32) -> Observable<(Album, Song, AddMode, Bool, PlayerStatus)>
 
     /// Add an artist to the play queue
     ///
@@ -135,7 +135,7 @@ public protocol ControlProtocol {
     ///   - artist: the artist to add
     ///   - addMode: how to add the song to the playqueue
     ///   - shuffle: whether or not to shuffle the artist
-    func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool) -> Observable<PlayerStatus>
+    func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool) -> Observable<(Artist, AddMode, Bool, PlayerStatus)>
     
     /// Add a playlist to the play queue
     ///
