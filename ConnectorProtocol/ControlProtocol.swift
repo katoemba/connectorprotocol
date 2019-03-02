@@ -74,21 +74,29 @@ public protocol ControlProtocol {
     /// Set the random mode of the player.
     ///
     /// - Parameter randomMode: The random mode to use.
-    func setRandom(randomMode: RandomMode)
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func setRandom(randomMode: RandomMode) -> Observable<PlayerStatus>
     
     /// Toggle the random mode (off -> on -> off)
-    func toggleRandom()
+    ///
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func toggleRandom() -> Observable<PlayerStatus>
     
     /// Shuffle the contents of the current playqueue.
-    func shufflePlayqueue()
+    ///
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func shufflePlayqueue() -> Observable<PlayerStatus>
     
     /// Set the repeat mode of the player.
     ///
     /// - Parameter repeatMode: The repeat mode to use.
-    func setRepeat(repeatMode: RepeatMode)
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func setRepeat(repeatMode: RepeatMode) -> Observable<PlayerStatus>
 
     /// Toggle the repeat mode (off -> all -> single -> off)
-    func toggleRepeat()
+    ///
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func toggleRepeat() -> Observable<PlayerStatus>
     
     /// Set the consume mode of the player.
     ///
