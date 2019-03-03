@@ -67,7 +67,7 @@ public struct Song {
     /// A string describing the encoding of the song.
     public var encoding = ""
     
-    /// The position of the track within a playlist, album or playqueue
+    /// The position of the track within the playqueue
     public var position = 0
     
     /// The name of the track.
@@ -82,8 +82,11 @@ public struct Song {
     /// A human-readable comment about this song. The exact meaning of this tag is not well-defined.
     public var comment = ""
     
+    /// The track number of a song.
+    public var track = 0
+    
     /// The decimal disc number in a multi-disc album.
-    public var disc = ""
+    public var disc = 0
 
     /// The Musicbrainz Artist Id for the artist of the track.
     public var musicbrainzArtistId = ""
@@ -133,7 +136,8 @@ public struct Song {
                 length: Int,
                 bitrate: String,
                 encoding: String,
-                position: Int = 0) {
+                position: Int = 0,
+                track: Int = 0) {
         self.id = id
         self.source = source
         self.location = location
@@ -148,6 +152,7 @@ public struct Song {
         self.bitrate = bitrate
         self.encoding = encoding
         self.position = position
+        self.track = track
     }
 }
 
@@ -186,6 +191,9 @@ extension Song: CustomDebugStringConvertible {
             "    genre = \(genre)\n" +
             "    length = \(length)\n" +
             "    bitrate = \(bitrate)\n" +
-            "    encoding = \(encoding)\n"
+            "    encoding = \(encoding)\n" +
+            "    track = \(track)\n" +
+            "    disc = \(disc)\n" +
+            "    position = \(position)"
     }
 }
