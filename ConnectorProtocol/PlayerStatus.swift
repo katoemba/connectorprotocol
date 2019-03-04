@@ -276,6 +276,7 @@ extension Output: CustomDebugStringConvertible {
 
 /// A PlayerStatus object containing all relevant status elements
 public struct PlayerStatus {
+    public var lastUpdateTime = Date(timeIntervalSince1970: 0)
     public var time = TimeStatus()
     public var currentSong = Song()
     public var quality = QualityStatus()
@@ -288,6 +289,7 @@ public struct PlayerStatus {
     public init() {}
     
     public init(_ from: PlayerStatus) {
+        lastUpdateTime = from.lastUpdateTime
         time = from.time
         currentSong = from.currentSong
         quality = from.quality
@@ -302,6 +304,7 @@ public struct PlayerStatus {
 extension PlayerStatus: CustomStringConvertible {
     public var description: String {
         return "> PlayerStatus\n" +
+            "   \(lastUpdateTime)" +
             "   \(time)" +
             "   \(currentSong)" +
             "   \(quality)" +
@@ -314,6 +317,7 @@ extension PlayerStatus: CustomStringConvertible {
 extension PlayerStatus: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "> PlayerStatus\n" +
+            "   \(lastUpdateTime)" +
             "   \(time)" +
             "   \(currentSong)" +
             "   \(quality)" +
