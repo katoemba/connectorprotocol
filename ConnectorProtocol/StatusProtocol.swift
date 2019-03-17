@@ -52,7 +52,7 @@ public protocol StatusProtocol {
     ///   - start: the start position of the requested block
     ///   - end: the end position of the requested block
     /// - Returns: Array of songs, not guaranteed to have the same number of songs as requested.
-    func playqueueSongs(start: Int, end: Int) -> [Song]
+    func playqueueSongs(start: Int, end: Int) -> Observable<[Song]>
     
     /// Trigger a forced refresh of the status
     func forceStatusRefresh()
