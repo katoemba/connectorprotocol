@@ -241,6 +241,12 @@ public protocol BrowseProtocol {
     /// - Returns: an PlaylistBrowseViewModel instance
     func playlistBrowseViewModel(_ playlists: [Playlist]) -> PlaylistBrowseViewModel
     
+    /// Return a view model for a list of randomly selected songs.
+    ///
+    /// - Parameter random: the number of songs to select
+    /// - Returns: a SongBrowseViewModel instance
+    func songBrowseViewModel(random: Int) -> SongBrowseViewModel
+    
     /// Return a view model for a preloaded list of songs.
     ///
     /// - Parameter songs: list of songs to show
