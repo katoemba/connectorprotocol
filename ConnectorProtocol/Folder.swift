@@ -60,8 +60,8 @@ public func ==(lhs: Folder, rhs: Folder) -> Bool {
 }
 
 extension Folder: Hashable {
-    public var hashValue: Int {
-        return id.hashValue
+    public func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
     }
 }
 

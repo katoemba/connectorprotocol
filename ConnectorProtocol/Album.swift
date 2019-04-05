@@ -96,8 +96,8 @@ public func ==(lhs: Album, rhs: Album) -> Bool {
 }
 
 extension Album: Hashable {
-    public var hashValue: Int {
-        return id.hashValue
+    public func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
     }
 }
 

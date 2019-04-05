@@ -162,8 +162,8 @@ public func ==(lhs: Song, rhs: Song) -> Bool {
 }
 
 extension Song: Hashable {
-    public var hashValue: Int {
-        return id.hashValue
+    public func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
     }
 }
 

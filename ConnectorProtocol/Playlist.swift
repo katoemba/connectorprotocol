@@ -60,8 +60,8 @@ public func ==(lhs: Playlist, rhs: Playlist) -> Bool {
 }
 
 extension Playlist: Hashable {
-    public var hashValue: Int {
-        return id.hashValue
+    public func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
     }
 }
 

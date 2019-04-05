@@ -79,12 +79,12 @@ public func ==(lhs: CoverURI, rhs: CoverURI) -> Bool {
 }
 
 extension CoverURI: Hashable {
-    public var hashValue: Int {
+    public func hash(into hasher: inout Hasher) {
         var concatUri = ""
         for possibleUri in possibleUris {
             concatUri.append(possibleUri)
         }
-        return concatUri.hashValue
+        concatUri.hash(into: &hasher)
     }
 }
 
