@@ -137,6 +137,15 @@ public protocol ControlProtocol {
     /// - Returns: an observable tuple consisting of songs, addMode and up-to-date playerStatus.
     func addSongs(_ songs: [Song], addMode: AddMode) -> Observable<([Song], AddMode, PlayerStatus)>
     
+    /// Add a batch of songs to the play queue and start with a particular song
+    ///
+    /// - Parameters:
+    ///   - songs: array of songs to add
+    ///   - addMode: how to add the song to the playqueue
+    ///   - startWithSong: the position of the song (within the album) to start playing
+    /// - Returns: an observable tuple consisting of songs, addMode and up-to-date playerStatus.
+    func addSongs(_ songs: [Song], addMode: AddMode, startWithSong: UInt32) -> Observable<([Song], AddMode, PlayerStatus)>
+    
     /// Add a song to a playlist
     ///
     /// - Parameters:
