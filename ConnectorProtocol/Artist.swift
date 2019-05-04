@@ -67,7 +67,12 @@ public struct Artist {
     
     static func sortName(sortName: String, name: String) -> String {
         if sortName != "" {
-            return sortName
+            if sortName != "The The" && (sortName.starts(with: "The ") || sortName.starts(with: "the ")) {
+                return "\(sortName.dropFirst(4)), The"
+            }
+            else {
+                return sortName
+            }
         }
         else {
             if name != "The The" && (name.starts(with: "The ") || name.starts(with: "the ")) {
