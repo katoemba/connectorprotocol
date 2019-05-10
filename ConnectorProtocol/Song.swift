@@ -61,12 +61,6 @@ public struct Song {
     /// The duration of the song in seconds.
     public var length = 0
     
-    /// A string describing the bitrate of the song.
-    public var bitrate = ""
-    
-    /// A string describing the encoding of the song.
-    public var encoding = ""
-    
     /// The position of the track within the playqueue
     public var position = 0
     
@@ -120,6 +114,9 @@ public struct Song {
     /// Date the album was last modified.
     public var lastModified = Date(timeIntervalSince1970: 0)
 
+    /// The quality of the song
+    public var quality = QualityStatus()
+    
     public init() {
     }
     
@@ -134,8 +131,7 @@ public struct Song {
                 year: Int,
                 genre: [String],
                 length: Int,
-                bitrate: String,
-                encoding: String,
+                quality: QualityStatus,
                 position: Int = 0,
                 track: Int = 0) {
         self.id = id
@@ -149,8 +145,7 @@ public struct Song {
         self.year = year
         self.genre = genre
         self.length = length
-        self.bitrate = bitrate
-        self.encoding = encoding
+        self.quality = quality
         self.position = position
         self.track = track
     }
@@ -190,8 +185,7 @@ extension Song: CustomDebugStringConvertible {
             "    year = \(year)\n" +
             "    genre = \(genre)\n" +
             "    length = \(length)\n" +
-            "    bitrate = \(bitrate)\n" +
-            "    encoding = \(encoding)\n" +
+            "    quality = \(quality)\n" +
             "    track = \(track)\n" +
             "    disc = \(disc)\n" +
             "    position = \(position)"
