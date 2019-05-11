@@ -34,6 +34,30 @@ public enum AddMode: String {
     case addAtEnd
 }
 
+public struct AddDetails {
+    let addMode: AddMode
+    let shuffle: Bool?
+    let startWithSong: Int?
+    
+    public init(_ addMode: AddMode) {
+        self.addMode = addMode
+        self.shuffle = nil
+        self.startWithSong = nil
+    }
+    
+    public init(_ addMode: AddMode, shuffle: Bool) {
+        self.addMode = addMode
+        self.shuffle = shuffle
+        self.startWithSong = nil
+    }
+
+    public init(_ addMode: AddMode, shuffle: Bool, startWithSong: Int) {
+        self.addMode = addMode
+        self.shuffle = shuffle
+        self.startWithSong = startWithSong
+    }
+}
+
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
     /// Start playback.
