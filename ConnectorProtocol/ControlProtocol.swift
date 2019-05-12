@@ -35,26 +35,24 @@ public enum AddMode: String {
 }
 
 public struct AddDetails {
-    let addMode: AddMode
-    let shuffle: Bool?
-    let startWithSong: Int?
+    public let addMode: AddMode
+    public let shuffle: Bool
+    public let startWithSong: UInt32
     
-    public init(_ addMode: AddMode) {
-        self.addMode = addMode
-        self.shuffle = nil
-        self.startWithSong = nil
-    }
-    
-    public init(_ addMode: AddMode, shuffle: Bool) {
-        self.addMode = addMode
-        self.shuffle = shuffle
-        self.startWithSong = nil
-    }
-
-    public init(_ addMode: AddMode, shuffle: Bool, startWithSong: Int) {
+    public init(_ addMode: AddMode, shuffle: Bool = false, startWithSong: UInt32 = 0) {
         self.addMode = addMode
         self.shuffle = shuffle
         self.startWithSong = startWithSong
+    }
+}
+
+public struct AddResponse {
+    public let addDetails: AddDetails
+    public let playerStatus: PlayerStatus
+    
+    public init(_ addDetails: AddDetails, _ playerStatus: PlayerStatus) {
+        self.addDetails = addDetails
+        self.playerStatus = playerStatus
     }
 }
 
@@ -99,7 +97,7 @@ public protocol ControlProtocol {
     ///
     /// - Parameter randomMode: The random mode to use.
     /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
-    func setRandom(randomMode: RandomMode) -> Observable<PlayerStatus>
+    func setRandom(_ randomMode: RandomMode) -> Observable<PlayerStatus>
     
     /// Toggle the random mode (off -> on -> off)
     ///
@@ -115,7 +113,7 @@ public protocol ControlProtocol {
     ///
     /// - Parameter repeatMode: The repeat mode to use.
     /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
-    func setRepeat(repeatMode: RepeatMode) -> Observable<PlayerStatus>
+    func setRepeat(_ repeatMode: RepeatMode) -> Observable<PlayerStatus>
 
     /// Toggle the repeat mode (off -> all -> single -> off)
     ///
@@ -125,7 +123,7 @@ public protocol ControlProtocol {
     /// Set the consume mode of the player.
     ///
     /// - Parameter consumeMode: The consume mode to use.
-    func setConsume(consumeMode: ConsumeMode)
+    func setConsume(_ consumeMode: ConsumeMode)
     
     /// Toggle the consume mode (off -> on -> off)
     func toggleConsume()
@@ -133,7 +131,7 @@ public protocol ControlProtocol {
     /// Set the volume of the player.
     ///
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
-    func setVolume(volume: Float)
+    func setVolume(_ volume: Float)
     
     /// Seek to a position in the current song
     ///
@@ -149,26 +147,17 @@ public protocol ControlProtocol {
     ///
     /// - Parameters:
     ///   - song: the song to add
-    ///   - addMode: how to add the song to the playqueue
-    /// - Returns: an observable tuple consisting of song, addMode and up-to-date playerStatus.
-    func addSong(_ song: Song, addMode: AddMode) -> Observable<(Song, AddMode, PlayerStatus)>
+    ///   - addDetails: how to add the song to the playqueue
+    /// - Returns: an observable tuple consisting of song and addResponse.
+    func add(_ song: Song, addDetails: AddDetails) -> Observable<(Song, AddResponse)>
 
     /// Add a batch of songs to the play queue
     ///
     /// - Parameters:
     ///   - songs: array of songs to add
-    ///   - addMode: how to add the song to the playqueue
-    /// - Returns: an observable tuple consisting of songs, addMode and up-to-date playerStatus.
-    func addSongs(_ songs: [Song], addMode: AddMode) -> Observable<([Song], AddMode, PlayerStatus)>
-    
-    /// Add a batch of songs to the play queue and start with a particular song
-    ///
-    /// - Parameters:
-    ///   - songs: array of songs to add
-    ///   - addMode: how to add the song to the playqueue
-    ///   - startWithSong: the position of the song (within the album) to start playing
-    /// - Returns: an observable tuple consisting of songs, addMode and up-to-date playerStatus.
-    func addSongs(_ songs: [Song], addMode: AddMode, startWithSong: UInt32) -> Observable<([Song], AddMode, PlayerStatus)>
+    ///   - addDetails: how to add the song to the playqueue
+    /// - Returns: an observable tuple consisting of songs and addResponse.
+    func add(_ songs: [Song], addDetails: AddDetails) -> Observable<([Song], AddResponse)>
     
     /// Add a song to a playlist
     ///
@@ -176,17 +165,15 @@ public protocol ControlProtocol {
     ///   - song: the song to add
     ///   - playlist: the playlist to add the song to
     /// - Returns: an observable tuple consisting of song and playlist.
-    func addSongToPlaylist(_ song: Song, playlist: Playlist) -> Observable<(Song, Playlist)>
+    func addToPlaylist(_ song: Song, playlist: Playlist) -> Observable<(Song, Playlist)>
 
     /// Add an album to the play queue
     ///
     /// - Parameters:
     ///   - album: the album to add
-    ///   - addMode: how to add the song to the playqueue
-    ///   - shuffle: whether or not to shuffle the album
-    ///   - startWithSong: the position of the song (within the album) to start playing
-    /// - Returns: an observable tuple consisting of album, song, addMode, shuffle and up-to-date playerStatus.
-    func addAlbum(_ album: Album, addMode: AddMode, shuffle: Bool, startWithSong: UInt32) -> Observable<(Album, Song, AddMode, Bool, PlayerStatus)>
+    ///   - addDetails: how to add the song to the playqueue
+    /// - Returns: an observable tuple consisting of album and addResponse.
+    func add(_ album: Album, addDetails: AddDetails) -> Observable<(Album, AddResponse)>
 
     /// Add an album to a playlist
     ///
@@ -194,52 +181,47 @@ public protocol ControlProtocol {
     ///   - album: the album to add
     ///   - playlist: the playlist to add the song to
     /// - Returns: an observable tuple consisting of album and playlist.
-    func addAlbumToPlaylist(_ album: Album, playlist: Playlist) -> Observable<(Album, Playlist)>
+    func addToPlaylist(_ album: Album, playlist: Playlist) -> Observable<(Album, Playlist)>
     
     /// Add an artist to the play queue
     ///
     /// - Parameters:
     ///   - artist: the artist to add
-    ///   - addMode: how to add the song to the playqueue
-    ///   - shuffle: whether or not to shuffle the artist
-    /// - Returns: an observable tuple consisting of artist, addMode, shuffle and up-to-date playerStatus.
-    func addArtist(_ artist: Artist, addMode: AddMode, shuffle: Bool) -> Observable<(Artist, AddMode, Bool, PlayerStatus)>
+    ///   - addDetails: how to add the song to the playqueue
+    /// - Returns: an observable tuple consisting of artist and addResponse.
+    func add(_ artist: Artist, addDetails: AddDetails) -> Observable<(Artist, AddResponse)>
     
     /// Add a playlist to the play queue
     ///
     /// - Parameters:
     ///   - playlist: the playlist to add
-    ///   - shuffle: whether or not to shuffle the playlist
-    ///   - startWithSong: the position of the song (within the playlist) to start playing
-    /// - Returns: an observable tuple consisting of playlist, song, addMode and up-to-date playerStatus.
-    func addPlaylist(_ playlist: Playlist, shuffle: Bool, startWithSong: UInt32) -> Observable<(Playlist, Song, Bool, PlayerStatus)>
+    ///   - addDetails: how to add the playlist to the playqueue
+    /// - Returns: an observable tuple consisting of playlist and addResponse.
+    func add(_ playlist: Playlist, addDetails: AddDetails) -> Observable<(Playlist, AddResponse)>
     
     /// Add a genre to the play queue
     ///
     /// - Parameters:
     ///   - genre: the genre to add
-    ///   - addMode: how to add the song to the playqueue
-    ///   - shuffle: whether or not to shuffle the genre
-    func addGenre(_ genre: String, addMode: AddMode, shuffle: Bool)
+    ///   - addDetails: how to add the folder to the playqueue
+    /// - Returns: an observable tuple consisting of genre and addResponse.
+    func add(_ genre: Genre, addDetails: AddDetails) -> Observable<(Genre, AddResponse)>
     
     /// Add a folder to the play queue
     ///
     /// - Parameters:
     ///   - folder: the folder to add
-    ///   - addMode: how to add the folder to the playqueue
-    ///   - shuffle: whether or not to shuffle the folder
-    ///   - startWithSong: the position of the song (within the folder) to start playing
-    /// - Returns: an observable tuple consisting of folder, song, addMode, shuffle and up-to-date playerStatus.
-    func addFolder(_ folder: Folder, addMode: AddMode, shuffle: Bool, startWithSong: UInt32) -> Observable<(Folder, Song, AddMode, Bool, PlayerStatus)>
+    ///   - addDetails: how to add the folder to the playqueue
+    /// - Returns: an observable tuple consisting of folder and addResponse.
+    func add(_ folder: Folder, addDetails: AddDetails) -> Observable<(Folder, AddResponse)>
     
     /// Add a folder recursively to the play queue
     ///
     /// - Parameters:
     ///   - folder: the folder to add
-    ///   - addMode: how to add the songs to the playqueue
-    ///   - shuffle: whether or not to shuffle the songs before adding them
-    /// - Returns: an observable tuple consisting of folder, addMode, shuffle and up-to-date playerStatus.
-    func addRecursiveFolder(_ folder: Folder, addMode: AddMode, shuffle: Bool) -> Observable<(Folder, AddMode, Bool, PlayerStatus)>
+    ///   - addDetails: how to add the folder to the playqueue
+    /// - Returns: an observable tuple consisting of folder and addResponse.
+    func addRecursive(_ folder: Folder, addDetails: AddDetails) -> Observable<(Folder, AddResponse)>
 
     /// Move a song in the playqueue to a different position
     ///

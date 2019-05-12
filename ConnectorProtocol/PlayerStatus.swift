@@ -113,6 +113,12 @@ public struct QualityStatus {
     public var encoding = ""
     public var channels = ""
 
+    public init(samplerate: String, encoding: String, channels: String) {
+        self.samplerate = samplerate
+        self.encoding = encoding
+        self.channels = channels
+    }
+    
     public init() {
     }
 

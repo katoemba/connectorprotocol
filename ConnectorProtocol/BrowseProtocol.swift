@@ -45,7 +45,7 @@ public enum SortType: String {
 }
 
 public enum BrowseFilter {
-    case genre(String)
+    case genre(Genre)
     case artist(Artist)
     case album(Album)
     case playlist(Playlist)
@@ -207,7 +207,7 @@ public protocol BrowseProtocol {
     ///
     /// - Parameter genre: genre to filter on
     /// - Returns: an AlbumBrowseViewModel instance
-    func albumBrowseViewModel(_ genre: String) -> AlbumBrowseViewModel
+    func albumBrowseViewModel(_ genre: Genre) -> AlbumBrowseViewModel
 
     /// Return a view model for a preloaded list of albums.
     ///
@@ -224,7 +224,7 @@ public protocol BrowseProtocol {
     ///
     /// - Parameter genre: genre to filter on
     /// - Returns: an ArtistBrowseViewModel instance
-    func artistBrowseViewModel(_ genre: String, type: ArtistType) -> ArtistBrowseViewModel
+    func artistBrowseViewModel(_ genre: Genre, type: ArtistType) -> ArtistBrowseViewModel
     
     /// Return a view model for a preloaded list of artists.
     ///
