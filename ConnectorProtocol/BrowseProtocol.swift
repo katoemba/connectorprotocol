@@ -27,7 +27,7 @@
 import Foundation
 import RxSwift
 
-public enum SourceType {
+public enum SourceType: String {
     case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast
 }
 
