@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Album object.
-public struct Album {
+public struct Album: Identifiable {
     /// A unique id for the album. Usage depends on library implementation.
     public var id = ""
     

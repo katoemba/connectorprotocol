@@ -69,16 +69,9 @@ public enum FolderContent {
     case playlist(Playlist)
 }
 
-public protocol AlbumSections {
-    var numberOfSections: Int { get }
-    func rowsInSection(_ section: Int) -> Int
-    var sectionTitles: [String] { get }
-    func getAlbumObservable(indexPath: IndexPath) -> Observable<Album>
-}
-
 public protocol AlbumSectionBrowseViewModel {
     var loadProgressObservable: Observable<LoadProgress> { get }
-    var albumSectionsObservable: Observable<AlbumSections> { get }
+    var albumSectionsObservable: Observable<ObjectSections<Album>> { get }
     var sort: SortType { get }
     var availableSortOptions: [SortType] { get }
     
@@ -100,13 +93,11 @@ public protocol AlbumBrowseViewModel {
 
 public protocol ArtistBrowseViewModel {
     var loadProgressObservable: Observable<LoadProgress> { get }
-    var artistsObservable: Observable<[Artist]> { get }
+    var artistSectionsObservable: Observable<ObjectSections<Artist>> { get }
     var filters: [BrowseFilter] { get }
     var artistType: ArtistType { get }
-    
-    func load()
+
     func load(filters: [BrowseFilter])
-    func extend()
 }
 
 public protocol PlaylistBrowseViewModel {

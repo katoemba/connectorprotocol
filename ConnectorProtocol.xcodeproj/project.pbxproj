@@ -48,6 +48,29 @@
 		C593A0BC2126F88C00D42F1B /* StationBrowseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C593A0BB2126F88C00D42F1B /* StationBrowseProtocol.swift */; };
 		C5C73C7B2070EF60007DAC5F /* CoverURI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C73C7A2070EF60007DAC5F /* CoverURI.swift */; };
 		C5DBB813206AC906006BBC92 /* PlayerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DBB812206AC906006BBC92 /* PlayerSettings.swift */; };
+		C5F2047A22D0DE23004C7864 /* ObjectSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F2047922D0DE23004C7864 /* ObjectSections.swift */; };
+		C5F2047B22D0DE23004C7864 /* ObjectSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F2047922D0DE23004C7864 /* ObjectSections.swift */; };
+		C5F2047C22D0DE23004C7864 /* ObjectSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F2047922D0DE23004C7864 /* ObjectSections.swift */; };
+		C5F2049322D21621004C7864 /* PlayerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DBB812206AC906006BBC92 /* PlayerSettings.swift */; };
+		C5F2049422D21622004C7864 /* PlayerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DBB812206AC906006BBC92 /* PlayerSettings.swift */; };
+		C5F2049522D21625004C7864 /* StatusProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C548EF3A1FFCDAC300FBE535 /* StatusProtocol.swift */; };
+		C5F2049622D21626004C7864 /* StatusProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C548EF3A1FFCDAC300FBE535 /* StatusProtocol.swift */; };
+		C5F2049722D21646004C7864 /* StationBrowseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C593A0BB2126F88C00D42F1B /* StationBrowseProtocol.swift */; };
+		C5F2049822D21646004C7864 /* CoverURI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C73C7A2070EF60007DAC5F /* CoverURI.swift */; };
+		C5F2049922D21646004C7864 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AFF7D204BF46A00CCAE3B /* Playlist.swift */; };
+		C5F2049A22D21646004C7864 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FEE8E42098E857001A811A /* Folder.swift */; };
+		C5F2049B22D21646004C7864 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55C76DB2128B5B400E0A3B3 /* Genre.swift */; };
+		C5F2049C22D21646004C7864 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = C593A0B92126F47D00D42F1B /* Station.swift */; };
+		C5F2049D22D21646004C7864 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F569421F7FC48D00D53500 /* SearchResult.swift */; };
+		C5F2049E22D21646004C7864 /* HelpMePlease.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5447EEC1FFFF9CE00508649 /* HelpMePlease.swift */; };
+		C5F2049F22D21647004C7864 /* StationBrowseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C593A0BB2126F88C00D42F1B /* StationBrowseProtocol.swift */; };
+		C5F204A022D21647004C7864 /* CoverURI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C73C7A2070EF60007DAC5F /* CoverURI.swift */; };
+		C5F204A122D21647004C7864 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AFF7D204BF46A00CCAE3B /* Playlist.swift */; };
+		C5F204A222D21647004C7864 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FEE8E42098E857001A811A /* Folder.swift */; };
+		C5F204A322D21647004C7864 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55C76DB2128B5B400E0A3B3 /* Genre.swift */; };
+		C5F204A422D21647004C7864 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = C593A0B92126F47D00D42F1B /* Station.swift */; };
+		C5F204A522D21647004C7864 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F569421F7FC48D00D53500 /* SearchResult.swift */; };
+		C5F204A622D21647004C7864 /* HelpMePlease.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5447EEC1FFFF9CE00508649 /* HelpMePlease.swift */; };
 		C5F569431F7FC48D00D53500 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F569421F7FC48D00D53500 /* SearchResult.swift */; };
 		C5FEE8E52098E857001A811A /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FEE8E42098E857001A811A /* Folder.swift */; };
 		E89F2C4C3526474621F786E7 /* Pods_ConnectorProtocolTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E1D40428D1683992433830 /* Pods_ConnectorProtocolTests.framework */; };
@@ -101,6 +124,7 @@
 		C593A0BB2126F88C00D42F1B /* StationBrowseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationBrowseProtocol.swift; sourceTree = "<group>"; };
 		C5C73C7A2070EF60007DAC5F /* CoverURI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverURI.swift; sourceTree = "<group>"; };
 		C5DBB812206AC906006BBC92 /* PlayerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettings.swift; sourceTree = "<group>"; };
+		C5F2047922D0DE23004C7864 /* ObjectSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectSections.swift; sourceTree = "<group>"; };
 		C5F569421F7FC48D00D53500 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		C5FEE8E42098E857001A811A /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		DCB7C89486279D95541DF9EE /* Pods_ConnectorProtocol_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ConnectorProtocol_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -204,6 +228,7 @@
 				C548EF3A1FFCDAC300FBE535 /* StatusProtocol.swift */,
 				C546AF861F35A90A003C5B7E /* ControlProtocol.swift */,
 				C546AF881F35A921003C5B7E /* BrowseProtocol.swift */,
+				C5F2047922D0DE23004C7864 /* ObjectSections.swift */,
 				C593A0BB2126F88C00D42F1B /* StationBrowseProtocol.swift */,
 				C546AF8A1F35A93E003C5B7E /* PlayqueueProtocol.swift */,
 				C5C73C7A2070EF60007DAC5F /* CoverURI.swift */,
@@ -562,6 +587,7 @@
 				C55C76DC2128B5B400E0A3B3 /* Genre.swift in Sources */,
 				C57433351F3E10D000615237 /* PlayerProtocol.swift in Sources */,
 				C593A0BA2126F47D00D42F1B /* Station.swift in Sources */,
+				C5F2047A22D0DE23004C7864 /* ObjectSections.swift in Sources */,
 				C546AF911F35DBE9003C5B7E /* Album.swift in Sources */,
 				C5FEE8E52098E857001A811A /* Folder.swift in Sources */,
 				C593A0BC2126F88C00D42F1B /* StationBrowseProtocol.swift in Sources */,
@@ -578,11 +604,22 @@
 				C546B14A1F37A598003C5B7E /* PlayqueueProtocol.swift in Sources */,
 				C546B1481F37A598003C5B7E /* ControlProtocol.swift in Sources */,
 				C546B14B1F37A598003C5B7E /* PlayerStatus.swift in Sources */,
+				C5F2049922D21646004C7864 /* Playlist.swift in Sources */,
+				C5F2047B22D0DE23004C7864 /* ObjectSections.swift in Sources */,
 				C546B1491F37A598003C5B7E /* BrowseProtocol.swift in Sources */,
+				C5F2049822D21646004C7864 /* CoverURI.swift in Sources */,
+				C5F2049B22D21646004C7864 /* Genre.swift in Sources */,
 				C546B14C1F37A598003C5B7E /* Song.swift in Sources */,
 				C546B14D1F37A598003C5B7E /* Album.swift in Sources */,
+				C5F2049D22D21646004C7864 /* SearchResult.swift in Sources */,
 				C57433361F3E10D100615237 /* PlayerProtocol.swift in Sources */,
+				C5F2049722D21646004C7864 /* StationBrowseProtocol.swift in Sources */,
+				C5F2049A22D21646004C7864 /* Folder.swift in Sources */,
 				C546B14E1F37A598003C5B7E /* Artist.swift in Sources */,
+				C5F2049522D21625004C7864 /* StatusProtocol.swift in Sources */,
+				C5F2049C22D21646004C7864 /* Station.swift in Sources */,
+				C5F2049322D21621004C7864 /* PlayerSettings.swift in Sources */,
+				C5F2049E22D21646004C7864 /* HelpMePlease.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,11 +630,22 @@
 				C546B1DC1F37AF15003C5B7E /* PlayqueueProtocol.swift in Sources */,
 				C546B1DA1F37AF15003C5B7E /* ControlProtocol.swift in Sources */,
 				C546B1DD1F37AF15003C5B7E /* PlayerStatus.swift in Sources */,
+				C5F204A122D21647004C7864 /* Playlist.swift in Sources */,
+				C5F2047C22D0DE23004C7864 /* ObjectSections.swift in Sources */,
 				C546B1DB1F37AF15003C5B7E /* BrowseProtocol.swift in Sources */,
+				C5F204A022D21647004C7864 /* CoverURI.swift in Sources */,
+				C5F204A322D21647004C7864 /* Genre.swift in Sources */,
 				C546B1DE1F37AF15003C5B7E /* Song.swift in Sources */,
 				C546B1DF1F37AF15003C5B7E /* Album.swift in Sources */,
+				C5F204A522D21647004C7864 /* SearchResult.swift in Sources */,
 				C57433371F3E10D100615237 /* PlayerProtocol.swift in Sources */,
+				C5F2049F22D21647004C7864 /* StationBrowseProtocol.swift in Sources */,
+				C5F204A222D21647004C7864 /* Folder.swift in Sources */,
 				C546B1E01F37AF15003C5B7E /* Artist.swift in Sources */,
+				C5F2049622D21626004C7864 /* StatusProtocol.swift in Sources */,
+				C5F204A422D21647004C7864 /* Station.swift in Sources */,
+				C5F2049422D21622004C7864 /* PlayerSettings.swift in Sources */,
+				C5F204A622D21647004C7864 /* HelpMePlease.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

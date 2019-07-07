@@ -34,7 +34,7 @@ public enum ArtistType {
 }
 
 /// A struct defining a generic Artist object.
-public struct Artist {
+public struct Artist: Identifiable {
     /// A unique id for the artist. Usage depends on library implementation.
     public var id = ""
     
@@ -50,6 +50,9 @@ public struct Artist {
     /// The sortation name of the artist.
     public var sortName = ""
     
+    /// URI through which cover art can be fetched.
+    public var coverURI = CoverURI.fullPathURI("")
+
     public init() {
     }
     
