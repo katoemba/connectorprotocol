@@ -112,11 +112,13 @@ public struct QualityStatus {
     public var samplerate = ""
     public var encoding = ""
     public var channels = ""
+    public var filetype = ""
 
-    public init(samplerate: String, encoding: String, channels: String) {
+    public init(samplerate: String, encoding: String, channels: String, filetype: String) {
         self.samplerate = samplerate
         self.encoding = encoding
         self.channels = channels
+        self.filetype = filetype
     }
     
     public init() {
@@ -126,20 +128,23 @@ public struct QualityStatus {
         samplerate = from.samplerate
         encoding = from.encoding
         channels = from.channels
+        filetype = from.filetype
     }
 }
 extension QualityStatus: Equatable {}
 public func ==(lhs: QualityStatus, rhs: QualityStatus) -> Bool {
     return lhs.samplerate == rhs.samplerate &&
         lhs.encoding == rhs.encoding &&
-        lhs.channels == rhs.channels
+        lhs.channels == rhs.channels &&
+        lhs.filetype == rhs.filetype
 }
 extension QualityStatus: CustomStringConvertible {
     public var description: String {
         return "> QualityStatus\n" +
             "    bitrate = \(samplerate)\n" +
             "    encoding = \(encoding)\n" +
-        "    channels = \(channels)\n"
+            "    channels = \(channels)\n" +
+        "    filetype = \(filetype)\n"
     }
 }
 extension QualityStatus: CustomDebugStringConvertible {
@@ -147,7 +152,8 @@ extension QualityStatus: CustomDebugStringConvertible {
         return "> QualityStatus\n" +
             "    bitrate = \(samplerate)\n" +
             "    encoding = \(encoding)\n" +
-        "    channels = \(channels)\n"
+            "    channels = \(channels)\n" +
+        "    filetype = \(filetype)\n"
     }
 }
 

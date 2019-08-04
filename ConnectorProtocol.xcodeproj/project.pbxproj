@@ -424,11 +424,11 @@
 			};
 			buildConfigurationList = C546AF751F35A8E6003C5B7E /* Build configuration list for PBXProject "ConnectorProtocol" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = C546AF711F35A8E6003C5B7E;
 			productRefGroup = C546AF7C1F35A8E6003C5B7E /* Products */;
