@@ -29,6 +29,7 @@ import RxSwift
 
 public protocol Identifiable {
     var id: String { get set }
+    func filter(_ filter: String) -> Bool
 }
 
 public protocol ObjectSectionsProtocol {
@@ -38,6 +39,7 @@ public protocol ObjectSectionsProtocol {
     func rowsInSection(_ section: Int) -> Int
     var sectionTitles: [String] { get }
     func getObjectObservable(indexPath: IndexPath) -> Observable<objectType>
+    func filter(_ filter: String) -> ObjectSections<objectType>
 }
 
 public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
@@ -74,10 +76,6 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
     }
     
     public var completeObjects: ([objectType]) -> Observable<[objectType]>
-    
-    deinit {
-        print("Cleanup ObjectsSections")
-    }
     
     public init(_ sectionDictionary: [(String, [objectType])], completeObjects: @escaping ([objectType]) -> Observable<[objectType]>) {
         self.completeObjects = completeObjects
@@ -176,5 +174,21 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
             .disposed(by: bag)
         
         return tuple.objectSubject
+    }
+    
+    public func filter(_ filter: String) -> ObjectSections<objectType> {
+        var filteredObjects = [objectType]()
+
+        for section in 0..<objectTuples.count {
+            for row in 0..<objectTuples[section].count {
+                let tuple = objectTuples[section][row]
+                
+                if tuple.object.filter(filter) {
+                    filteredObjects.append(tuple.object)
+                }
+            }
+        }
+
+        return ObjectSections<objectType>([("", filteredObjects)], completeObjects: completeObjects)
     }
 }

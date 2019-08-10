@@ -86,6 +86,10 @@ public struct Artist: Identifiable {
             }
         }
     }
+    
+    public func filter(_ filter: String) -> Bool {
+        return name.uppercased().contains(filter.uppercased())
+    }
 }
 
 extension Artist: Equatable {}

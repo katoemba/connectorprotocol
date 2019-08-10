@@ -88,6 +88,10 @@ public struct Album: Identifiable {
         self.sortTitle = sortTitle != "" ? sortTitle : title
         self.sortArtist = Artist.sortName(sortName: sortArtist, name: artist)
     }
+
+    public func filter(_ filter: String) -> Bool {
+        return title.uppercased().contains(filter.uppercased()) || artist.uppercased().contains(filter.uppercased())
+    }
 }
 
 extension Album: Equatable {}
