@@ -44,7 +44,7 @@ public protocol ObjectSectionsProtocol {
 
 public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
     public typealias objectType = T
-    
+
     private class ObjectTuple {
         var loadStatus: LoadStatus
         var objectSubject: BehaviorSubject<objectType>

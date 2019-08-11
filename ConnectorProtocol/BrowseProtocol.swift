@@ -69,9 +69,10 @@ public enum FolderContent {
     case playlist(Playlist)
 }
 
+public typealias AlbumSections = ObjectSections<Album>
 public protocol AlbumSectionBrowseViewModel {
     var loadProgressObservable: Observable<LoadProgress> { get }
-    var albumSectionsObservable: Observable<ObjectSections<Album>> { get }
+    var albumSectionsObservable: Observable<AlbumSections> { get }
     var sort: SortType { get }
     var availableSortOptions: [SortType] { get }
     
@@ -91,9 +92,10 @@ public protocol AlbumBrowseViewModel {
     func extend(to: Int)
 }
 
+public typealias ArtistSections = ObjectSections<Artist>
 public protocol ArtistBrowseViewModel {
     var loadProgressObservable: Observable<LoadProgress> { get }
-    var artistSectionsObservable: Observable<ObjectSections<Artist>> { get }
+    var artistSectionsObservable: Observable<ArtistSections> { get }
     var filters: [BrowseFilter] { get }
     var artistType: ArtistType { get }
 
