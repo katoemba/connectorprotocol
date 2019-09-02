@@ -95,9 +95,9 @@ public class SelectionSetting: PlayerSetting {
 
 /// A setting that holds a single selection from a list of options.
 public class ActionSetting: PlayerSetting {
-    public var action: () -> Void
+    public var action: () -> Observable<String>
 
-    public init(id: String, description: String, action: @escaping () -> Void) {
+    public init(id: String, description: String, action: @escaping () -> Observable<String>) {
         self.action = action
         super.init(type: .action, id: id, description: description)
     }
