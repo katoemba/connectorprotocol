@@ -39,6 +39,18 @@ public enum DiscoverMode: String {
     case manual = "manual"
 }
 
+public enum Functions {
+    case randomSongs
+    case randomAlbums
+    case composers
+    case performers
+    case quality
+    case recentlyAddedAlbums
+    case recentlyPlayedAlbums
+    case recentlyAddedSongs
+    case recentlyPlayedSongs
+}
+
 /// A protocol to provide a generic interface to control a network music player.
 public protocol PlayerProtocol: class {
     /// String that identifies the Controller Type.
@@ -55,6 +67,9 @@ public protocol PlayerProtocol: class {
     
     /// Description of the model of player. Implementation will be backend specific.
     var model: String { get }
+    
+    /// A list of functions supported by the player
+    var supportedFunctions: [Functions] { get }
     
     /// Property to get the connection parameters so they can be stored in User Defaults
     var connectionProperties: [String: Any] { get }
