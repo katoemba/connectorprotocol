@@ -24,7 +24,7 @@
 //
 	
 
-import Foundation
+import UIKit
 import RxSwift
 
 public protocol Identifiable {
