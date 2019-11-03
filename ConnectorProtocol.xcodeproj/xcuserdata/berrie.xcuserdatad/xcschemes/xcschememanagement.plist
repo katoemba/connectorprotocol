@@ -4,26 +4,26 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>ConnectorProtocolTests.xcscheme</key>
+		<key>ConnectorProtocolTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>6</integer>
 		</dict>
-		<key>ConnectorProtocol_MacOS.xcscheme</key>
+		<key>ConnectorProtocol_MacOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
-		<key>ConnectorProtocol_iOS.xcscheme</key>
+		<key>ConnectorProtocol_iOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>ConnectorProtocol_tvOS.xcscheme</key>
+		<key>ConnectorProtocol_tvOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
