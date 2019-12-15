@@ -49,6 +49,7 @@ public enum Functions {
     case recentlyPlayedAlbums
     case recentlyAddedSongs
     case recentlyPlayedSongs
+    case binaryImageRetrieval
 }
 
 /// A protocol to provide a generic interface to control a network music player.
