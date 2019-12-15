@@ -28,7 +28,11 @@ import Foundation
 
 public enum CoverURI {
     case fullPathURI(String)
-    case filenameOptionsURI(String, String, [String])
+    case filenameOptionsURI(
+        String,     // baseUri, e.g. something like http://host:80/music
+        String,     // path, the path underneath the baseuri where to look
+        [String]    // possibleFilenames, a list of possible filenames to check for within the path
+    )
     
     public var baseUri: String {
         get {
