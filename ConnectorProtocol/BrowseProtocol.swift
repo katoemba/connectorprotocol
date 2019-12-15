@@ -294,7 +294,14 @@ public protocol BrowseProtocol {
     /// - Parameter coverURI: the CoverURI to pre-process
     /// - Returns: the processed cover URI
     func preprocessCoverURI(_ coverURI: CoverURI) -> Observable<CoverURI>
-    
+
+    /// Get binary data for an album cover based on it's uri
+    /// This is primarily meant for cover-art retrieval in mpd
+    ///
+    /// - Parameter uri: the path where the the data can be taken from
+    /// - Returns: an observable String containing the image data
+    func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?>
+
     /// Create a diagnostics string that can help troubleshooting data issues
     ///
     /// - Parameter album: an album for which to get diagnostics
