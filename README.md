@@ -1,14 +1,14 @@
 # README #
 
-### What is this repository for? ###
+## What is this repository for? ##
 
 * ConnectorProtocol is a generic protocol specification to control a network based music player for Swift.
 The protocol abstracts a player specific implementation from a client implementation, which allows to have
 a single client that supports multiple player types.
-* MPDConnector is a full implementation of this protocol for the MPD protocol: https://bitbucket.org/musicremote/mpdconnector/
-* These two frameworks are the foundation of the Rigelian MPD client, for more info see http://www.rigelian.net
+* MPDConnector is a full implementation of this protocol for the MPD protocol: https://github.com/katoemba/mpdconnector/
+* These two frameworks are the foundation of the Rigelian MPD client, for more info see https://www.rigelian.net
 
-### What are the building blocks of this Protocol? ###
+## What are the building blocks of this Protocol? ##
 
 * The protocol relies heavily on reactive constructs, using RxSwift.
 * ConnectorProtocol consist of five sub-protocols:
@@ -26,17 +26,41 @@ a single client that supports multiple player types.
 	* PlayerStatus
 * The protocol is meant to be independent of the target platform (iOS, MacOS, tvOS). However testing is only done on iOS.
 
-### How do I get set up? ###
+## Requirements
 
-* For now you will have to manually copy ConnectorProtocol into a project.
-* ConnectorProtocol depends on the following libraries:
-	* RxSwift v4
-	* RxBlocking v4 for the unit test part
+* Xcode 11
+* Swift 5.0
 
-### Testing ###
+## Installation
+
+libmpdclient-swift is dependent on RxSwift.
+
+Build and usage via swift package manager is supported:
+
+### [Swift Package Manager](https://github.com/apple/swift-package-manager)
+
+The easiest way to add the library is directly from within XCode (11). Alternatively you can create a `Package.swift` file. 
+
+```swift
+// swift-tools-version:5.0
+
+import PackageDescription
+
+let package = Package(
+  name: "MyProject",
+  dependencies: [
+  .package(url: "https://github.com/katoemba/connectorprotocol.git", from: "1.7.0")
+  ],
+  targets: [
+    .target(name: "MyProject", dependencies: ["connectorprotocol"])
+  ]
+)
+```
+
+## Testing ##
 
 * A very limited set of unit tests is included.
 
-### Who do I talk to? ###
+## Who do I talk to? ##
 
 * In case of questions you can contact berrie at rigelian dot net
