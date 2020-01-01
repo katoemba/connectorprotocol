@@ -70,7 +70,7 @@ public enum FolderContent {
 }
 
 public typealias AlbumSections = ObjectSections<Album>
-public protocol AlbumSectionBrowseViewModel {
+public protocol AlbumSectionBrowseViewModel: class {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var albumSectionsObservable: Observable<AlbumSections> { get }
     var sort: SortType { get }
@@ -79,7 +79,7 @@ public protocol AlbumSectionBrowseViewModel {
     func load(sort: SortType)
 }
 
-public protocol AlbumBrowseViewModel {
+public protocol AlbumBrowseViewModel: class {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var albumsObservable: Observable<[Album]> { get }
     var filters: [BrowseFilter] { get }
@@ -93,7 +93,7 @@ public protocol AlbumBrowseViewModel {
 }
 
 public typealias ArtistSections = ObjectSections<Artist>
-public protocol ArtistBrowseViewModel {
+public protocol ArtistBrowseViewModel: class {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var artistSectionsObservable: Observable<ArtistSections> { get }
     var filters: [BrowseFilter] { get }
@@ -102,7 +102,7 @@ public protocol ArtistBrowseViewModel {
     func load(filters: [BrowseFilter])
 }
 
-public protocol PlaylistBrowseViewModel {
+public protocol PlaylistBrowseViewModel: class {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var playlistsObservable: Observable<[Playlist]> { get }
     
@@ -113,7 +113,7 @@ public protocol PlaylistBrowseViewModel {
     func deletePlaylist(_ playlist: Playlist)
 }
 
-public protocol SongBrowseViewModel {
+public protocol SongBrowseViewModel: class {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var songsObservable: Observable<[Song]> { get }
     var songsWithSubfilterObservable: Observable<[Song]> { get }
@@ -125,7 +125,7 @@ public protocol SongBrowseViewModel {
     func removeSong(at: Int)
 }
 
-public protocol GenreBrowseViewModel {
+public protocol GenreBrowseViewModel: class {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var genresObservable: Observable<[Genre]> { get }
     var parentGenre: Genre? { get }
@@ -134,7 +134,7 @@ public protocol GenreBrowseViewModel {
     func extend()
 }
 
-public protocol FolderBrowseViewModel {
+public protocol FolderBrowseViewModel: class {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var folderContentsObservable: Observable<[FolderContent]> { get }
     var parentFolder: Folder? { get }
