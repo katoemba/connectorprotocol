@@ -41,6 +41,7 @@ public enum DiscoverMode: String {
 
 public enum Functions {
     case randomSongs
+    case twentyRandomSongs  // Allow to specify a smaller number of random songs for performance reasons
     case randomAlbums
     case composers
     case performers
