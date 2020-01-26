@@ -28,10 +28,11 @@ import Foundation
 import RxSwift
 
 public enum ConnectionProperties: String {
-    case Name = "Name"
-    case Host = "Host"
-    case Port = "Port"
-    case Password = "Password"
+    case controllerType = "ControllerType"
+    case name = "Name"
+    case host = "Host"
+    case port = "Port"
+    case password = "Password"
 }
 
 public enum DiscoverMode: String {
@@ -120,6 +121,9 @@ public protocol PlayerProtocol: class {
 }
 
 public protocol PlayerBrowserProtocol {
+    /// String that identifies the Controller Type.
+    var controllerType: String { get }
+
     var addPlayerObservable : Observable<PlayerProtocol> { get }
     var removePlayerObservable : Observable<PlayerProtocol> { get }
 
