@@ -148,6 +148,10 @@ public protocol PlayerBrowserProtocol {
     ///
     /// - Parameter player: the player to remove
     func removePlayer(_ player: PlayerProtocol)
+
+    /// Get the specific settings to add a player manually.
+    /// A client can implement a generic add manual player view from these definitions.
+    var addManualPlayerSettings: [PlayerSettingGroup] { get }
 }
 
 /// This wrapper class is a work-around for Swift restrictions on Protocols and Associated Types.

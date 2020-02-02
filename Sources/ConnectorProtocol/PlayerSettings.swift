@@ -36,17 +36,22 @@ public enum PlayerSettingType {
 }
 
 public enum StringSettingRestriction {
+    case readonly
     case regular
     case password
     case numeric
     case email
 }
 
+public typealias ValidationFunction = (PlayerSetting, Any?) -> String?
+
 /// Base class for player specific settings.
 public class PlayerSetting {
     public var id: String
     public var description: String
     public var type: PlayerSettingType
+    public var validation: ValidationFunction?
+
     
     public init(type: PlayerSettingType,
          id: String,
