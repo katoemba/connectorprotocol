@@ -109,22 +109,17 @@ extension TimeStatus: CustomDebugStringConvertible {
 // MARK: - QualityStatus Struct
 
 public struct QualityStatus {
+    public var bitrate = ""
     public var samplerate = ""
     public var encoding = ""
     public var channels = ""
     public var filetype = ""
 
-    public init(samplerate: String, encoding: String, channels: String, filetype: String) {
-        self.samplerate = samplerate
-        self.encoding = encoding
-        self.channels = channels
-        self.filetype = filetype
-    }
-    
     public init() {
     }
 
     public init(_ from: QualityStatus) {
+        bitrate = from.bitrate
         samplerate = from.samplerate
         encoding = from.encoding
         channels = from.channels
@@ -133,7 +128,8 @@ public struct QualityStatus {
 }
 extension QualityStatus: Equatable {}
 public func ==(lhs: QualityStatus, rhs: QualityStatus) -> Bool {
-    return lhs.samplerate == rhs.samplerate &&
+    return lhs.bitrate == rhs.bitrate &&
+        lhs.samplerate == rhs.samplerate &&
         lhs.encoding == rhs.encoding &&
         lhs.channels == rhs.channels &&
         lhs.filetype == rhs.filetype
@@ -141,7 +137,8 @@ public func ==(lhs: QualityStatus, rhs: QualityStatus) -> Bool {
 extension QualityStatus: CustomStringConvertible {
     public var description: String {
         return "> QualityStatus\n" +
-            "    bitrate = \(samplerate)\n" +
+            "    bitrate = \(bitrate)\n" +
+            "    samplerate = \(samplerate)\n" +
             "    encoding = \(encoding)\n" +
             "    channels = \(channels)\n" +
         "    filetype = \(filetype)\n"
@@ -150,7 +147,8 @@ extension QualityStatus: CustomStringConvertible {
 extension QualityStatus: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "> QualityStatus\n" +
-            "    bitrate = \(samplerate)\n" +
+            "    bitrate = \(bitrate)\n" +
+            "    samplerate = \(samplerate)\n" +
             "    encoding = \(encoding)\n" +
             "    channels = \(channels)\n" +
         "    filetype = \(filetype)\n"
