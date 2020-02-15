@@ -1,3 +1,8 @@
+[![bitrise CI](https://img.shields.io/bitrise/d2f7e3b6ab1ea0c5?token=qtI4l__6bRRUTZQb1bD-nw)](https://bitrise.io)
+![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey)
+[![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
+
+
 # README #
 
 ## What is this repository for? ##
