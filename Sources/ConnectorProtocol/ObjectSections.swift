@@ -24,7 +24,7 @@
 //
 	
 
-import UIKit
+import Foundation
 import RxSwift
 
 public protocol Identifiable {
@@ -45,6 +45,9 @@ public protocol ObjectSectionsProtocol {
 public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
     public typealias objectType = T
 
+    private let sectionIndex = 0
+    private let rowIndex = 1
+    
     private class ObjectTuple {
         var loadStatus: LoadStatus
         var objectSubject: BehaviorSubject<objectType>
@@ -90,11 +93,14 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
     }
     
     private func nextIndexPathDown(_ indexPath: IndexPath) -> IndexPath? {
-        if indexPath.row > 0 {
-            return IndexPath(row: indexPath.row - 1, section: indexPath.section)
+        let section = indexPath[sectionIndex]
+        let row = indexPath[rowIndex]
+        
+        if row > 0 {
+            return IndexPath(indexes: [section, row - 1])
         }
-        else if indexPath.section > 0 {
-            return IndexPath(row: objectTuples[indexPath.section - 1].count - 1, section: indexPath.section - 1)
+        else if section > 0 {
+            return IndexPath(indexes: [section - 1, objectTuples[section - 1].count - 1])
         }
         else {
             return nil
@@ -102,11 +108,14 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
     }
     
     private func nextIndexPathUp(_ indexPath: IndexPath) -> IndexPath? {
-        if indexPath.row < objectTuples[indexPath.section].count - 1 {
-            return IndexPath(row: indexPath.row + 1, section: indexPath.section)
+        let section = indexPath[sectionIndex]
+        let row = indexPath[rowIndex]
+        
+        if row < objectTuples[section].count - 1 {
+            return IndexPath(indexes: [section, row + 1])
         }
-        else if indexPath.section < objectTuples.count - 1 {
-            return IndexPath(row: 0, section: indexPath.section + 1)
+        else if section < objectTuples.count - 1 {
+            return IndexPath(indexes: [section + 1, 0])
         }
         else {
             return nil
@@ -114,10 +123,13 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
     }
     
     public func getObjectObservable(indexPath: IndexPath) -> Observable<objectType> {
-        guard indexPath.section < objectTuples.count,
-            indexPath.row < objectTuples[indexPath.section].count else { return Observable.empty() }
+        let section = indexPath[sectionIndex]
+        let row = indexPath[rowIndex]
+
+        guard section < objectTuples.count,
+            row < objectTuples[section].count else { return Observable.empty() }
         
-        let tuple = objectTuples[indexPath.section][indexPath.row]
+        let tuple = objectTuples[section][row]
         if tuple.loadStatus != .initial {
             return tuple.objectSubject
         }
@@ -134,7 +146,9 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
                 break
             }
             
-            let downTuple = objectTuples[indexPathDown!.section][indexPathDown!.row]
+            let downSection = indexPathDown![sectionIndex]
+            let downRow = indexPathDown![rowIndex]
+            let downTuple = objectTuples[downSection][downRow]
             if downTuple.loadStatus == .initial {
                 objectsToFetch.append(downTuple.object)
                 objectIndexes[downTuple.object.id] = indexPathDown!
@@ -148,7 +162,9 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
                 break
             }
             
-            let upTuple = objectTuples[indexPathUp!.section][indexPathUp!.row]
+            let upSection = indexPathUp![sectionIndex]
+            let upRow = indexPathUp![rowIndex]
+            let upTuple = objectTuples[upSection][upRow]
             if upTuple.loadStatus == .initial {
                 objectsToFetch.append(upTuple.object)
                 objectIndexes[upTuple.object.id] = indexPathUp!
@@ -161,13 +177,17 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
                 guard let weakSelf = self else { return }
                 
                 for object in objects {
-                    if let indexPath = objectIndexes[object.id],
-                        indexPath.section < weakSelf.objectTuples.count,
-                        indexPath.row < weakSelf.objectTuples[indexPath.section].count {
-                        let tuple = weakSelf.objectTuples[indexPath.section][indexPath.row]
-                        tuple.loadStatus = .complete
-                        tuple.object = object
-                        tuple.objectSubject.onNext(object)
+                    if let indexPath = objectIndexes[object.id] {
+                        let section = indexPath[weakSelf.sectionIndex]
+                        let row = indexPath[weakSelf.rowIndex]
+                        
+                        if section < weakSelf.objectTuples.count,
+                            row < weakSelf.objectTuples[section].count {
+                            let tuple = weakSelf.objectTuples[section][row]
+                            tuple.loadStatus = .complete
+                            tuple.object = object
+                            tuple.objectSubject.onNext(object)
+                        }
                     }
                 }
             })

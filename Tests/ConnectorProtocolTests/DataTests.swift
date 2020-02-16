@@ -52,7 +52,7 @@ class DataTests: XCTestCase {
                          year: 1000,
                          genre: ["genre"],
                          length: 100,
-                         quality: QualityStatus(samplerate: "bitrate", encoding: "encoding", channels: "", filetype: "mp3"))
+                         quality: QualityStatus())
         let song2 = Song(id: "123",
                          source: .Local,
                          location: "locationx",
@@ -64,7 +64,7 @@ class DataTests: XCTestCase {
                          year: 1001,
                          genre: ["genrex"],
                          length: 101,
-                         quality: QualityStatus(samplerate: "bitratex", encoding: "encodingx", channels: "", filetype: "mp3"))
+                         quality: QualityStatus())
 
         // Then they are treated equal
         XCTAssert(song1 == song2, "song comparison failed for songs with the same id")
@@ -83,7 +83,7 @@ class DataTests: XCTestCase {
                          year: 1000,
                          genre: ["genre"],
                          length: 100,
-                         quality: QualityStatus(samplerate: "bitrate", encoding: "encoding", channels: "", filetype: "mp3"))
+                         quality: QualityStatus())
         let song2 = Song(id: "345",
                          source: .Local,
                          location: "location",
@@ -95,7 +95,7 @@ class DataTests: XCTestCase {
                          year: 1000,
                          genre: ["genrex="],
                          length: 100,
-                         quality: QualityStatus(samplerate: "bitrate", encoding: "encoding", channels: "", filetype: "mp3"))
+                         quality: QualityStatus())
 
         // Then they are treated as not equal
         XCTAssertFalse(song1 == song2, "song comparison failed for songs with different id")
@@ -114,7 +114,7 @@ class DataTests: XCTestCase {
                          year: 1000,
                          genre: ["genre"],
                          length: 100,
-                         quality: QualityStatus(samplerate: "bitrate", encoding: "encoding", channels: "", filetype: "mp3"))
+                         quality: QualityStatus())
         let song2 = Song(id: "123",
                          source: .Spotify,
                          location: "location",
@@ -126,7 +126,7 @@ class DataTests: XCTestCase {
                          year: 1000,
                          genre: ["genrex="],
                          length: 100,
-                         quality: QualityStatus(samplerate: "bitrate", encoding: "encoding", channels: "", filetype: "mp3"))
+                         quality: QualityStatus())
 
         // Then they are treated as not equal
         XCTAssertFalse(song1 == song2, "song comparison failed for songs with different id")
