@@ -1,5 +1,5 @@
 [![bitrise CI](https://img.shields.io/bitrise/d2f7e3b6ab1ea0c5?token=qtI4l__6bRRUTZQb1bD-nw)](https://bitrise.io)
-![platforms](https://img.shields.io/badge/platforms-iOS-lightgrey)
+![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS-lightgrey)
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 
