@@ -301,6 +301,11 @@ public protocol BrowseProtocol {
     /// - Parameter uri: the path where the the data can be taken from
     /// - Returns: an observable String containing the image data
     func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?>
+    
+    /// Filter artists that exist in the library
+    /// - Parameter artist: the set of artists to check
+    /// - Returns: an observable of the filtered array of artists
+    func existingArtists(artists: [Artist]) -> Observable<[Artist]>
 
     /// Create a diagnostics string that can help troubleshooting data issues
     ///
