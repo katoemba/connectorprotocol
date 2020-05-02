@@ -131,17 +131,26 @@ public protocol ControlProtocol {
     /// Set the volume of the player.
     ///
     /// - Parameter volume: The volume to set. Must be a value between 0.0 and 1.0, values outside this range will be ignored.
-    func setVolume(_ volume: Float)
-    
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func setVolume(_ volume: Float) -> Observable<PlayerStatus>
+
+    /// Adjust the volume of the player.
+    ///
+    /// - Parameter adjustment: The adjustment to be made. Negative values will decrease the volume, positive values will increase the volume.
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func adjustVolume(_ adjustment: Float) -> Observable<PlayerStatus>
+
     /// Seek to a position in the current song
     ///
     /// - Parameter seconds: seconds in the current song, must be <= length of the song
-    func setSeek(seconds: UInt32)
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func setSeek(seconds: UInt32) -> Observable<PlayerStatus>
     
     /// Seek to a relative position in the current song
     ///
     /// - Parameter percentage: relative position in the current song, must be between 0.0 and 1.0
-    func setSeek(percentage: Float)
+    /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
+    func setSeek(percentage: Float) -> Observable<PlayerStatus>
 
     /// Add a song to the play queue
     ///
