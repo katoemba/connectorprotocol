@@ -52,6 +52,7 @@ public enum Functions {
     case recentlyAddedSongs
     case recentlyPlayedSongs
     case binaryImageRetrieval
+    case stream
 }
 
 /// A protocol to provide a generic interface to control a network music player.
@@ -100,6 +101,9 @@ public protocol PlayerProtocol: class {
     
     /// Get a browse object to browse music on the player.
     var browse: BrowseProtocol { get }
+    
+    /// Get the url on which the player is providing an audio stream
+    var playerStreamURL: URL? { get }
 
     /// Get a copy of the player object.
     func copy() -> PlayerProtocol
@@ -118,6 +122,13 @@ public protocol PlayerProtocol: class {
     /// - Parameter id: the id of the setting to load
     /// - Returns: a new PlayerSetting object containing the value of the requested setting, or nil if the setting is unknown
     func loadSetting(id: String) -> PlayerSetting?
+}
+
+/// Extension to include optional functions and properties, to maintain some form of backwards compatibility
+public extension PlayerProtocol {
+    var playerStreamURL: URL? {
+        return nil
+    }
 }
 
 public protocol PlayerBrowserProtocol {
