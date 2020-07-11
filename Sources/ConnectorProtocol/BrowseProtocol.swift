@@ -55,6 +55,23 @@ public enum BrowseFilter {
     case random(Int)
 }
 
+public enum SearchItem {
+    case genre(name: String)
+    case artist(name: String)
+    case song(title: String, artist: String?)
+    case album(title: String, artist: String?)
+    case artistAlbum(artist: String, sort: SortType)
+    case playlist(name: String)
+}
+
+public enum FoundItem: Hashable, Equatable {
+    case genre(Genre)
+    case artist(Artist)
+    case song(Song)
+    case album(Album)
+    case playlist(Playlist)
+}
+
 public enum LoadProgress {
     case notStarted
     case loading
@@ -312,4 +329,9 @@ public protocol BrowseProtocol {
     /// - Parameter album: an album for which to get diagnostics
     /// - Returns: an observable String containing the diagnostics data
     func diagnostics(album: Album) -> Observable<String>
+    
+    /// Search for the existance a certain item
+    /// - Parameter searchItem: what to search for
+    /// - Returns: an observable array of results
+    func search(searchItem: SearchItem) -> Observable<[FoundItem]>
 }
