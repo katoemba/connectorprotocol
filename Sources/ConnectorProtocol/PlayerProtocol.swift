@@ -52,6 +52,7 @@ public enum Functions {
     case recentlyAddedSongs
     case recentlyPlayedSongs
     case binaryImageRetrieval
+    case embeddedImageRetrieval
     case stream
 }
 

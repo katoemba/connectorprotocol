@@ -319,6 +319,13 @@ public protocol BrowseProtocol {
     /// - Returns: an observable String containing the image data
     func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?>
     
+    /// Get embedded binary data for an album cover based on it's uri
+    /// This is primarily meant for cover-art retrieval in mpd
+    ///
+    /// - Parameter uri: the path where the the data can be taken from
+    /// - Returns: an observable String containing the image data
+    func embeddedImageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?>
+    
     /// Filter artists that exist in the library
     /// - Parameter artist: the set of artists to check
     /// - Returns: an observable of the filtered array of artists
@@ -334,4 +341,15 @@ public protocol BrowseProtocol {
     /// - Parameter searchItem: what to search for
     /// - Returns: an observable array of results
     func search(searchItem: SearchItem) -> Observable<[FoundItem]>
+}
+
+extension BrowseProtocol {
+    // It's not required to provide an implementation for this, only mpdconnector has this.
+    public func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
+        return Observable.just(nil)
+    }
+
+    public func embeddedImageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
+        return Observable.just(nil)
+    }
 }
