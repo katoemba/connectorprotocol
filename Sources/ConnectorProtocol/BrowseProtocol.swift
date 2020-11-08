@@ -345,6 +345,10 @@ public protocol BrowseProtocol {
 
 extension BrowseProtocol {
     // It's not required to provide an implementation for this, only mpdconnector has this.
+    public func preprocessCoverURI(_ coverURI: CoverURI) -> Observable<CoverURI> {
+        return Observable.just(coverURI)
+    }
+
     public func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
         return Observable.just(nil)
     }
