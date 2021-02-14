@@ -35,7 +35,7 @@ public class HelpMePlease {
     public static func allocUp(name: String) {
         if logAllocations {
             _ = Observable.just(1)
-                .observeOn(serialScheduler)
+                .observe(on: serialScheduler)
                 .subscribe(onNext: { (_) in
                     let count = allocCounter[name] ?? 0
                     allocCounter[name] = count + 1
@@ -46,7 +46,7 @@ public class HelpMePlease {
     public static func allocDown(name: String) {
         if logAllocations {
             _ = Observable.just(1)
-                .observeOn(serialScheduler)
+                .observe(on: serialScheduler)
                 .subscribe(onNext: { (_) in
                     let count = allocCounter[name] ?? 0
                     allocCounter[name] = count - 1
