@@ -311,6 +311,18 @@ public struct PlayerStatus {
     }
 }
 
+extension PlayerStatus: Equatable {}
+public func ==(lhs: PlayerStatus, rhs: PlayerStatus) -> Bool {
+    return lhs.outputs == rhs.outputs &&
+        lhs.playing == rhs.playing &&
+        lhs.playqueue == rhs.playqueue &&
+        lhs.quality == rhs.quality &&
+        lhs.volume == rhs.volume &&
+        lhs.volumeEnabled == rhs.volumeEnabled &&
+        lhs.currentSong == rhs.currentSong &&
+        lhs.time == rhs.time
+}
+
 extension PlayerStatus: CustomStringConvertible {
     public var description: String {
         return "> PlayerStatus\n" +
