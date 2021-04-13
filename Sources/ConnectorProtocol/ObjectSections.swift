@@ -80,6 +80,12 @@ public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
     
     public var completeObjects: ([objectType]) -> Observable<[objectType]>
     
+    public func objectAt(section: Int, row: Int) -> objectType? {
+        guard section < objectTuples.count, row < objectTuples[section].count else { return nil }
+
+        return objectTuples[section][row].object
+    }
+    
     public init(_ sectionDictionary: [(String, [objectType])], completeObjects: @escaping ([objectType]) -> Observable<[objectType]>) {
         self.completeObjects = completeObjects
         for objectSection in sectionDictionary {
