@@ -34,6 +34,10 @@ public enum CoverURI {
         [String]    // possibleFilenames, a list of possible filenames to check for within the path
     )
     
+    public static var embeddedPrefix: String {
+        return "::::::::::"
+    }
+    
     public var baseUri: String {
         get {
             switch self {
@@ -51,13 +55,30 @@ public enum CoverURI {
             case let .fullPathURI(uri):
                 return [uri]
             case let .filenameOptionsURI(baseUri, _, possibleFilenames):
-                return possibleFilenames.map({ (possibleFilename) -> String in
-                    "\(baseUri)\(possibleFilename)"
+                return possibleFilenames.compactMap({ (possibleFilename) -> String? in
+                    guard possibleFilename.starts(with: CoverURI.embeddedPrefix) == false else { return nil }
+                    return "\(baseUri)\(possibleFilename)"
                 })
             }
         }
     }
     
+    public var embeddedUri: String? {
+        get {
+            switch self {
+            case .fullPathURI(_):
+                return nil
+            case let .filenameOptionsURI(_, _, possibleFilenames):
+                for filename in possibleFilenames {
+                    if filename.starts(with: CoverURI.embeddedPrefix) {
+                        return String(filename.suffix(filename.count - CoverURI.embeddedPrefix.count))
+                    }
+                }
+            }
+            return nil
+        }
+    }
+
     public var path: String {
         get {
             switch self {

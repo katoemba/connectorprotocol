@@ -140,6 +140,7 @@ public protocol SongBrowseViewModel: class {
     func load()
     func extend()
     func removeSong(at: Int)
+    func songBatch(start: Int, count: Int) -> Observable<[Song]>
 }
 
 public protocol GenreBrowseViewModel: class {
