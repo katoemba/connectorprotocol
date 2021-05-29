@@ -57,7 +57,7 @@ public enum Functions {
 }
 
 /// A protocol to provide a generic interface to control a network music player.
-public protocol PlayerProtocol: class {
+public protocol PlayerProtocol: AnyObject {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
     
