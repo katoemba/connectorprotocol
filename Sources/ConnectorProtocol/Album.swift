@@ -105,6 +105,32 @@ extension Album: Hashable {
     }
 }
 
+extension Album {
+    public static func sort(_ albums: [Album], by sort: SortType) -> [Album] {
+        albums.sorted { lhs, rhs in
+            if sort == .year || sort == .yearReverse {
+                if lhs.year < rhs.year {
+                    return sort == .year
+                }
+                else if lhs.year > rhs.year {
+                    return sort == .yearReverse
+                }
+            }
+            
+            if sort == .artist {
+                let artistCompare = lhs.sortArtist.caseInsensitiveCompare(rhs.sortArtist)
+                if artistCompare == .orderedSame {
+                    return (lhs.year == rhs.year) ? (lhs.title.caseInsensitiveCompare(rhs.title) == .orderedAscending) : (lhs.year < rhs.year)
+                }
+                                        
+                return (artistCompare == .orderedAscending)
+            }
+            
+            return (lhs.title.caseInsensitiveCompare(rhs.title) == .orderedAscending)
+        }
+    }
+}
+
 extension Album: CustomStringConvertible {
     public var description: String {
         return "> Album\n" +

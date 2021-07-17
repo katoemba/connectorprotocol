@@ -103,6 +103,21 @@ extension Artist: Hashable {
     }
 }
 
+extension Artist {
+    public static func sort(_ artists: [Artist], by sort: SortType) -> [Artist] {
+        artists.sorted { lhs, rhs in
+            let sortOrder = lhs.sortName.caseInsensitiveCompare(rhs.sortName)
+            if sortOrder == .orderedSame {
+                return lhs.name.caseInsensitiveCompare(rhs.name) == .orderedAscending
+            }
+            else {
+                return sortOrder == .orderedAscending
+            }
+        }
+    }
+}
+
+
 extension Artist: CustomStringConvertible {
     public var description: String {
         return "> Artist\n" +

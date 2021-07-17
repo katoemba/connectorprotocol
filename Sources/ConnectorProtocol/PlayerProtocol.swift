@@ -58,6 +58,8 @@ public enum Functions {
 
 /// A protocol to provide a generic interface to control a network music player.
 public protocol PlayerProtocol: AnyObject {
+    typealias FolderSettingAttachment = (Folder, PlayerSetting) -> (Void)
+    
     /// String that identifies the Controller Type.
     var controllerType: String { get }
     
@@ -88,6 +90,12 @@ public protocol PlayerProtocol: AnyObject {
     /// Property to get an optional connection warning of a specific player, like incompatible version
     var connectionWarning: String? { get }
     
+    /// Optional property to return a list of settings that be set to a folder, used for UPnP
+    var folderAttachmentSettings: [PlayerSetting]? { get }
+    
+    /// Optional action to connect a folder to a setting
+    var attachFolderToSetting: FolderSettingAttachment? { get }
+
     /// Activate a player. It shall initiate (long-)polling of status updates.
     func activate()
     
@@ -128,6 +136,14 @@ public protocol PlayerProtocol: AnyObject {
 /// Extension to include optional functions and properties, to maintain some form of backwards compatibility
 public extension PlayerProtocol {
     var playerStreamURL: URL? {
+        return nil
+    }
+    
+    var folderAttachmentSettings: [PlayerSetting]? {
+        return nil
+    }
+    
+    var attachFolderToSetting: FolderSettingAttachment? {
         return nil
     }
 }
