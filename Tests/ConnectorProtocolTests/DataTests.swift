@@ -55,14 +55,14 @@ class DataTests: XCTestCase {
                          quality: QualityStatus())
         let song2 = Song(id: "123",
                          source: .Local,
-                         location: "locationx",
-                         title: "titlex",
-                         album: "albumx",
-                         artist: "artistx",
-                         albumartist: "albumartistx",
-                         composer: "composerx",
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
                          year: 1001,
-                         genre: ["genrex"],
+                         genre: ["genre"],
                          length: 101,
                          quality: QualityStatus())
 
@@ -121,6 +121,99 @@ class DataTests: XCTestCase {
                          title: "title",
                          album: "album",
                          artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genrex="],
+                         length: 100,
+                         quality: QualityStatus())
+
+        // Then they are treated as not equal
+        XCTAssertFalse(song1 == song2, "song comparison failed for songs with different id")
+    }
+    
+    func testSongDifferentTitleNotEqual() {
+        // When song1 and song2 have a different source
+        let song1 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus())
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "titlex",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genrex="],
+                         length: 100,
+                         quality: QualityStatus())
+
+        // Then they are treated as not equal
+        XCTAssertFalse(song1 == song2, "song comparison failed for songs with different id")
+    }
+    
+    func testSongDifferentAlbumNotEqual() {
+        // When song1 and song2 have a different source
+        let song1 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus())
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "albumx",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genrex="],
+                         length: 100,
+                         quality: QualityStatus())
+
+        // Then they are treated as not equal
+        XCTAssertFalse(song1 == song2, "song comparison failed for songs with different id")
+    }
+    
+    func testSongDifferentArtistNotEqual() {
+        // When song1 and song2 have a different source
+        let song1 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus())
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artistx",
                          albumartist: "albumartist",
                          composer: "composer",
                          year: 1000,
