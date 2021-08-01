@@ -85,6 +85,12 @@ public struct TimeStatus {
         elapsedTime = from.elapsedTime
         trackTime = from.trackTime
     }
+    
+    fileprivate func elapsedTime(_ elapsedTime: Int) -> TimeStatus {
+        var copy = self
+        copy.elapsedTime = elapsedTime
+        return copy
+    }
 }
 extension TimeStatus: Equatable {}
 public func ==(lhs: TimeStatus, rhs: TimeStatus) -> Bool {
@@ -211,6 +217,30 @@ public struct PlayStatus {
         repeatMode = from.repeatMode
         consumeMode = from.consumeMode
     }
+    
+    fileprivate func playPauseMode(_ playMode: PlayPauseMode) -> PlayStatus {
+        var copy = self
+        copy.playPauseMode = playPauseMode
+        return copy
+    }
+    
+    fileprivate func randomMode(_ randomMode: RandomMode) -> PlayStatus {
+        var copy = self
+        copy.randomMode = randomMode
+        return copy
+    }
+    
+    fileprivate func repeatMode(_ repeatMode: RepeatMode) -> PlayStatus {
+        var copy = self
+        copy.repeatMode = repeatMode
+        return copy
+    }
+
+    fileprivate func consumeMode(_ consumeMode: ConsumeMode) -> PlayStatus {
+        var copy = self
+        copy.consumeMode = consumeMode
+        return copy
+    }
 }
 extension PlayStatus: Equatable {}
 public func ==(lhs: PlayStatus, rhs: PlayStatus) -> Bool {
@@ -308,6 +338,42 @@ public struct PlayerStatus {
         playqueue = from.playqueue
         playing = from.playing
         outputs = from.outputs
+    }
+    
+    public func playPauseMode(_ playPauseMode: PlayPauseMode) -> PlayerStatus {
+        var copy = self
+        copy.playing = playing.playPauseMode(playPauseMode)
+        return copy
+    }
+
+    public func repeatMode(_ repeatMode: RepeatMode) -> PlayerStatus {
+        var copy = self
+        copy.playing = playing.repeatMode(repeatMode)
+        return copy
+    }
+
+    public func randomMode(_ randomMode: RandomMode) -> PlayerStatus {
+        var copy = self
+        copy.playing = playing.randomMode(randomMode)
+        return copy
+    }
+
+    public func consumeMode(_ consumeMode: ConsumeMode) -> PlayerStatus {
+        var copy = self
+        copy.playing = playing.consumeMode(consumeMode)
+        return copy
+    }
+    
+    public func volume(_ volume: Float) -> PlayerStatus {
+        var copy = self
+        copy.volume = volume
+        return copy
+    }
+    
+    public func elapsedTime(_ elapsedTime: Int) -> PlayerStatus {
+        var copy = self
+        copy.time = time.elapsedTime(elapsedTime)
+        return copy
     }
 }
 

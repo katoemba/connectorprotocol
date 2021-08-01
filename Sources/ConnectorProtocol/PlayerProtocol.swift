@@ -154,6 +154,7 @@ public protocol PlayerBrowserProtocol {
 
     var addPlayerObservable : Observable<PlayerProtocol> { get }
     var removePlayerObservable : Observable<PlayerProtocol> { get }
+    var changedPlayerObservable: Observable<PlayerProtocol> { get }
 
     /// Start listening for players on the network.
     func startListening()
@@ -180,6 +181,12 @@ public protocol PlayerBrowserProtocol {
     /// Get the specific settings to add a player manually.
     /// A client can implement a generic add manual player view from these definitions.
     var addManualPlayerSettings: [PlayerSettingGroup] { get }
+}
+
+public extension PlayerBrowserProtocol {
+    var changedPlayerObservable: Observable<PlayerProtocol> {
+        Observable.empty()
+    }
 }
 
 /// This wrapper class is a work-around for Swift restrictions on Protocols and Associated Types.

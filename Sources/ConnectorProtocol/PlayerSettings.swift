@@ -51,7 +51,7 @@ public class PlayerSetting {
     public var description: String
     public var type: PlayerSettingType
     public var validation: ValidationFunction?
-
+    public var reloadAllOnChange = false
     
     public init(type: PlayerSettingType,
          id: String,
@@ -90,6 +90,10 @@ public class ToggleSetting: PlayerSetting {
 public class SelectionSetting: PlayerSetting {
     public var items: [Int: String]
     public var value: Int
+    public var selectedItem: String? {
+        guard value >= 0 && value < items.count else { return nil }
+        return items[value]
+    }
     
     public init(id: String, description: String, items: [Int: String], value: Int) {
         self.items = items
