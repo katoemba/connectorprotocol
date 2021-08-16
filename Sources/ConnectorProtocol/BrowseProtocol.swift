@@ -27,7 +27,7 @@
 import Foundation
 import RxSwift
 
-public enum SourceType: String {
+public enum SourceType: String, Codable {
     case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast, UPnP
 }
 
@@ -188,6 +188,12 @@ public protocol BrowseProtocol {
     /// - Parameter playlist: A Playlist object.
     /// - Returns: An array of fully populated Song objects.
     func songsInPlaylist(_ playlist: Playlist) -> Observable<[Song]>
+    
+    /// Get the songs in a playlist
+    ///
+    /// - Parameter genre: A Genre object.
+    /// - Returns: An array of fully populated Song objects.
+    func songsByGenre(_ genre: Genre) -> Observable<[Song]>
     
     /// Search across artists, songs and albums.
     ///
@@ -357,4 +363,9 @@ extension BrowseProtocol {
     public func embeddedImageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
         return Observable.just(nil)
     }
+    
+    public func songsByGenre(_ genre: Genre) -> Observable<[Song]> {
+        return Observable.just([])
+    }
+
 }

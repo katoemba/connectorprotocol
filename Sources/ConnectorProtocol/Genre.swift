@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Genre object.
-public struct Genre {
+public struct Genre: Codable {
     /// A unique id for the genre. Usage depends on library implementation.
     public var id = ""
     

@@ -27,6 +27,19 @@
 import Foundation
 
 public enum CoverURI {
+    enum CodingKeys: String, CodingKey {
+        case type
+        case fullPathURI
+        case baseUri
+        case path
+        case possibleFileNames
+    }
+    
+    private enum CoverURIType: String, Codable {
+        case fullPathURI
+        case filenameOptionsURI
+    }
+    
     case fullPathURI(String)
     case filenameOptionsURI(
         String,     // baseUri, e.g. something like http://host:80/music
@@ -113,4 +126,43 @@ extension CoverURI: Hashable {
     }
 }
 
+extension CoverURI: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        //access the keyed container
+        var container = encoder.container(keyedBy: CodingKeys.self)
 
+        //iterate over self and encode (1) the status and (2) the associated value(s)
+        switch self {
+        case .fullPathURI(let fullPathURI):
+            try container.encode(CoverURIType.fullPathURI, forKey: .type)
+            try container.encode(fullPathURI, forKey: .fullPathURI)
+        case .filenameOptionsURI(let baseUri, let path, let possibleFilenames):
+            try container.encode(CoverURIType.filenameOptionsURI, forKey: .type)
+            try container.encode(baseUri, forKey: .baseUri)
+            try container.encode(path, forKey: .path)
+            try container.encode(possibleFilenames, forKey: .possibleFileNames)
+        }
+    }
+}
+
+extension CoverURI: Decodable {
+    public init(from decoder: Decoder) throws {
+        //access the keyed container
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        //decode the value for the status key into the EventConfirmationStatus enum
+        let type = try container.decode(CoverURIType.self, forKey: .type)
+        
+        //iterate over the received status, and try to decode the other relevant values
+        switch type {
+        case .fullPathURI:
+            let fullPathURI = try container.decode(String.self, forKey: .fullPathURI)
+            self = .fullPathURI(fullPathURI)
+        case .filenameOptionsURI:
+            let baseUri = try container.decode(String.self, forKey: .baseUri)
+            let path = try container.decode(String.self, forKey: .path)
+            let possibleFileNames = try container.decode([String].self, forKey: .possibleFileNames)
+            self = .filenameOptionsURI(baseUri, path, possibleFileNames)
+        }
+    }
+}

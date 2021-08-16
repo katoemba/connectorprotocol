@@ -26,7 +26,7 @@
 
 import Foundation
 
-public enum ArtistType {
+public enum ArtistType: String, Codable {
     case artist
     case albumArtist
     case performer
@@ -34,7 +34,7 @@ public enum ArtistType {
 }
 
 /// A struct defining a generic Artist object.
-public struct Artist: Identifiable {
+public struct Artist: Identifiable, Codable {
     /// A unique id for the artist. Usage depends on library implementation.
     public var id = ""
     
@@ -60,12 +60,14 @@ public struct Artist: Identifiable {
                 type: ArtistType = .artist,
                 source: SourceType,
                 name: String,
-                sortName: String = "") {
+                sortName: String = "",
+                coverURI: CoverURI = CoverURI.fullPathURI("")) {
         self.id = id
         self.type = type
         self.source = source
         self.name = name
         self.sortName = Artist.sortName(sortName: sortName, name: name)
+        self.coverURI = coverURI
     }
     
     static func sortName(sortName: String, name: String) -> String {

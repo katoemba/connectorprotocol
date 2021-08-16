@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Song object.
-public struct Song {
+public struct Song: Codable {
     /// A unique id for the song. Usage depends on library implementation.
     public var id = ""
     
@@ -133,7 +133,12 @@ public struct Song {
                 length: Int,
                 quality: QualityStatus,
                 position: Int = 0,
-                track: Int = 0) {
+                track: Int = 0,
+                coverURI: CoverURI = CoverURI.fullPathURI(""),
+                sortArtist: String = "",
+                sortAlbumArtist: String = "",
+                sortAlbum: String = "",
+                lastModified: Date = Date(timeIntervalSince1970: 0)) {
         self.id = id
         self.source = source
         self.location = location
@@ -148,6 +153,11 @@ public struct Song {
         self.quality = quality
         self.position = position
         self.track = track
+        self.coverURI = coverURI
+        self.sortArtist = sortArtist
+        self.sortAlbumArtist = sortAlbumArtist
+        self.sortAlbum = sortAlbum
+        self.lastModified = lastModified
     }
 }
 
@@ -190,5 +200,80 @@ extension Song: CustomDebugStringConvertible {
             "    track = \(track)\n" +
             "    disc = \(disc)\n" +
             "    position = \(position)"
+    }
+}
+
+public extension Song {
+    typealias SongToStringConvertor = (Song) -> (String)
+    
+    var extendedAlbumArtist: String {
+        albumartist != "" ? albumartist : artist
+    }
+    
+    var extendedSortArtist: String {
+        sortArtist != "" ? sortArtist : artist
+    }
+
+    var extendSortAlbumArtist: String {
+        if sortAlbumArtist != "" {
+            return sortAlbumArtist
+        }
+        else if albumartist != "" {
+            return albumartist
+        }
+        else if sortArtist != "" {
+            return sortArtist
+        }
+        else {
+            return artist
+        }
+    }
+    
+    var extendedSortAlbum: String {
+        sortAlbum != "" ? sortAlbum : album
+    }
+    
+    func createAlbum(idCreator: SongToStringConvertor? = nil,
+                     locationCreator: SongToStringConvertor? = nil) -> Album {
+        let id = idCreator?(self) ?? "\(source.rawValue)::\(extendedAlbumArtist)::\(album)"
+        let location = locationCreator?(self) ?? ""
+        
+        return Album(id: id,
+                     source: source,
+                     location: location,
+                     title: album,
+                     artist: albumartist,
+                     year: year,
+                     genre: genre,
+                     sortTitle: extendedSortAlbum,
+                     sortArtist: extendSortAlbumArtist,
+                     lastModified: lastModified,
+                     coverURI: coverURI,
+                     quality: quality)
+    }
+    
+    func createArtist(type: ArtistType,
+                      idCreator: SongToStringConvertor? = nil) -> Artist? {
+        
+        switch type {
+        case .artist:
+            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.artist)"
+            return Artist(id: id, type: .artist, source: source, name: self.artist, sortName: extendedSortArtist)
+        case .albumArtist:
+            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.albumartist)"
+            return Artist(id: id, type: .albumArtist, source: source, name: extendedAlbumArtist, sortName: extendSortAlbumArtist)
+        case .composer:
+            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.composer)"
+            if composer != "" {
+                return Artist(id: id, type: .composer, source: source, name: composer, sortName: composer)
+            }
+        case .performer:
+            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.performer)"
+            if performer != "" {
+                return Artist(id: id, type: .performer, source: source, name: performer, sortName: performer)
+            }
+        }
+        
+        return nil
     }
 }

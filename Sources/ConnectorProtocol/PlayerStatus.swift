@@ -114,7 +114,7 @@ extension TimeStatus: CustomDebugStringConvertible {
 
 // MARK: - QualityStatus Struct
 
-public struct QualityStatus {
+public struct QualityStatus: Codable {
     public var bitrate = ""
     public var samplerate = ""
     public var encoding = ""

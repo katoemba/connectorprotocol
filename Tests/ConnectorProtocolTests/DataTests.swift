@@ -388,4 +388,120 @@ class DataTests: XCTestCase {
         XCTAssert(huskerdu.sortArtist == "Hüsker Dü", "sortName: expected 'Hüsker Dü', got \(huskerdu.sortArtist)")
         XCTAssert(huskerdu.sortTitle == "Flip your Wig", "sortName: expected 'Flip your Wig', got \(huskerdu.sortTitle)")
     }
+    
+    func testAlbumFromSong() {
+        let song1 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         sortArtist: "sortartist",
+                         sortAlbumArtist: "sortalbumartist",
+                         sortAlbum: "sortalbum")
+
+        let album = song1.createAlbum()
+        XCTAssertEqual(album.id, "\(SourceType.Local.rawValue)::albumartist::album")
+        XCTAssertEqual(album.artist, "albumartist")
+        XCTAssertEqual(album.title, "album")
+        XCTAssertEqual(album.sortArtist, "sortalbumartist")
+        XCTAssertEqual(album.sortTitle, "sortalbum")
+        XCTAssertEqual(album.genre, ["genre"])
+    }
+    
+    func testArtistFromSong() {
+        let song1 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         sortArtist: "sortartist",
+                         sortAlbumArtist: "sortalbumartist",
+                         sortAlbum: "sortalbum")
+
+        let artist = song1.createArtist(type: .albumArtist)
+        XCTAssertNotNil(artist)
+        XCTAssertEqual(artist!.id, "\(SourceType.Local.rawValue)::albumartist")
+        XCTAssertEqual(artist!.type, .albumArtist)
+        XCTAssertEqual(artist!.name, "albumartist")
+        XCTAssertEqual(artist!.sortName, "sortalbumartist")
+    }
+    
+    func testExtendedNames() {
+        let song1 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         sortArtist: "sortartist",
+                         sortAlbumArtist: "sortalbumartist",
+                         sortAlbum: "sortalbum")
+
+        XCTAssertEqual(song1.extendedSortAlbum, "sortalbum")
+        XCTAssertEqual(song1.extendedSortArtist, "sortartist")
+        XCTAssertEqual(song1.extendedAlbumArtist, "albumartist")
+        XCTAssertEqual(song1.extendSortAlbumArtist, "sortalbumartist")
+
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         sortArtist: "",
+                         sortAlbumArtist: "",
+                         sortAlbum: "")
+
+        XCTAssertEqual(song2.extendedSortAlbum, "album")
+        XCTAssertEqual(song2.extendedSortArtist, "artist")
+        XCTAssertEqual(song2.extendedAlbumArtist, "artist")
+        XCTAssertEqual(song2.extendSortAlbumArtist, "artist")
+
+        let song3 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         sortArtist: "",
+                         sortAlbumArtist: "",
+                         sortAlbum: "")
+
+        XCTAssertEqual(song3.extendedSortAlbum, "album")
+        XCTAssertEqual(song3.extendedSortArtist, "artist")
+        XCTAssertEqual(song3.extendedAlbumArtist, "albumartist")
+        XCTAssertEqual(song3.extendSortAlbumArtist, "albumartist")
+    }
 }

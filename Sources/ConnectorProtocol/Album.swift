@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Album object.
-public struct Album: Identifiable {
+public struct Album: Identifiable, Codable {
     /// A unique id for the album. Usage depends on library implementation.
     public var id = ""
     
@@ -63,6 +63,8 @@ public struct Album: Identifiable {
 
     /// Date the album was last modified.
     public var lastModified = Date(timeIntervalSince1970: 0)
+    
+    public var quality = QualityStatus()
 
     public init() {
     }
@@ -74,9 +76,12 @@ public struct Album: Identifiable {
                 artist: String,
                 year: Int,
                 genre: [String],
-                length: Int,
+                length: Int = 0,
                 sortTitle: String = "",
-                sortArtist: String = "") {
+                sortArtist: String = "",
+                lastModified: Date = Date(timeIntervalSince1970: 0),
+                coverURI: CoverURI = CoverURI.fullPathURI(""),
+                quality: QualityStatus = QualityStatus()) {
         self.id = id
         self.source = source
         self.location = location
@@ -87,6 +92,9 @@ public struct Album: Identifiable {
         self.length = length
         self.sortTitle = sortTitle != "" ? sortTitle : title
         self.sortArtist = Artist.sortName(sortName: sortArtist, name: artist)
+        self.lastModified = lastModified
+        self.coverURI = coverURI
+        self.quality = quality
     }
 
     public func filter(_ filter: String) -> Bool {
@@ -128,6 +136,10 @@ extension Album {
             
             return (lhs.title.caseInsensitiveCompare(rhs.title) == .orderedAscending)
         }
+    }
+    
+    public mutating func lengthFromSongs(_ songs: [Song]) {
+        length = songs.reduce(0, { $0 + $1.length})
     }
 }
 
