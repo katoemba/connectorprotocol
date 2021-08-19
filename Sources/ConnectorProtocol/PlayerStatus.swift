@@ -123,6 +123,14 @@ public struct QualityStatus: Codable {
 
     public init() {
     }
+    
+    internal init(bitrate: String = "", samplerate: String = "", encoding: String = "", channels: String = "", filetype: String = "") {
+        self.bitrate = bitrate
+        self.samplerate = samplerate
+        self.encoding = encoding
+        self.channels = channels
+        self.filetype = filetype
+    }
 
     public init(_ from: QualityStatus) {
         bitrate = from.bitrate

@@ -242,7 +242,7 @@ public extension Song {
                      source: source,
                      location: location,
                      title: album,
-                     artist: albumartist,
+                     artist: extendedAlbumArtist,
                      year: year,
                      genre: genre,
                      sortTitle: extendedSortAlbum,
@@ -257,19 +257,19 @@ public extension Song {
         
         switch type {
         case .artist:
-            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.artist)"
+            let id = idCreator?(self) ?? "\(source.rawValue)::\(artist)"
             return Artist(id: id, type: .artist, source: source, name: self.artist, sortName: extendedSortArtist)
         case .albumArtist:
-            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.albumartist)"
+            let id = idCreator?(self) ?? "\(source.rawValue)::\(extendedAlbumArtist)"
             return Artist(id: id, type: .albumArtist, source: source, name: extendedAlbumArtist, sortName: extendSortAlbumArtist)
         case .composer:
-            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.composer)"
             if composer != "" {
+                let id = idCreator?(self) ?? "\(source.rawValue)::\(composer)"
                 return Artist(id: id, type: .composer, source: source, name: composer, sortName: composer)
             }
         case .performer:
-            let id = idCreator?(self) ?? "\(source.rawValue)::\(self.performer)"
             if performer != "" {
+                let id = idCreator?(self) ?? "\(source.rawValue)::\(performer)"
                 return Artist(id: id, type: .performer, source: source, name: performer, sortName: performer)
             }
         }

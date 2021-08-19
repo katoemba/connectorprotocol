@@ -406,11 +406,35 @@ class DataTests: XCTestCase {
                          sortAlbumArtist: "sortalbumartist",
                          sortAlbum: "sortalbum")
 
-        let album = song1.createAlbum()
+        var album = song1.createAlbum()
         XCTAssertEqual(album.id, "\(SourceType.Local.rawValue)::albumartist::album")
         XCTAssertEqual(album.artist, "albumartist")
         XCTAssertEqual(album.title, "album")
         XCTAssertEqual(album.sortArtist, "sortalbumartist")
+        XCTAssertEqual(album.sortTitle, "sortalbum")
+        XCTAssertEqual(album.genre, ["genre"])
+
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         sortArtist: "sortartist",
+                         sortAlbumArtist: "",
+                         sortAlbum: "sortalbum")
+
+        album = song2.createAlbum()
+        XCTAssertEqual(album.id, "\(SourceType.Local.rawValue)::artist::album")
+        XCTAssertEqual(album.artist, "artist")
+        XCTAssertEqual(album.title, "album")
+        XCTAssertEqual(album.sortArtist, "sortartist")
         XCTAssertEqual(album.sortTitle, "sortalbum")
         XCTAssertEqual(album.genre, ["genre"])
     }
@@ -432,12 +456,35 @@ class DataTests: XCTestCase {
                          sortAlbumArtist: "sortalbumartist",
                          sortAlbum: "sortalbum")
 
-        let artist = song1.createArtist(type: .albumArtist)
+        var artist = song1.createArtist(type: .albumArtist)
         XCTAssertNotNil(artist)
         XCTAssertEqual(artist!.id, "\(SourceType.Local.rawValue)::albumartist")
         XCTAssertEqual(artist!.type, .albumArtist)
         XCTAssertEqual(artist!.name, "albumartist")
         XCTAssertEqual(artist!.sortName, "sortalbumartist")
+
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         sortArtist: "sortartist",
+                         sortAlbumArtist: "",
+                         sortAlbum: "sortalbum")
+
+        artist = song2.createArtist(type: .albumArtist)
+        XCTAssertNotNil(artist)
+        XCTAssertEqual(artist!.id, "\(SourceType.Local.rawValue)::artist")
+        XCTAssertEqual(artist!.type, .albumArtist)
+        XCTAssertEqual(artist!.name, "artist")
+        XCTAssertEqual(artist!.sortName, "sortartist")
     }
     
     func testExtendedNames() {
