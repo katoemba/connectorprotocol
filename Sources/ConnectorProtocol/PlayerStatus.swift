@@ -378,6 +378,12 @@ public struct PlayerStatus {
         return copy
     }
     
+    public func volumeEnabled(_ volumeEnabled: Bool) -> PlayerStatus {
+        var copy = self
+        copy.volumeEnabled = volumeEnabled
+        return copy
+    }
+    
     public func elapsedTime(_ elapsedTime: Int) -> PlayerStatus {
         var copy = self
         copy.time = time.elapsedTime(elapsedTime)

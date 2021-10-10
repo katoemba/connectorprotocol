@@ -271,7 +271,12 @@ public protocol ControlProtocol {
     ///
     /// - Parameter station: the station that has to be played
     func playStation(_ station: Station)
-    
+
+    /// Play a favourite
+    ///
+    /// - Parameter favourite: the favourite that has to be played
+    func playFavourite(_ favourite: FoundItem)
+
     /// Enable or disable an output
     ///
     /// - Parameters:
@@ -283,4 +288,10 @@ public protocol ControlProtocol {
     ///
     /// - Parameter output: the output to toggle
     func toggleOutput(_ output: Output)
+}
+
+extension ControlProtocol {
+    public func playFavourite(_ favourite: FoundItem) {
+        // Default does nothing
+    }
 }

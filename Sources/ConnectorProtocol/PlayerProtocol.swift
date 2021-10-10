@@ -54,6 +54,7 @@ public enum Functions {
     case binaryImageRetrieval
     case embeddedImageRetrieval
     case stream
+    case favourites
 }
 
 /// A protocol to provide a generic interface to control a network music player.

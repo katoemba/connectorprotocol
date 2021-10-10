@@ -344,10 +344,14 @@ public protocol BrowseProtocol {
     /// - Returns: an observable String containing the diagnostics data
     func diagnostics(album: Album) -> Observable<String>
     
-    /// Search for the existance a certain item
+    /// Search for the existence a certain item
     /// - Parameter searchItem: what to search for
     /// - Returns: an observable array of results
     func search(searchItem: SearchItem) -> Observable<[FoundItem]>
+    
+    /// Load favourites from a player
+    /// - Returns: an observable array of items
+    func favourites() -> Observable<[FoundItem]>
 }
 
 extension BrowseProtocol {
@@ -368,4 +372,7 @@ extension BrowseProtocol {
         return Observable.just([])
     }
 
+    public func favourites() -> Observable<[FoundItem]> {
+        return Observable.just([])
+    }
 }
