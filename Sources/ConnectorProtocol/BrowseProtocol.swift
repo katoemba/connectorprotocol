@@ -348,10 +348,6 @@ public protocol BrowseProtocol {
     /// - Parameter searchItem: what to search for
     /// - Returns: an observable array of results
     func search(searchItem: SearchItem) -> Observable<[FoundItem]>
-    
-    /// Load favourites from a player
-    /// - Returns: an observable array of items
-    func favourites() -> Observable<[FoundItem]>
 }
 
 extension BrowseProtocol {
@@ -369,10 +365,6 @@ extension BrowseProtocol {
     }
     
     public func songsByGenre(_ genre: Genre) -> Observable<[Song]> {
-        return Observable.just([])
-    }
-
-    public func favourites() -> Observable<[FoundItem]> {
         return Observable.just([])
     }
 }

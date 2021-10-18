@@ -61,6 +61,9 @@ public enum Functions {
 public protocol PlayerProtocol: AnyObject {
     typealias FolderSettingAttachment = (Folder, PlayerSetting) -> (Void)
     
+    /// Observable that triggers whenever something in the player is changed
+    var playerChanged: Observable<PlayerProtocol> { get }
+
     /// String that identifies the Controller Type.
     var controllerType: String { get }
     
@@ -132,6 +135,10 @@ public protocol PlayerProtocol: AnyObject {
     /// - Parameter id: the id of the setting to load
     /// - Returns: a new PlayerSetting object containing the value of the requested setting, or nil if the setting is unknown
     func loadSetting(id: String) -> PlayerSetting?
+    
+    /// Load favourites from a player
+    /// - Returns: an observable array of items
+    func favourites() -> Observable<[FoundItem]>
 }
 
 /// Extension to include optional functions and properties, to maintain some form of backwards compatibility
@@ -146,6 +153,14 @@ public extension PlayerProtocol {
     
     var attachFolderToSetting: FolderSettingAttachment? {
         return nil
+    }
+    
+    var playerChanged: Observable<PlayerProtocol> {
+        Observable.just(self)
+    }
+    
+    func favourites() -> Observable<[FoundItem]> {
+        return Observable.empty()
     }
 }
 
