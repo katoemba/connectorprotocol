@@ -55,6 +55,9 @@ public enum Functions {
     case embeddedImageRetrieval
     case stream
     case favourites
+    case playlists
+    case tidal
+    case qobuz
 }
 
 /// A protocol to provide a generic interface to control a network music player.
