@@ -101,6 +101,72 @@ class DataTests: XCTestCase {
         XCTAssertFalse(song1 == song2, "song comparison failed for songs with different id")
     }
     
+    func testSongEqualBasedOnPlayqueueId() {
+        // When song1 and song2 have the same id and source
+        let song1 = Song(id: "12233",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "albumx",
+                         artist: "artistx",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         playqueueId: "1234")
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1001,
+                         genre: ["genre"],
+                         length: 101,
+                         quality: QualityStatus(),
+                         playqueueId: "1234")
+
+        // Then they are treated equal
+        XCTAssert(song1 == song2, "song comparison failed for songs with the same playqueue id")
+    }
+
+    func testSongNotEqualBasedOnPlayqueueId() {
+        // When song1 and song2 have a different id
+        let song1 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1000,
+                         genre: ["genre"],
+                         length: 100,
+                         quality: QualityStatus(),
+                         playqueueId: "4567")
+        let song2 = Song(id: "123",
+                         source: .Local,
+                         location: "location",
+                         title: "title",
+                         album: "album",
+                         artist: "artist",
+                         albumartist: "albumartist",
+                         composer: "composer",
+                         year: 1001,
+                         genre: ["genre"],
+                         length: 101,
+                         quality: QualityStatus(),
+                         playqueueId: "1234")
+
+        // Then they are treated as not equal
+        XCTAssertFalse(song1 == song2, "song comparison failed for songs with different playqueueId")
+    }
+    
     func testSongDifferentSourceNotEqual() {
         // When song1 and song2 have a different source
         let song1 = Song(id: "123",

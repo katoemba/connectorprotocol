@@ -64,6 +64,9 @@ public struct Song: Codable {
     /// The position of the track within the playqueue
     public var position = 0
     
+    /// A unique id of a track in the playqueue
+    public var playqueueId: String? = nil
+    
     /// The name of the track.
     public var name = ""
     
@@ -133,7 +136,9 @@ public struct Song: Codable {
                 length: Int,
                 quality: QualityStatus,
                 position: Int = 0,
+                playqueueId: String? = nil,
                 track: Int = 0,
+                disc: Int = 1,
                 coverURI: CoverURI = CoverURI.fullPathURI(""),
                 sortArtist: String = "",
                 sortAlbumArtist: String = "",
@@ -152,7 +157,9 @@ public struct Song: Codable {
         self.length = length
         self.quality = quality
         self.position = position
+        self.playqueueId = playqueueId
         self.track = track
+        self.disc = disc
         self.coverURI = coverURI
         self.sortArtist = sortArtist
         self.sortAlbumArtist = sortAlbumArtist
@@ -163,7 +170,11 @@ public struct Song: Codable {
 
 extension Song: Equatable {}
 public func ==(lhs: Song, rhs: Song) -> Bool {
-    return lhs.id == rhs.id && lhs.source == rhs.source && lhs.position == rhs.position &&
+    if let lplayqueueId = lhs.playqueueId, let rplayqueueId = rhs.playqueueId {
+        return lplayqueueId == rplayqueueId
+    }
+    
+    return lhs.id == rhs.id && lhs.source == rhs.source &&
         lhs.title == rhs.title && lhs.album == rhs.album && lhs.artist == rhs.artist
 }
 

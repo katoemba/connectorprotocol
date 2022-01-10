@@ -54,7 +54,25 @@ public protocol StatusProtocol {
     /// - Returns: Array of songs, not guaranteed to have the same number of songs as requested.
     func playqueueSongs(start: Int, end: Int) -> Observable<[Song]>
     
+    /// Get a block of song id's from the playqueue
+    ///
+    /// - Parameters:
+    ///   - start: the start position of the requested block
+    ///   - end: the end position of the requested block
+    /// - Returns: Array of tuples of playqueue position and track id, not guaranteed to have the same number of songs as requested.
+    func playqueueSongIds(start: Int, end: Int) -> Observable<[(Int, String)]>
+
     /// Trigger a forced refresh of the status
     func forceStatusRefresh()
-    
+}
+
+public extension StatusProtocol {
+    func playqueueSongIds(start: Int, end: Int) -> Observable<[(Int, String)]> {
+        playqueueSongs(start: start, end: end)
+            .map {
+                $0.map {
+                    ($0.position, $0.playqueueId ?? "0")
+                }
+            }
+    }
 }
