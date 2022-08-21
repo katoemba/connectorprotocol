@@ -338,6 +338,21 @@ public protocol BrowseProtocol {
     /// - Returns: an observable of the filtered array of artists
     func existingArtists(artists: [Artist]) -> Observable<[Artist]>
 
+    /// Complete data for a song
+    /// - Parameter song: a song for which data must be completed
+    /// - Returns: an observable song
+    func complete(_ song: Song) -> Observable<Song>
+
+    /// Complete data for an album
+    /// - Parameter album: an album for which data must be completed
+    /// - Returns: an observable album
+    func complete(_ album: Album) -> Observable<Album>
+
+    /// Complete data for an artist
+    /// - Parameter artist: an artist for which data must be completed
+    /// - Returns: an observable artist
+    func complete(_ artist: Artist) -> Observable<Artist>
+
     /// Create a diagnostics string that can help troubleshooting data issues
     ///
     /// - Parameter album: an album for which to get diagnostics
