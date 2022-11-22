@@ -140,6 +140,11 @@ public protocol ControlProtocol {
     /// - Returns: an observable for the up-to-date playerStatus after the action is completed.
     func adjustVolume(_ adjustment: Float) -> Observable<PlayerStatus>
 
+    /// Percentage at which the volume of the player reaches 50%, to adjust for skewed volume control of the player.
+    /// If set to 20% for example, then 25% volume will set it to 10% on the player, and 75% will set it to 60% on the player.
+    /// Must be a value between 0.1 and 0.9, values outside this range will be ignored. Pass nil to disable adjustment.
+    var volumeAdjustment: Float? { get set }
+    
     /// Seek to a position in the current song
     ///
     /// - Parameter seconds: seconds in the current song, must be <= length of the song
@@ -293,5 +298,14 @@ public protocol ControlProtocol {
 extension ControlProtocol {
     public func playFavourite(_ favourite: FoundItem) {
         // Default does nothing
+    }
+    
+    public var volumeAdjustment: Float? {
+        get {
+            return nil
+        }
+        set {
+            
+        }
     }
 }

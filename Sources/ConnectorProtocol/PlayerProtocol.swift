@@ -58,6 +58,7 @@ public enum Functions {
     case playlists
     case tidal
     case qobuz
+    case volumeAdjustment
 }
 
 /// A protocol to provide a generic interface to control a network music player.
