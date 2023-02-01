@@ -28,7 +28,7 @@ import Foundation
 import RxSwift
 
 public enum SourceType: String, Codable {
-    case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast, UPnP
+    case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast, UPnP, Tidal, Qobuz, Radio
 }
 
 public enum LoadStatus {

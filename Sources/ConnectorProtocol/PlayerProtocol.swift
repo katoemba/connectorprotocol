@@ -116,9 +116,12 @@ public protocol PlayerProtocol: AnyObject {
     /// Get a control object to control the player.
     var control: ControlProtocol { get }
     
-    /// Get a browse object to browse music on the player.
+    /// Get a browse object to browse local music on the player.
     var browse: BrowseProtocol { get }
-    
+
+    /// Get a browse object to browse a specific source on the player. There will be a default implementation that return the local music browser
+    func browse(source: SourceType) -> BrowseProtocol
+
     /// Get the url on which the player is providing an audio stream
     var playerStreamURL: URL? { get }
 
@@ -165,6 +168,10 @@ public extension PlayerProtocol {
     
     func favourites() -> Observable<[FoundItem]> {
         return Observable.empty()
+    }
+    
+    func browse(source: SourceType) -> BrowseProtocol {
+        return browse
     }
 }
 
