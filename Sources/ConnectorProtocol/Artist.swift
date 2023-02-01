@@ -52,7 +52,13 @@ public struct Artist: Identifiable, Codable {
     
     /// URI through which cover art can be fetched.
     public var coverURI = CoverURI.fullPathURI("")
-
+    
+    /// Summary of the artist biography
+    public var biographySummary: String? = nil
+    
+    /// Biography of the artist.
+    public var biography: String? = nil
+    
     public init() {
     }
     
@@ -61,13 +67,17 @@ public struct Artist: Identifiable, Codable {
                 source: SourceType,
                 name: String,
                 sortName: String = "",
-                coverURI: CoverURI = CoverURI.fullPathURI("")) {
+                coverURI: CoverURI = CoverURI.fullPathURI(""),
+                biographySummary: String? = nil,
+                biography: String? = nil) {
         self.id = id
         self.type = type
         self.source = source
         self.name = name
         self.sortName = Artist.sortName(sortName: sortName, name: name)
         self.coverURI = coverURI
+        self.biographySummary = biographySummary
+        self.biography = biography
     }
     
     static func sortName(sortName: String, name: String) -> String {
