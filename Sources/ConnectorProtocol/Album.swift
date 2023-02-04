@@ -46,6 +46,9 @@ public struct Album: Identifiable, Codable {
     /// The name of the artist(s) that released the album.
     public var artist = ""
 
+    /// A service specific id for an artist
+    public var aristId: String? = nil
+
     /// The sortation version of the artist(s) that released the album.
     public var sortArtist = ""
     
@@ -74,6 +77,7 @@ public struct Album: Identifiable, Codable {
                 location: String,
                 title: String,
                 artist: String,
+                artistId: String? = nil,
                 year: Int,
                 genre: [String],
                 length: Int = 0,
@@ -87,6 +91,7 @@ public struct Album: Identifiable, Codable {
         self.location = location
         self.title = title
         self.artist = artist
+        self.aristId = artistId
         self.year = year
         self.genre = genre
         self.length = length

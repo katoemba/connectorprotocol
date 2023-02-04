@@ -43,9 +43,15 @@ public struct Song: Codable {
     /// The title of the album on which the song appears.
     public var album = ""
     
+    /// A service specific id for an album
+    public var albumId: String? = nil
+    
     /// The name of the artist(s) that perform the song.
     public var artist = ""
-    
+
+    /// A service specific id for an artist
+    public var aristId: String? = nil
+
     /// The name of the artist that released the album of which this song is part.
     public var albumartist = ""
     
@@ -128,7 +134,9 @@ public struct Song: Codable {
                 location: String,
                 title: String,
                 album: String,
+                albumId: String? = nil,
                 artist: String,
+                artistId: String? = nil,
                 albumartist: String,
                 composer: String,
                 year: Int,
