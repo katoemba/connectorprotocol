@@ -50,7 +50,7 @@ public struct Song: Codable {
     public var artist = ""
 
     /// A service specific id for an artist
-    public var aristId: String? = nil
+    public var artistId: String? = nil
 
     /// The name of the artist that released the album of which this song is part.
     public var albumartist = ""

@@ -48,11 +48,16 @@ public enum BrowseFilter {
     case genre(Genre)
     case artist(Artist)
     case album(Album)
+    case related(Album)
     case playlist(Playlist)
     case recent(Int)
     case folder(Folder)
     case type(ArtistType)
     case random(Int)
+    case streamingRecent(genre: String?)
+    case streamingFeatured(genre: String?)
+    case streamingPopular(genre: String?)
+    case streamingFavorite
 }
 
 public enum SearchItem {
@@ -105,8 +110,13 @@ public protocol AlbumBrowseViewModel: AnyObject {
     
     func load(sort: SortType)
     func load(filters: [BrowseFilter])
-    func extend()
-    func extend(to: Int)
+    func prefetch(to: Int)
+    func loadMoreData()
+}
+
+extension AlbumBrowseViewModel {
+    public func loadMoreData() {
+    }
 }
 
 public typealias ArtistSections = ObjectSections<Artist>
@@ -124,7 +134,6 @@ public protocol PlaylistBrowseViewModel: AnyObject {
     var playlistsObservable: Observable<[Playlist]> { get }
     
     func load()
-    func extend()
     
     func renamePlaylist(_ playlist: Playlist, to: String) -> Playlist
     func deletePlaylist(_ playlist: Playlist)
@@ -138,7 +147,6 @@ public protocol SongBrowseViewModel: AnyObject {
     var subFilter: BrowseFilter? { get }
 
     func load()
-    func extend()
     func removeSong(at: Int)
     func songBatch(start: Int, count: Int) -> Observable<[Song]>
 }
@@ -149,7 +157,6 @@ public protocol GenreBrowseViewModel: AnyObject {
     var parentGenre: Genre? { get }
 
     func load()
-    func extend()
 }
 
 public protocol FolderBrowseViewModel: AnyObject {
@@ -158,7 +165,6 @@ public protocol FolderBrowseViewModel: AnyObject {
     var parentFolder: Folder? { get }
 
     func load()
-    func extend()
 }
 
 /// A protocol to provide a generic interface to a music library.
@@ -219,6 +225,12 @@ public protocol BrowseProtocol {
     /// - Parameter artist: artist to filter on
     /// - Returns: an AlbumBrowseViewModel instance
     func albumBrowseViewModel(_ artist: Artist) -> AlbumBrowseViewModel
+
+    /// Return a view model for albums related to a provided album (typically from the same artist).
+    ///
+    /// - Parameter album: related album to filter on
+    /// - Returns: an AlbumBrowseViewModel instance
+    func albumBrowseViewModel(_ album: Album) -> AlbumBrowseViewModel
 
     /// Return a view model for a list of albums filtered by genre, which can return albums in batches.
     ///
