@@ -115,28 +115,126 @@ extension TimeStatus: CustomDebugStringConvertible {
 // MARK: - QualityStatus Struct
 
 public struct QualityStatus: Codable {
-    public var bitrate = ""
-    public var samplerate = ""
-    public var encoding = ""
-    public var channels = ""
-    public var filetype = ""
-
-    public init() {
+    public enum RawEncoding: Codable {
+        case bits(UInt32)
+        case text(String)
+    }
+    public var bitrate: String {
+        guard let rawBitrate = rawBitrate, rawBitrate > 0 else { return "" }
+        return "\(rawBitrate / 1000) kbps"
+    }
+    public var samplerate: String {
+        guard let rawSamplerate = rawSamplerate else { return "" }
+        return "\(rawSamplerate / 1000) kHz"
+    }
+    public var encoding: String {
+        guard let rawEncoding = rawEncoding else { return "" }
+        switch rawEncoding {
+        case let .text(text):
+            return text
+        case let .bits(bits):
+            return "\(bits) bits"
+        }
+    }
+    public var channels: String {
+        guard let rawChannels = rawChannels, rawChannels > 0 else { return "" }
+        return "\(rawChannels)"
+    }
+    public var uiDescription: String {
+        var descr = ""
+        var separator = ""
+        if filetype != "" {
+            descr += separator + filetype
+            separator = " - "
+        }
+        if bitrate != "" {
+            descr += separator + bitrate
+            separator = " - "
+        }
+        if encoding != "" {
+            descr += separator + encoding
+            separator = " - "
+        }
+        if samplerate != "" {
+            descr += separator + samplerate
+            separator = " - "
+        }
+        
+        return descr
     }
     
-    internal init(bitrate: String = "", samplerate: String = "", encoding: String = "", channels: String = "", filetype: String = "") {
-        self.bitrate = bitrate
-        self.samplerate = samplerate
-        self.encoding = encoding
-        self.channels = channels
+    public var rawBitrate: UInt32?
+    public var rawSamplerate: UInt32?
+    public var rawChannels: UInt32?
+    public var rawEncoding: RawEncoding?
+    public var filetype = ""
+
+    public init(bitrate: String = "", samplerate: String = "", encoding: String = "", channels: String = "", filetype: String = "") {
+        if bitrate != "" {
+            if let rawBitrate = UInt32(bitrate.lowercased().replacingOccurrences(of: "kbps", with: "").replacingOccurrences(of: " ", with: "")) {
+                self.rawBitrate = rawBitrate < 24000 ? rawBitrate * 1000 : rawBitrate
+            }
+        }
+        if samplerate != "" {
+            if let rawSamplerate = UInt32(samplerate.lowercased().replacingOccurrences(of: "khz", with: "").replacingOccurrences(of: " ", with: "")) {
+                self.rawSamplerate = rawSamplerate < 1000 ? rawSamplerate * 1000 : rawSamplerate
+            }
+        }
+        if channels != "" {
+            rawChannels = UInt32(channels)
+        }
+        if encoding != "" {
+            if let bits = UInt32(encoding.lowercased().replacingOccurrences(of: "bits", with: "").replacingOccurrences(of: " ", with: "")) {
+                rawEncoding = .bits(bits)
+            }
+            else {
+                rawEncoding = .text(encoding)
+            }
+        }
+        self.filetype = filetype
+    }
+    
+    public init(rawBitrate: UInt32? = nil, rawSamplerate: UInt32? = nil, rawChannels: UInt32?, rawEncoding: RawEncoding?, filetype: String = "") {
+        if let rawBitrate = rawBitrate {
+            self.rawBitrate = rawBitrate < 24000 ? rawBitrate * 1000 : rawBitrate
+        }
+        if let rawSamplerate = rawSamplerate {
+            self.rawSamplerate = rawSamplerate < 1000 ? rawSamplerate * 1000 : rawSamplerate
+        }
+        self.rawChannels = rawChannels
+        self.rawEncoding = rawEncoding
+        self.filetype = filetype
+    }
+
+    public init(rawBitrate: UInt32? = nil, rawSamplerate: UInt32? = nil, rawChannels: UInt32?, encodingString: String, filetype: String = "") {
+        if let rawBitrate = rawBitrate {
+            self.rawBitrate = rawBitrate < 24000 ? rawBitrate * 1000 : rawBitrate
+        }
+        if let rawSamplerate = rawSamplerate {
+            if rawSamplerate < 1000 {
+                self.rawSamplerate = rawSamplerate * 1000
+            }
+            else {
+                self.rawSamplerate = rawSamplerate
+            }
+        }
+        self.rawChannels = rawChannels
+        if encodingString != "" {
+            if let bits = UInt32(encodingString.lowercased().replacingOccurrences(of: "bits", with: "").replacingOccurrences(of: " ", with: "")) {
+                rawEncoding = .bits(bits)
+            }
+            else {
+                rawEncoding = .text(encodingString)
+            }
+        }
         self.filetype = filetype
     }
 
     public init(_ from: QualityStatus) {
-        bitrate = from.bitrate
-        samplerate = from.samplerate
-        encoding = from.encoding
-        channels = from.channels
+        rawBitrate = from.rawBitrate
+        rawSamplerate = from.rawSamplerate
+        rawChannels = from.rawChannels
+        rawEncoding = from.rawEncoding
         filetype = from.filetype
     }
 }
