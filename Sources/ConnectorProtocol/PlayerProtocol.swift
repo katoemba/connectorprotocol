@@ -58,6 +58,7 @@ public enum Functions {
     case playlists
     case tidal
     case qobuz
+    case radio
     case volumeAdjustment
 }
 
