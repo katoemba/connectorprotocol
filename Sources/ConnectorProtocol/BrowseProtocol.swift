@@ -165,6 +165,26 @@ public protocol FolderBrowseViewModel: AnyObject {
     var parentFolder: Folder? { get }
 
     func load()
+    func loadMoreData()
+}
+
+extension FolderBrowseViewModel {
+    public func loadMoreData() {
+    }
+}
+
+public struct Result<T> {
+    public init(total: UInt32, offset: UInt32, limit: UInt32, items: [T]) {
+        self.total = total
+        self.offset = offset
+        self.limit = limit
+        self.items = items
+    }
+    
+    public let total: UInt32
+    public let offset: UInt32
+    public let limit: UInt32
+    public let items: [T]
 }
 
 /// A protocol to provide a generic interface to a music library.
