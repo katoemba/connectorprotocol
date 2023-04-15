@@ -84,6 +84,9 @@ public protocol PlayerProtocol: AnyObject {
     /// Description of the model of player. Implementation will be backend specific.
     var model: String { get }
     
+    /// Description of the model of an associated media player. Implementation will be backend specific.
+    var mediaServerModel: String { get }
+    
     /// A list of functions supported by the player
     var supportedFunctions: [Functions] { get }
     
@@ -165,6 +168,10 @@ public extension PlayerProtocol {
     
     var playerChanged: Observable<PlayerProtocol> {
         Observable.just(self)
+    }
+    
+    var mediaServerModel: String {
+        "Embedded media server"
     }
     
     func favourites() -> Observable<[FoundItem]> {
