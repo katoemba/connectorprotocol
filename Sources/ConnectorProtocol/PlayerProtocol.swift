@@ -60,6 +60,7 @@ public enum Functions {
     case qobuz
     case radio
     case volumeAdjustment
+    case mediaServerBrowsing
 }
 
 /// A protocol to provide a generic interface to control a network music player.
@@ -107,6 +108,12 @@ public protocol PlayerProtocol: AnyObject {
     
     /// Optional action to connect a folder to a setting
     var attachFolderToSetting: FolderSettingAttachment? { get }
+    
+    /// Property that specifies whether browsable media are available
+    var mediaAvailable: Bool { get }
+
+    /// Property that specifies which media servers are available. This is useful in case there are more than 1 data sources.
+    var mediaServers: [BrowseProtocol] { get }
 
     /// Activate a player. It shall initiate (long-)polling of status updates.
     func activate()
@@ -125,6 +132,9 @@ public protocol PlayerProtocol: AnyObject {
 
     /// Get a browse object to browse a specific source on the player. There will be a default implementation that return the local music browser
     func browse(source: SourceType) -> BrowseProtocol
+    
+    /// Select a specific media server for a given source.
+    func selectMediaServer(_ mediaServer: BrowseProtocol, source: SourceType)
 
     /// Get the url on which the player is providing an audio stream
     var playerStreamURL: URL? { get }
@@ -165,15 +175,28 @@ public extension PlayerProtocol {
     var attachFolderToSetting: FolderSettingAttachment? {
         return nil
     }
-    
+
     var playerChanged: Observable<PlayerProtocol> {
         Observable.just(self)
+    }
+    
+    /// Default is that a player automatically has media available (like mpd, kodi).
+    var mediaAvailable: Bool {
+        true
     }
     
     var mediaServerModel: String {
         "Embedded media server"
     }
+
+    var mediaServers: [BrowseProtocol] {
+        return [browse]
+    }
     
+    func selectMediaServer(_ mediaServer: BrowseProtocol, source: SourceType) {
+        // Do nothing by default.
+    }
+
     func favourites() -> Observable<[FoundItem]> {
         return Observable.empty()
     }

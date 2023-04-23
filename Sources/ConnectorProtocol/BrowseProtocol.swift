@@ -189,6 +189,12 @@ public struct Result<T> {
 
 /// A protocol to provide a generic interface to a music library.
 public protocol BrowseProtocol {
+    /// Name of browser
+    var name: String { get }
+
+    /// Description of the current status of the cache. Return nil if a cache is not supported.
+    var cacheStatus: String? { get }
+
     /// Get the songs performed by an artist.
     ///
     /// - Parameter artist: An Artist object.
@@ -413,5 +419,9 @@ extension BrowseProtocol {
     
     public func songsByGenre(_ genre: Genre) -> Observable<[Song]> {
         return Observable.just([])
+    }
+    
+    public var cacheStatus: String? {
+        return nil
     }
 }
