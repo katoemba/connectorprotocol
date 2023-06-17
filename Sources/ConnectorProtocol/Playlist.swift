@@ -40,17 +40,52 @@ public struct Playlist {
     /// The date the playlist was last modified
     public var lastModified = Date(timeIntervalSince1970: 0)
     
+    /// The total duration of the playlist in seconds
+    public var duration: UInt32?
+    
+    /// The number of songs in the playlist
+    public var numberOfSongs: UInt32?
+    
+    /// An image to show for this playlist
+    public var image: CoverURI?
+
+    /// A small image to show for this playlist
+    public var miniImage: CoverURI?
+
+    /// A list of genres included in this playlist
+    public var genres: [String]?
+    
+    /// A description of the content of the playlist
+    public var description: String?
+    
+    /// Whether the user can make changes to this playlist
+    public var editable: Bool = true
+    
     public init() {
     }
     
     public init(id: String,
                 source: SourceType,
                 name: String,
-                lastModified: Date) {
+                lastModified: Date,
+                editable: Bool = true,
+                duration: UInt32? = nil,
+                numberOfSongs: UInt32? = nil,
+                image: CoverURI? = nil,
+                miniImage: CoverURI? = nil,
+                genres: [String]? = nil,
+                description: String? = nil) {
         self.id = id
         self.source = source
         self.name = name
         self.lastModified = lastModified
+        self.editable = editable
+        self.duration = duration
+        self.numberOfSongs = numberOfSongs
+        self.image = image
+        self.miniImage = miniImage
+        self.genres = genres
+        self.description = description
     }
 }
 
@@ -62,16 +97,6 @@ public func ==(lhs: Playlist, rhs: Playlist) -> Bool {
 extension Playlist: Hashable {
     public func hash(into hasher: inout Hasher) {
         id.hash(into: &hasher)
-    }
-}
-
-extension Playlist: CustomStringConvertible {
-    public var description: String {
-        return "> Playlist\n" +
-            "    id = \(id)\n" +
-            "    source = \(source)\n" +
-            "    name = \(name)\n" +
-        "    lastModified = \(lastModified)\n"
     }
 }
 

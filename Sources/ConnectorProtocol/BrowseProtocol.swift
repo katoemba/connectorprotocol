@@ -134,9 +134,20 @@ public protocol PlaylistBrowseViewModel: AnyObject {
     var playlistsObservable: Observable<[Playlist]> { get }
     
     func load()
-    
+    func load(filters: [BrowseFilter])
+    func loadMoreData()
+
     func renamePlaylist(_ playlist: Playlist, to: String) -> Playlist
     func deletePlaylist(_ playlist: Playlist)
+}
+
+extension PlaylistBrowseViewModel {
+    public func loadMoreData() {
+    }
+    
+    public func load(filters: [BrowseFilter]) {
+        load()
+    }
 }
 
 public protocol SongBrowseViewModel: AnyObject {
