@@ -115,6 +115,12 @@ extension TimeStatus: CustomDebugStringConvertible {
 // MARK: - QualityStatus Struct
 
 public struct QualityStatus: Codable {
+    public enum QualityIndicator {
+        case regular
+        case cd
+        case hd
+    }
+    
     public enum RawEncoding: Codable {
         case bits(UInt32)
         case text(String)
@@ -161,6 +167,24 @@ public struct QualityStatus: Codable {
         }
         
         return descr
+    }
+    
+    public var qualityIndicator: QualityIndicator {
+        if case let .text(text) = rawEncoding {
+            if text.uppercased() == "DSD" {
+                return .hd
+            }
+        }
+        else if case let .bits(bits) = rawEncoding,
+                ["FLAC", "ALAC", "AIFF", "WAV"].contains(filetype.uppercased()) {
+            if bits >= 24 && rawSamplerate ?? 0 >= 44000 {
+                return .hd
+            }
+            else if bits >= 16 && rawSamplerate ?? 0 >= 44000 {
+                return .cd
+            }
+        }
+        return .regular
     }
     
     public var rawBitrate: UInt32?
