@@ -34,7 +34,7 @@ public enum ArtistType: String, Codable {
 }
 
 /// A struct defining a generic Artist object.
-public struct Artist: Identifiable, Codable {
+public struct Artist: SectionIdentifiable, Codable {
     /// A unique id for the artist. Usage depends on library implementation.
     public var id = ""
     

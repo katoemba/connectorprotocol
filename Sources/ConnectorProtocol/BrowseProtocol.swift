@@ -58,6 +58,7 @@ public enum BrowseFilter {
     case streamingFeatured(genre: String?)
     case streamingPopular(genre: String?)
     case streamingFavorite
+    case similarArtists(Artist)
 }
 
 public enum SearchItem {
@@ -387,6 +388,11 @@ public protocol BrowseProtocol {
     /// - Returns: an observable of the filtered array of artists
     func existingArtists(artists: [Artist]) -> Observable<[Artist]>
 
+    /// Find similar artists that exist in the library
+    /// - Parameter artist: the artist to find similars for
+    /// - Returns: an observable of the array of similar artists
+    func similarArtists(artist: Artist) -> Observable<[Artist]>
+
     /// Complete data for a song
     /// - Parameter song: a song for which data must be completed
     /// - Returns: an observable song
@@ -402,12 +408,6 @@ public protocol BrowseProtocol {
     /// - Returns: an observable artist
     func complete(_ artist: Artist) -> Observable<Artist>
 
-    /// Create a diagnostics string that can help troubleshooting data issues
-    ///
-    /// - Parameter album: an album for which to get diagnostics
-    /// - Returns: an observable String containing the diagnostics data
-    func diagnostics(album: Album) -> Observable<String>
-    
     /// Search for the existence a certain item
     /// - Parameter searchItem: what to search for
     /// - Returns: an observable array of results
@@ -419,11 +419,11 @@ extension BrowseProtocol {
     public func preprocessCoverURI(_ coverURI: CoverURI) -> Observable<CoverURI> {
         return Observable.just(coverURI)
     }
-
+    
     public func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
         return Observable.just(nil)
     }
-
+    
     public func embeddedImageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
         return Observable.just(nil)
     }
@@ -434,5 +434,9 @@ extension BrowseProtocol {
     
     public var cacheStatus: String? {
         return nil
+    }
+    
+    public func similarArtists(artist: Artist) -> Observable<[Artist]> {
+        return Observable.just([])
     }
 }

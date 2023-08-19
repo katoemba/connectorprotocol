@@ -27,13 +27,13 @@
 import Foundation
 import RxSwift
 
-public protocol Identifiable {
+public protocol SectionIdentifiable {
     var id: String { get set }
     func filter(_ filter: String) -> Bool
 }
 
 public protocol ObjectSectionsProtocol {
-    associatedtype objectType: Identifiable
+    associatedtype objectType: SectionIdentifiable
     
     var numberOfSections: Int { get }
     func rowsInSection(_ section: Int) -> Int
@@ -42,7 +42,7 @@ public protocol ObjectSectionsProtocol {
     func filter(_ filter: String) -> ObjectSections<objectType>
 }
 
-public class ObjectSections<T: Identifiable>: ObjectSectionsProtocol {
+public class ObjectSections<T: SectionIdentifiable>: ObjectSectionsProtocol {
     public typealias objectType = T
 
     private let sectionIndex = 0

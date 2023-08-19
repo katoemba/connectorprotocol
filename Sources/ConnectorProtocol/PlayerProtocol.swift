@@ -130,8 +130,8 @@ public protocol PlayerProtocol: AnyObject {
     /// Get a browse object to browse local music on the player.
     var browse: BrowseProtocol { get }
 
-    /// Get a browse object to browse a specific source on the player. There will be a default implementation that return the local music browser
-    func browse(source: SourceType) -> BrowseProtocol
+    /// Get a browse object to browse a specific source on the player. There will be a default implementation that returns nil
+    func browse(source: SourceType) -> BrowseProtocol?
     
     /// Select a specific media server for a given source.
     func selectMediaServer(_ mediaServer: BrowseProtocol, source: SourceType)
@@ -201,8 +201,11 @@ public extension PlayerProtocol {
         return Observable.empty()
     }
     
-    func browse(source: SourceType) -> BrowseProtocol {
-        return browse
+    func browse(source: SourceType) -> BrowseProtocol? {
+        if source == .Local {
+            return browse
+        }
+        return nil
     }
 }
 
