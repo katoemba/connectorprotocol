@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Album object.
-public struct Station {
+public struct Station: Codable {
     /// A unique id for the station. Usage depends on library implementation.
     public var id = ""
     

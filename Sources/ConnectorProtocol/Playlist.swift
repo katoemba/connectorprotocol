@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Playlist object.
-public struct Playlist {
+public struct Playlist: Codable {
     /// A unique id for the playlist. Usage depends on library implementation.
     public var id = ""
     

@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Folder object.
-public struct Folder {
+public struct Folder: Codable {
     /// A unique id for the folder. Usage depends on library implementation.
     public var id = ""
     

@@ -27,7 +27,7 @@
 import Foundation
 import RxSwift
 
-public enum AddMode: String {
+public enum AddMode: String, Codable {
     case replace
     case addNext
     case addNextAndPlay
