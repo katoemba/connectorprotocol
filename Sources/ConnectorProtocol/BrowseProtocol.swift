@@ -59,6 +59,7 @@ public enum BrowseFilter {
     case streamingPopular(genre: String?)
     case streamingFavorite
     case similarArtists(Artist)
+    case tip
 }
 
 public enum SearchItem {
