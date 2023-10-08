@@ -68,6 +68,8 @@ public struct Album: SectionIdentifiable, Codable {
     public var lastModified = Date(timeIntervalSince1970: 0)
     
     public var quality = QualityStatus()
+    
+    public var albumDescription = ""
 
     public init() {
     }
@@ -83,6 +85,7 @@ public struct Album: SectionIdentifiable, Codable {
                 length: Int = 0,
                 sortTitle: String = "",
                 sortArtist: String = "",
+                albumDescription: String = "",
                 lastModified: Date = Date(timeIntervalSince1970: 0),
                 coverURI: CoverURI = CoverURI.fullPathURI(""),
                 quality: QualityStatus = QualityStatus()) {
@@ -97,6 +100,7 @@ public struct Album: SectionIdentifiable, Codable {
         self.length = length
         self.sortTitle = sortTitle != "" ? sortTitle : title
         self.sortArtist = Artist.sortName(sortName: sortArtist, name: artist)
+        self.albumDescription = albumDescription
         self.lastModified = lastModified
         self.coverURI = coverURI
         self.quality = quality
