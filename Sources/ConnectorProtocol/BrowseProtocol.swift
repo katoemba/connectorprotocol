@@ -239,7 +239,12 @@ public protocol BrowseProtocol {
     /// - Parameter genre: A Genre object.
     /// - Returns: An array of fully populated Song objects.
     func songsByGenre(_ genre: Genre) -> Observable<[Song]>
-    
+
+    /// Get an array of recent albums
+    ///
+    /// - Returns: An array of fully populated Album objects.
+    func recentAlbums() async -> [Album]
+
     /// Search across artists, songs and albums.
     ///
     /// - Parameters:
@@ -439,5 +444,9 @@ extension BrowseProtocol {
     
     public func similarArtists(artist: Artist) -> Observable<[Artist]> {
         return Observable.just([])
+    }
+    
+    public func recentAlbums() async -> [Album] {
+        return []
     }
 }

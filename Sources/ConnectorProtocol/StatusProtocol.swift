@@ -43,7 +43,7 @@ public protocol StatusProtocol {
     /// An observable ConnectionStatus value
     var connectionStatusObservable: Observable<ConnectionStatus> { get }
     
-    /// An observable PlayerStatus object
+    /// An observable PlayerStatus object, that is automatically refreshed when the player is actively monitoring
     var playerStatusObservable : Observable<PlayerStatus> { get }
     
     /// Get a block of songs from the playqueue
@@ -61,9 +61,12 @@ public protocol StatusProtocol {
     ///   - end: the end position of the requested block
     /// - Returns: Array of tuples of playqueue position and track id, not guaranteed to have the same number of songs as requested.
     func playqueueSongIds(start: Int, end: Int) -> Observable<[(Int, String)]>
-
-    /// Trigger a forced refresh of the status
+    
+    /// Trigger a forced refresh of the playerStatusObservable
     func forceStatusRefresh()
+    
+    /// Get the current status from the player
+    func getStatus() -> Observable<PlayerStatus>
 }
 
 public extension StatusProtocol {
