@@ -130,9 +130,33 @@ public struct QualityStatus: Codable {
         return "\(rawBitrate / 1000) kbps"
     }
     public var samplerate: String {
-        guard let rawSamplerate = rawSamplerate else { return "" }
-        return "\(rawSamplerate / 1000) kHz"
+        if let rawSamplerate = rawSamplerate {
+            return "\(String(format: "%.1f", Double(rawSamplerate) / 1000.0)) kHz"
+        }
+        switch rawEncoding {
+        case let .text(encodingString):
+            if encodingString == "DSD64" {
+                return "2822.4 kHz"
+            }
+            if encodingString == "DSD128" {
+                return "5644.8 kHz"
+            }
+            if encodingString == "DSD256" {
+                return "11289.6 kHz"
+            }
+            if encodingString == "DSD512" {
+                return "22579.2 kHz"
+            }
+            if encodingString == "DSD1012" {
+                return "45185.4 kHz"
+            }
+        default:
+            break
+        }
+        
+        return ""
     }
+    
     public var encoding: String {
         guard let rawEncoding = rawEncoding else { return "" }
         switch rawEncoding {
@@ -171,9 +195,15 @@ public struct QualityStatus: Codable {
     
     public var qualityIndicator: QualityIndicator {
         if case let .text(text) = rawEncoding {
-            if text.uppercased() == "DSD" {
+            if text.uppercased().starts(with: "DSD") {
                 return .hd
             }
+            if text.uppercased().starts(with: "Float") && ["M4A"].contains(filetype.uppercased()) == false && rawSamplerate ?? 0 > 44000 {
+                return .hd
+            }
+        }
+        else if ["DSF", "DSD", "DFF"].contains(filetype.uppercased()) {
+            return .hd
         }
         else if case let .bits(bits) = rawEncoding,
                 ["FLAC", "ALAC", "AIFF", "WAV"].contains(filetype.uppercased()) {
