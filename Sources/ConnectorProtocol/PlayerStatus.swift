@@ -147,7 +147,7 @@ public struct QualityStatus: Codable {
             if encodingString == "DSD512" {
                 return "22579.2 kHz"
             }
-            if encodingString == "DSD1012" {
+            if encodingString == "DSD1024" {
                 return "45185.4 kHz"
             }
         default:
