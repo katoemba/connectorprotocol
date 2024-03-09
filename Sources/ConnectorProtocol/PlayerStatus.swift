@@ -225,13 +225,13 @@ public struct QualityStatus: Codable {
 
     public init(bitrate: String = "", samplerate: String = "", encoding: String = "", channels: String = "", filetype: String = "") {
         if bitrate != "" {
-            if let rawBitrate = UInt32(bitrate.lowercased().replacingOccurrences(of: "kbps", with: "").replacingOccurrences(of: " ", with: "")) {
-                self.rawBitrate = rawBitrate < 24000 ? rawBitrate * 1000 : rawBitrate
+            if let rawBitrate = Double(bitrate.lowercased().replacingOccurrences(of: "kbps", with: "").replacingOccurrences(of: " ", with: "")) {
+                self.rawBitrate = rawBitrate < 24000 ? UInt32(rawBitrate * 1000) : UInt32(rawBitrate)
             }
         }
         if samplerate != "" {
-            if let rawSamplerate = UInt32(samplerate.lowercased().replacingOccurrences(of: "khz", with: "").replacingOccurrences(of: " ", with: "")) {
-                self.rawSamplerate = rawSamplerate < 1000 ? rawSamplerate * 1000 : rawSamplerate
+            if let rawSamplerate = Double(samplerate.lowercased().replacingOccurrences(of: "khz", with: "").replacingOccurrences(of: " ", with: "")) {
+                self.rawSamplerate = rawSamplerate < 1000 ? UInt32(rawSamplerate * 1000) : UInt32(rawSamplerate)
             }
         }
         if channels != "" {
