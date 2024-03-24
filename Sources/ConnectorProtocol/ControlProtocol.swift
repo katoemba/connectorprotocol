@@ -48,9 +48,9 @@ public struct AddDetails {
 
 public struct AddResponse {
     public let addDetails: AddDetails
-    public let playerStatus: PlayerStatus
+    public let playerStatus: PlayerStatus?
     
-    public init(_ addDetails: AddDetails, _ playerStatus: PlayerStatus) {
+    public init(_ addDetails: AddDetails, _ playerStatus: PlayerStatus?) {
         self.addDetails = addDetails
         self.playerStatus = playerStatus
     }
