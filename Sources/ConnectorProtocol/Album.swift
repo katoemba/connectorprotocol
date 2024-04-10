@@ -177,3 +177,29 @@ extension Album: CustomDebugStringConvertible {
             "    sortArtist = \(sortArtist)\n"
     }
 }
+
+extension Array<Album> {
+    public func sorted(sort: SortType) -> Array<Album> {
+        self.sorted(by: { (lhs, rhs) -> Bool in
+            if sort == .year || sort == .yearReverse {
+                if lhs.year < rhs.year {
+                    return sort == .year
+                }
+                else if lhs.year > rhs.year {
+                    return sort == .yearReverse
+                }
+            }
+            
+            if sort == .artist {
+                let artistCompare = lhs.sortArtist.caseInsensitiveCompare(rhs.sortArtist)
+                if artistCompare == .orderedSame {
+                    return (lhs.year == rhs.year) ? (lhs.title.caseInsensitiveCompare(rhs.title) == .orderedAscending) : (lhs.year < rhs.year)
+                }
+                                        
+                return (artistCompare == .orderedAscending)
+            }
+            
+            return (lhs.title.caseInsensitiveCompare(rhs.title) == .orderedAscending)
+        })
+    }
+}
