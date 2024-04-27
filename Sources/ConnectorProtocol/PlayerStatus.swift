@@ -207,10 +207,13 @@ public struct QualityStatus: Codable {
         }
         else if case let .bits(bits) = rawEncoding,
                 ["FLAC", "ALAC", "AIFF", "WAV"].contains(filetype.uppercased()) {
-            if bits >= 24 && rawSamplerate ?? 0 >= 44000 {
+            if bits >= 24 && (rawSamplerate ?? 0) >= 44000 {
                 return .hd
             }
-            else if bits >= 16 && rawSamplerate ?? 0 >= 44000 {
+            else if bits >= 16 && (rawSamplerate ?? 0) >= 96000 {
+                return .hd
+            }
+            else if bits >= 16 && (rawSamplerate ?? 0) >= 44000 {
                 return .cd
             }
         }
