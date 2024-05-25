@@ -155,13 +155,10 @@ extension PlaylistBrowseViewModel {
 public protocol SongBrowseViewModel: AnyObject {
     var loadProgressObservable: Observable<LoadProgress> { get }
     var songsObservable: Observable<[Song]> { get }
-    var songsWithSubfilterObservable: Observable<[Song]> { get }
     var filter: BrowseFilter? { get }
-    var subFilter: BrowseFilter? { get }
 
     func load()
     func removeSong(at: Int)
-    func songBatch(start: Int, count: Int) -> Observable<[Song]>
 }
 
 public protocol GenreBrowseViewModel: AnyObject {
@@ -331,9 +328,8 @@ public protocol BrowseProtocol {
     /// Return a view model for a list of songs in an album, which can return songs in batches.
     ///
     /// - Parameter album: album to filter on
-    /// - Parameter artist: an optional artist to filter on
     /// - Returns: a SongBrowseViewModel instance
-    func songBrowseViewModel(_ album: Album, artist: Artist?) -> SongBrowseViewModel
+    func songBrowseViewModel(_ album: Album) -> SongBrowseViewModel
 
     /// Return a view model for a list of songs in a playlist, which can return songs in batches.
     ///
