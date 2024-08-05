@@ -33,6 +33,11 @@ public enum ConnectionProperties: String {
     case host = "Host"
     case port = "Port"
     case password = "Password"
+    case binaryCoverArt = "BinaryCoverArt"
+    case embeddedCoverArt = "EmbeddedCoverArt"
+    case urlCoverArt = "URLCoverArt"
+    case discogsCoverArt = "DiscogsCoverArt"
+    case musicbrainzCoverArt = "MusicbrainzCoverArt"
 }
 
 public enum DiscoverMode: String {
