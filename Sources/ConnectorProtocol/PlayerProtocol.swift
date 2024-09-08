@@ -74,7 +74,7 @@ public protocol PlayerProtocol: AnyObject {
     
     /// Observable that triggers whenever something in the player is changed
     var playerChanged: Observable<PlayerProtocol> { get }
-
+    
     /// String that identifies the Controller Type.
     var controllerType: String { get }
     
@@ -116,10 +116,10 @@ public protocol PlayerProtocol: AnyObject {
     
     /// Property that specifies whether browsable media are available
     var mediaAvailable: Bool { get }
-
+    
     /// Property that specifies which media servers are available. This is useful in case there are more than 1 data sources.
     var mediaServers: [BrowseProtocol] { get }
-
+    
     /// Activate a player. It shall initiate (long-)polling of status updates.
     func activate()
     
@@ -134,16 +134,16 @@ public protocol PlayerProtocol: AnyObject {
     
     /// Get a browse object to browse local music on the player.
     var browse: BrowseProtocol { get }
-
+    
     /// Get a browse object to browse a specific source on the player. There will be a default implementation that returns nil
     func browse(source: SourceType) -> BrowseProtocol?
     
     /// Select a specific media server for a given source.
     func selectMediaServer(_ mediaServer: BrowseProtocol, source: SourceType)
-
+    
     /// Get the url on which the player is providing an audio stream
     var playerStreamURL: URL? { get }
-
+    
     /// Get a copy of the player object.
     func copy() -> PlayerProtocol
     
