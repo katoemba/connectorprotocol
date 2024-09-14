@@ -165,6 +165,9 @@ public protocol PlayerProtocol: AnyObject {
     /// Load favourites from a player
     /// - Returns: an observable array of items
     func favourites() -> Observable<[FoundItem]>
+    
+    /// Check if a player is reachable
+    func ping() async -> Bool
 }
 
 /// Extension to include optional functions and properties, to maintain some form of backwards compatibility

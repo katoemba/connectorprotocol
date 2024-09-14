@@ -56,6 +56,10 @@ public struct AddResponse {
     }
 }
 
+public enum ControlError: Error {
+    case notImplemented(function: String)
+}
+
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
     /// Start playback.

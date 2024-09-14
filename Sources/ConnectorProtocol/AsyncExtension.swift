@@ -42,4 +42,12 @@ public extension ControlProtocol {
     func adjustVolume(_ adjustment: Float) async throws -> PlayerStatus {
         try await adjustVolume(adjustment).asSingle().value
     }
+    
+    func add(_ album: Album, addDetails: AddDetails) async throws -> AddResponse {
+        try await add(album, addDetails: addDetails).asSingle().value.1
+    }
+    
+    func add(_ songs: [Song], addDetails: AddDetails) async throws -> AddResponse {
+        try await add(songs, addDetails: addDetails).asSingle().value.1
+    }
 }

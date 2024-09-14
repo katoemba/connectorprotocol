@@ -414,6 +414,15 @@ public protocol BrowseProtocol {
     /// - Parameter searchItem: what to search for
     /// - Returns: an observable array of results
     func search(searchItem: SearchItem) -> Observable<[FoundItem]>
+    
+    /// Select a number of random songs from the collection
+    /// - Parameter count: the number of songs to return
+    /// - Returns: an array of songs
+    func randomSongs(_ count: Int) async throws -> [Song]
+    
+    /// Select a random album from the collection
+    /// - Returns: the selected album
+    func randomAlbums(_ count: Int) async throws -> [Album]
 }
 
 extension BrowseProtocol {
