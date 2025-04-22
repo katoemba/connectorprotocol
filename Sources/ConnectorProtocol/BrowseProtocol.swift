@@ -27,7 +27,7 @@
 import Foundation
 import RxSwift
 
-public enum SourceType: String, Codable {
+public enum SourceType: String, Codable, Sendable {
     case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast, UPnP, Tidal, Qobuz, Radio
 }
 

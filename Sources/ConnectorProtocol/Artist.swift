@@ -26,7 +26,7 @@
 
 import Foundation
 
-public enum ArtistType: String, Codable {
+public enum ArtistType: String, Codable, Sendable {
     case artist
     case albumArtist
     case performer
@@ -34,7 +34,7 @@ public enum ArtistType: String, Codable {
 }
 
 /// A struct defining a generic Artist object.
-public struct Artist: SectionIdentifiable, Codable {
+public struct Artist: SectionIdentifiable, Codable, Sendable {
     /// A unique id for the artist. Usage depends on library implementation.
     public var id = ""
     

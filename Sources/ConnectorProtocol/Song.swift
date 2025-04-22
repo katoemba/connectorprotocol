@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Song object.
-public struct Song: Codable {
+public struct Song: Codable, Sendable {
     /// A unique id for the song. Usage depends on library implementation.
     public var id = ""
     

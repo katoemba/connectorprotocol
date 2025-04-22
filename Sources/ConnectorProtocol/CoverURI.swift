@@ -26,7 +26,7 @@
 
 import Foundation
 
-public enum CoverURI: Codable {
+public enum CoverURI: Codable, Sendable {
     private enum CoverURIType: String, Codable {
         case fullPathURI
         case filenameOptionsURI

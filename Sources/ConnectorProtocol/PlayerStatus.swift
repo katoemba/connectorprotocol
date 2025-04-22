@@ -114,8 +114,8 @@ extension TimeStatus: CustomDebugStringConvertible {
 
 // MARK: - QualityStatus Struct
 
-public struct QualityStatus: Codable {
-    public enum QualityIndicator {
+public struct QualityStatus: Codable, Sendable {
+    public enum QualityIndicator: Sendable {
         case regular
         case cd
         case hd
