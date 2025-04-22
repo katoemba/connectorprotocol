@@ -232,7 +232,7 @@ public extension Song {
     var extendedSortArtist: String {
         sortArtist != "" ? sortArtist : artist
     }
-
+    
     var extendSortAlbumArtist: String {
         if sortAlbumArtist != "" {
             return sortAlbumArtist
@@ -294,5 +294,9 @@ public extension Song {
         }
         
         return nil
+    }
+    
+    func createGenres() -> [Genre] {
+        genre.map { ConnectorProtocol.Genre(id: $0, source: self.source, name: $0) }
     }
 }
