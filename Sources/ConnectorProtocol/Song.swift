@@ -139,6 +139,7 @@ public struct Song: Codable {
                 artistId: String? = nil,
                 albumartist: String,
                 composer: String,
+                performer: String = "",
                 year: Int,
                 genre: [String],
                 length: Int,
@@ -160,6 +161,7 @@ public struct Song: Codable {
         self.artist = artist
         self.albumartist = albumartist
         self.composer = composer
+        self.performer = performer
         self.year = year
         self.genre = genre
         self.length = length
@@ -212,6 +214,7 @@ extension Song: CustomDebugStringConvertible {
             "    artist = \(artist)\n" +
             "    albumartist = \(albumartist)\n" +
             "    composer = \(composer)\n" +
+            "    performer = \(performer)\n" +
             "    year = \(year)\n" +
             "    genre = \(genre)\n" +
             "    length = \(length)\n" +
