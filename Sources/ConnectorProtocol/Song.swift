@@ -82,6 +82,9 @@ public struct Song: Codable, Sendable {
     /// The performer of the track.
     public var performer = ""
     
+    /// The conductor of the track.
+    public var conductor = ""
+    
     /// A human-readable comment about this song. The exact meaning of this tag is not well-defined.
     public var comment = ""
     
@@ -140,6 +143,7 @@ public struct Song: Codable, Sendable {
                 albumartist: String,
                 composer: String,
                 performer: String = "",
+                conductor: String = "",
                 year: Int,
                 genre: [String],
                 length: Int,
@@ -162,6 +166,7 @@ public struct Song: Codable, Sendable {
         self.albumartist = albumartist
         self.composer = composer
         self.performer = performer
+        self.conductor = conductor
         self.year = year
         self.genre = genre
         self.length = length
@@ -215,6 +220,7 @@ extension Song: CustomDebugStringConvertible {
             "    albumartist = \(albumartist)\n" +
             "    composer = \(composer)\n" +
             "    performer = \(performer)\n" +
+            "    conductor = \(conductor)\n" +
             "    year = \(year)\n" +
             "    genre = \(genre)\n" +
             "    length = \(length)\n" +
@@ -294,6 +300,11 @@ public extension Song {
                 let id = idCreator?(self) ?? "\(source.rawValue)::\(performer)"
                 return Artist(id: id, type: .performer, source: source, name: performer, sortName: performer)
             }
+        case .conductor:
+            if conductor != "" {
+                let id = idCreator?(self) ?? "\(source.rawValue)::\(conductor)"
+                return Artist(id: id, type: .conductor, source: source, name: conductor, sortName: conductor)
+            }
         }
         
         return nil
@@ -301,5 +312,5 @@ public extension Song {
     
     func createGenres() -> [Genre] {
         genre.map { ConnectorProtocol.Genre(id: $0, source: self.source, name: $0) }
-    }
+    }    
 }

@@ -32,6 +32,7 @@ public struct SearchResult: Sendable {
     public var artists = [Artist]()
     public var composers = [Artist]()
     public var performers = [Artist]()
+    public var conductors = [Artist]()
     public var playlists = [Playlist]()
 
     public init() {

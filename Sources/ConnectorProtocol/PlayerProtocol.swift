@@ -51,6 +51,7 @@ public enum Functions {
     case randomAlbums
     case composers
     case performers
+    case conductors
     case quality
     case recentlyAddedAlbums
     case recentlyPlayedAlbums

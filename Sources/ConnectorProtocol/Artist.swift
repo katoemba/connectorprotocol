@@ -31,6 +31,7 @@ public enum ArtistType: String, Codable, Sendable {
     case albumArtist
     case performer
     case composer
+    case conductor
 }
 
 /// A struct defining a generic Artist object.
@@ -49,7 +50,7 @@ public struct Artist: SectionIdentifiable, Codable, Sendable {
     
     /// The sortation name of the artist.
     public var sortName = ""
-    
+
     /// URI through which cover art can be fetched.
     public var coverURI = CoverURI.fullPathURI("")
     
@@ -125,6 +126,15 @@ extension Artist {
             else {
                 return sortOrder == .orderedAscending
             }
+        }
+    }
+    
+    public static func splitPerformerString(_ performer: String) -> [String] {
+        if performer.contains(";") {
+            return performer.split(separator: ";").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+        }
+        else {
+            return performer.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
         }
     }
 }
