@@ -274,7 +274,7 @@ public protocol ControlProtocol {
     func savePlaylist(_ name: String)
     
     /// Clear the active playqueue
-    func clearPlayqueue()
+    func clearPlayqueue(from: Int?, to: Int?)
     
     /// Play a station
     ///
@@ -303,7 +303,7 @@ extension ControlProtocol {
     public func playFavourite(_ favourite: FoundItem) {
         // Default does nothing
     }
-    
+        
     public var volumeAdjustment: Float? {
         get {
             return nil
