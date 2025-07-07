@@ -25,7 +25,6 @@
 //
 
 import Foundation
-import RxSwift
 
 public enum PlayPauseMode {
     case Paused
@@ -121,7 +120,7 @@ public struct QualityStatus: Codable, Sendable {
         case hd
     }
     
-    public enum RawEncoding: Codable {
+    public enum RawEncoding: Codable, Sendable {
         case bits(UInt32)
         case text(String)
     }

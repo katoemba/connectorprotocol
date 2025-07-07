@@ -25,7 +25,6 @@
 //
 
 import Foundation
-import RxSwift
 
 /// The connection status
 ///
@@ -41,41 +40,17 @@ public enum ConnectionStatus {
 /// A protocol to provide a generic interface to observe / read the status from a music player.
 public protocol StatusProtocol {
     /// An observable ConnectionStatus value
-    var connectionStatusObservable: Observable<ConnectionStatus> { get }
+    var connectionStatusStream: AsyncStream<ConnectionStatus> { get }
     
     /// An observable PlayerStatus object, that is automatically refreshed when the player is actively monitoring
-    var playerStatusObservable : Observable<PlayerStatus> { get }
+    var playerStatusStream : AsyncStream<PlayerStatus> { get }
     
-    /// Get a block of songs from the playqueue
-    ///
-    /// - Parameters:
-    ///   - start: the start position of the requested block
-    ///   - end: the end position of the requested block
-    /// - Returns: Array of songs, not guaranteed to have the same number of songs as requested.
-    func playqueueSongs(start: Int, end: Int) -> Observable<[Song]>
+    func playqueueSongs(start: Int, end: Int) async -> [Song]
     
-    /// Get a block of song id's from the playqueue
-    ///
-    /// - Parameters:
-    ///   - start: the start position of the requested block
-    ///   - end: the end position of the requested block
-    /// - Returns: Array of tuples of playqueue position and track id, not guaranteed to have the same number of songs as requested.
-    func playqueueSongIds(start: Int, end: Int) -> Observable<[(Int, String)]>
+    func playqueueSongIds(start: Int, end: Int) async -> [(Int, String)]
     
-    /// Trigger a forced refresh of the playerStatusObservable
-    func forceStatusRefresh()
+    func forceStatusRefresh() async
     
     /// Get the current status from the player
-    func getStatus() -> Observable<PlayerStatus>
-}
-
-public extension StatusProtocol {
-    func playqueueSongIds(start: Int, end: Int) -> Observable<[(Int, String)]> {
-        playqueueSongs(start: start, end: end)
-            .map {
-                $0.map {
-                    ($0.position, $0.playqueueId ?? "0")
-                }
-            }
-    }
+    func playerStatus() async -> PlayerStatus
 }

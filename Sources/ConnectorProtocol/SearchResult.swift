@@ -26,7 +26,7 @@
 
 import Foundation
 
-public struct SearchResult: Sendable {
+public struct SearchResult {
     public var songs = [Song]()
     public var albums = [Album]()
     public var artists = [Artist]()
