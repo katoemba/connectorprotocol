@@ -61,7 +61,7 @@ public protocol ControlProtocol {
 
     func stop() async throws
     
-    func togglePlayPause() async throws
+    func togglePlayPause(from playerStatus: PlayerStatus) async throws
 
     func skip() async throws
     
