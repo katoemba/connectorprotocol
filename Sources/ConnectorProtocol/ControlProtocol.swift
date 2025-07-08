@@ -37,20 +37,12 @@ public struct AddDetails {
     public let addMode: AddMode
     public let shuffle: Bool
     public let startWithSong: UInt32
+    public let playerStatus: PlayerStatus
     
-    public init(_ addMode: AddMode, shuffle: Bool = false, startWithSong: UInt32 = 0) {
+    public init(_ addMode: AddMode, shuffle: Bool = false, startWithSong: UInt32 = 0, playerStatus: PlayerStatus) {
         self.addMode = addMode
         self.shuffle = shuffle
         self.startWithSong = startWithSong
-    }
-}
-
-public struct AddResponse {
-    public let addDetails: AddDetails
-    public let playerStatus: PlayerStatus?
-    
-    public init(_ addDetails: AddDetails, _ playerStatus: PlayerStatus?) {
-        self.addDetails = addDetails
         self.playerStatus = playerStatus
     }
 }
@@ -61,83 +53,79 @@ public enum ControlError: Error {
 
 /// A protocol to provide a generic interface to control a music player.
 public protocol ControlProtocol {
-    func play() async throws -> PlayerStatus
+    func play() async throws
 
-    func play(index: Int) async throws -> PlayerStatus
+    func play(index: Int) async throws
 
-    func pause() async throws -> PlayerStatus
+    func pause() async throws
 
-    func stop() async throws -> PlayerStatus
+    func stop() async throws
     
-    func togglePlayPause() async throws -> PlayerStatus
+    func togglePlayPause() async throws
 
-    func skip() async throws -> PlayerStatus
+    func skip() async throws
     
-    func back() async throws -> PlayerStatus
+    func back() async throws
     
-    func add(_ album: Album, addDetails: AddDetails) async throws -> AddResponse
+    func add(_ album: Album, addDetails: AddDetails) async throws
     
-    func add(_ songs: [Song], addDetails: AddDetails) async throws -> AddResponse
+    func add(_ songs: [Song], addDetails: AddDetails) async throws
 
-    func setRandom(_ randomMode: RandomMode) async -> PlayerStatus
+    func setRandom(_ randomMode: RandomMode) async throws
     
-    func toggleRandom() async -> PlayerStatus
+    func toggleRandom() async throws
     
-    func shufflePlayqueue() async -> PlayerStatus
+    func shufflePlayqueue() async throws
     
-    func setRepeat(_ repeatMode: RepeatMode) async -> PlayerStatus
+    func setRepeat(_ repeatMode: RepeatMode) async throws
 
-    func toggleRepeat() async -> PlayerStatus
+    func toggleRepeat() async throws
     
-    func setConsume(_ consumeMode: ConsumeMode) async -> PlayerStatus
+    func setConsume(_ consumeMode: ConsumeMode) async throws
     
-    func toggleConsume() async -> PlayerStatus
+    func toggleConsume() async throws
     
-    func setVolume(_ volume: Float)async -> PlayerStatus
+    func setVolume(_ volume: Float)async throws
 
-    func adjustVolume(_ adjustment: Float) async -> PlayerStatus
+    func adjustVolume(_ adjustment: Float) async throws
 
-    func setSeek(seconds: UInt32) async -> PlayerStatus
+    func setSeek(seconds: UInt32) async throws
     
-    func setSeek(percentage: Float) async -> PlayerStatus
+    func setSeek(percentage: Float) async throws
 
-    func add(_ song: Song, addDetails: AddDetails) async -> (Song, AddResponse)
+    func add(_ song: Song, addDetails: AddDetails) async throws
+    
+    func addToPlaylist(_ song: Song, playlist: Playlist) async throws
 
-    func add(_ songs: [Song], addDetails: AddDetails) async -> (Song, AddResponse)
+    func addToPlaylist(_ album: Album, playlist: Playlist) async throws
     
-    func addToPlaylist(_ song: Song, playlist: Playlist) async
+    func add(_ artist: Artist, addDetails: AddDetails) async throws
+    
+    func add(_ playlist: Playlist, addDetails: AddDetails) async throws
+    
+    func add(_ genre: Genre, addDetails: AddDetails) async throws
+    
+    func add(_ folder: Folder, addDetails: AddDetails) async throws
+    
+    func addRecursive(_ folder: Folder, addDetails: AddDetails) async throws
 
-    func add(_ album: Album, addDetails: AddDetails) async -> (Album, AddResponse)
+    func moveSong(from: Int, to: Int) async throws
+    
+    func deleteSong(_ at: Int) async throws
+    
+    func moveSong(playlist: Playlist, from: Int, to: Int) async throws
+    
+    func deleteSong(playlist: Playlist, at: Int) async throws
+    
+    func savePlaylist(_ name: String) async throws
+    
+    func clearPlayqueue(from: Int?, to: Int?) async throws
+    
+    func playStation(_ station: Station) async throws
+    
+    func playFavourite(_ favourite: FoundItem) async throws
 
-    func addToPlaylist(_ album: Album, playlist: Playlist) async
-    
-    func add(_ artist: Artist, addDetails: AddDetails) async -> (Artist, AddResponse)
-    
-    func add(_ playlist: Playlist, addDetails: AddDetails) async -> (Playlist, AddResponse)
-    
-    func add(_ genre: Genre, addDetails: AddDetails) async -> (Genre, AddResponse)
-    
-    func add(_ folder: Folder, addDetails: AddDetails) async -> (Folder, AddResponse)
-    
-    func addRecursive(_ folder: Folder, addDetails: AddDetails) async -> (Folder, AddResponse)
+    func setOutput(_ output: Output, enabled: Bool) async throws
 
-    func moveSong(from: Int, to: Int) async
-    
-    func deleteSong(_ at: Int) async
-    
-    func moveSong(playlist: Playlist, from: Int, to: Int) async
-    
-    func deleteSong(playlist: Playlist, at: Int) async
-    
-    func savePlaylist(_ name: String) async
-    
-    func clearPlayqueue(from: Int?, to: Int?) async -> PlayerStatus
-    
-    func playStation(_ station: Station) async -> PlayerStatus
-
-    func playFavourite(_ favourite: FoundItem) async -> PlayerStatus
-
-    func setOutput(_ output: Output, enabled: Bool) async -> PlayerStatus
-
-    func toggleOutput(_ output: Output) async -> PlayerStatus
+    func toggleOutput(_ output: Output) async throws
 }
