@@ -73,25 +73,25 @@ public protocol ControlProtocol {
 
     func setRandom(_ randomMode: RandomMode) async throws
     
-    func toggleRandom() async throws
+    func toggleRandom(from playerStatus: PlayerStatus) async throws
     
     func shufflePlayqueue() async throws
     
     func setRepeat(_ repeatMode: RepeatMode) async throws
 
-    func toggleRepeat() async throws
+    func toggleRepeat(from playerStatus: PlayerStatus) async throws
     
     func setConsume(_ consumeMode: ConsumeMode) async throws
     
-    func toggleConsume() async throws
+    func toggleConsume(from playerStatus: PlayerStatus) async throws
     
     func setVolume(_ volume: Float)async throws
 
-    func adjustVolume(_ adjustment: Float) async throws
+    func adjustVolume(_ adjustment: Float, from playerStatus: PlayerStatus) async throws
 
-    func setSeek(seconds: UInt32) async throws
+    func setSeek(seconds: UInt32, from playerStatus: PlayerStatus) async throws
     
-    func setSeek(percentage: Float) async throws
+    func setSeek(percentage: Float, from playerStatus: PlayerStatus) async throws
 
     func add(_ song: Song, addDetails: AddDetails) async throws
     
@@ -119,7 +119,7 @@ public protocol ControlProtocol {
     
     func savePlaylist(_ name: String) async throws
     
-    func clearPlayqueue(from: Int?, to: Int?) async throws
+    func clearPlayqueue(from: Int?, to: Int?, playerStatus: PlayerStatus?) async throws
     
     func playStation(_ station: Station) async throws
     
