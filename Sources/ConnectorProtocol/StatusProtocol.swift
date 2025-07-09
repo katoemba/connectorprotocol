@@ -41,8 +41,10 @@ public enum ConnectionStatus {
 /// A protocol to provide a generic interface to observe / read the status from a music player.
 public protocol StatusProtocol {
     var connectionStatusPublisher: AnyPublisher<ConnectionStatus, Never> { get }
+    var connectionStatusStream: AsyncStream<ConnectionStatus> { get }
     
     var playerStatusPublisher: AnyPublisher<PlayerStatus, Never> { get }
+    var playerStatusStream: AsyncStream<PlayerStatus> { get }
     
     func playqueueSongs(start: Int, end: Int) async -> [Song]
     

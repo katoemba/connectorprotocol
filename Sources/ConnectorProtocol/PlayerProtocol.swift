@@ -147,9 +147,8 @@ public protocol PlayerBrowserProtocol {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
 
-    var addPlayerObservable : AsyncStream<PlayerProtocol> { get }
-    var removePlayerObservable : AsyncStream<PlayerProtocol> { get }
-    var changedPlayerObservable: AsyncStream<PlayerProtocol> { get }
+    // var addPlayerStream: AsyncStream<PlayerProtocol> { get }
+    // var removePlayerStream: AsyncStream<PlayerProtocol> { get }
 
     /// Start listening for players on the network.
     func startListening() async
