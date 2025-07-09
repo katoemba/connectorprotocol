@@ -112,10 +112,10 @@ public protocol PlayerProtocol: AnyObject {
     var mediaServers: [BrowseProtocol] { get }
     
     /// Activate a player. It shall initiate (long-)polling of status updates.
-    func activate() async
+    func activate()
     
     /// Deactivate a plaer. It shall stop (long-)polling of status updates and close any open connections.
-    func deactivate() async
+    func deactivate()
     
     /// Get a shared status object to monitor the player.
     var status: StatusProtocol { get }
@@ -137,7 +137,7 @@ public protocol PlayerProtocol: AnyObject {
     
     /// Load favourites from a player
     /// - Returns: an observable array of items
-    func favourites() async -> [FoundItem]
+    func favourites() async throws -> [FoundItem]
     
     /// Check if a player is reachable
     func ping() async -> Bool
