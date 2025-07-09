@@ -115,45 +115,45 @@ public protocol BrowseProtocol {
     /// Description of the current status of the cache. Return nil if a cache is not supported.
     var cacheStatus: String? { get }
 
-    func songsByArtist(_ artist: Artist) async -> [Song]
+    func songsByArtist(_ artist: Artist) async throws -> [Song]
  
-    func albumsByArtist(_ artist: Artist, sort: SortType) async -> [Album]
+    func albumsByArtist(_ artist: Artist, sort: SortType) async throws -> [Album]
     
-    func songsOnAlbum(_ album: Album) async -> [Song]
+    func songsOnAlbum(_ album: Album) async throws -> [Song]
 
-    func songsInPlaylist(_ playlist: Playlist) async -> [Song]
+    func songsInPlaylist(_ playlist: Playlist) async throws -> [Song]
     
-    func songsByGenre(_ genre: Genre) async -> [Song]
+    func songsByGenre(_ genre: Genre) async throws -> [Song]
 
-    func recentAlbums() async -> [Album]
+    func recentAlbums() async throws -> [Album]
 
-    func artists(type: ArtistType) async -> [Artist]
+    func artists(type: ArtistType) async throws -> [Artist]
 
-    func artists(genre: Genre) async -> [Artist]
+    func artists(genre: Genre) async throws -> [Artist]
 
-    func albums() async -> [Album]
+    func albums() async throws -> [Album]
     
-    func albums(genre: Genre?) async -> [Album]
+    func albums(genre: Genre?) async throws -> [Album]
     
-    func existingArtists(artists: [Artist]) async -> [Artist]
+    func existingArtists(artists: [Artist]) async throws -> [Artist]
 
-    func similarArtists(artist: Artist) async -> [Artist]
+    func similarArtists(artist: Artist) async throws -> [Artist]
 
     /// Complete data for a song
     /// - Parameter song: a song for which data must be completed
     /// - Returns: an observable song
-    func complete(_ song: Song) async -> Song
+    func complete(_ song: Song) async throws -> Song
 
-    func completeAlbums(_ albums: [Album]) async -> [Album]
+    func completeAlbums(_ albums: [Album]) async throws -> [Album]
     
-    func complete(_ album: Album) async -> Album
+    func complete(_ album: Album) async throws -> Album
 
-    func complete(_ artist: Artist) async -> Artist
+    func complete(_ artist: Artist) async throws -> Artist
 
     /// Search for the existence a certain item
     /// - Parameter searchItem: what to search for
     /// - Returns: an observable array of results
-    func search(searchItem: SearchItem) async -> [FoundItem]
+    func search(searchItem: SearchItem) async throws -> [FoundItem]
     
     /// Select a number of random songs from the collection
     /// - Parameter count: the number of songs to return
@@ -164,7 +164,7 @@ public protocol BrowseProtocol {
     /// - Returns: the selected album
     func randomAlbums(_ count: Int) async throws -> [Album]
     
-    func coverData(_ album: Album) async -> Data?
+    func coverData(_ album: Album) async throws -> Data
     
-    func coverData(_ song: Song) async -> Data?
+    func coverData(_ song: Song) async throws -> Data
 }
