@@ -160,7 +160,7 @@ public protocol PlayerBrowserProtocol {
     ///
     /// - Parameter connectionProperties: dictionary of connection properties
     /// - Returns: An observable on which a created Player can published.
-    func playerForConnectionProperties(_ connectionProperties: [String: Any]) async -> PlayerProtocol?
+    func playerForConnectionProperties(_ connectionProperties: [String: Any]) async throws -> PlayerProtocol
     
     /// Persist a manually added player in user defaults
     ///
