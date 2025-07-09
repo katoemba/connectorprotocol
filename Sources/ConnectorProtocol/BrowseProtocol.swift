@@ -123,10 +123,10 @@ public protocol BrowseProtocol {
 
     func songsInPlaylist(_ playlist: Playlist) async throws -> [Song]
     
-    func songsByGenre(_ genre: Genre) async throws -> [Song]
-
     func recentAlbums() async throws -> [Album]
 
+    func recentAlbums(numberOfAlbums: Int) async throws -> [Album]
+    
     func artists(type: ArtistType) async throws -> [Artist]
 
     func artists(genre: Genre) async throws -> [Artist]
