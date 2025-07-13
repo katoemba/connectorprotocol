@@ -167,4 +167,6 @@ public protocol BrowseProtocol {
     func coverData(_ album: Album) async throws -> Data
     
     func coverData(_ song: Song) async throws -> Data
+    
+    func genres() async throws -> [Genre]
 }

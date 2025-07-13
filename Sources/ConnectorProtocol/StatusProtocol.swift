@@ -46,6 +46,8 @@ public protocol StatusProtocol {
     var playerStatusPublisher: AnyPublisher<PlayerStatus, Never> { get }
     var playerStatusStream: AsyncStream<PlayerStatus> { get }
     
+    var playerStatus: PlayerStatus { get }
+    
     func playqueueSongs(start: Int, end: Int) async -> [Song]
     
     func playqueueSongIds(start: Int, end: Int) async -> [(Int, String)]

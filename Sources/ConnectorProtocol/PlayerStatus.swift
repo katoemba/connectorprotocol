@@ -27,31 +27,31 @@
 import Foundation
 
 public enum PlayPauseMode {
-    case Paused
-    case Playing
-    case Stopped
+    case paused
+    case playing
+    case stopped
 }
 
 public enum RandomMode {
-    case Off
-    case On
+    case off
+    case on
 }
 
 public enum ShuffleMode {
-    case Off
-    case On
+    case off
+    case on
 }
 
 public enum RepeatMode {
-    case Off
-    case Single
-    case All
-    case Album
+    case off
+    case single
+    case all
+    case album
 }
 
 public enum ConsumeMode {
-    case Off
-    case On
+    case off
+    case on
 }
 
 // MARK: - TimeStatus struct
@@ -365,10 +365,10 @@ extension PlayqueueStatus: CustomDebugStringConvertible {
 // MARK: - PlayStatus Struct
 
 public struct PlayStatus {
-    public var playPauseMode = PlayPauseMode.Paused
-    public var randomMode = RandomMode.Off
-    public var repeatMode = RepeatMode.Off
-    public var consumeMode = ConsumeMode.Off
+    public var playPauseMode = PlayPauseMode.paused
+    public var randomMode = RandomMode.off
+    public var repeatMode = RepeatMode.off
+    public var consumeMode = ConsumeMode.off
 
     public init() {
     }
@@ -485,7 +485,7 @@ public struct PlayerStatus {
     public var volume = Float(0)
     public var volumeEnabled = true
     public var playqueue = PlayqueueStatus()
-    public var playing = PlayStatus()
+    public var playing: PlayStatus = PlayStatus()
     public var outputs = [Output]()
     
     public init() {}

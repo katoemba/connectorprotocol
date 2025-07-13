@@ -44,7 +44,7 @@ public enum DiscoverMode: String {
     case manual = "manual"
 }
 
-public enum Functions {
+public enum Functions: CaseIterable {
     case randomSongs
     case twentyRandomSongs  // Allow to specify a smaller number of random songs for performance reasons
     case randomAlbums
