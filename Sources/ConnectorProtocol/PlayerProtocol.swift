@@ -160,7 +160,7 @@ public protocol PlayerBrowserProtocol {
     ///
     /// - Parameter connectionProperties: dictionary of connection properties
     /// - Returns: An observable on which a created Player can published.
-    func playerForConnectionProperties(_ connectionProperties: [String: Any]) async throws -> PlayerProtocol
+    func playerForConnectionProperties(_ connectionProperties: [String: Any]) async throws -> any PlayerProtocol
     
     /// Persist a manually added player in user defaults
     ///
@@ -170,5 +170,5 @@ public protocol PlayerBrowserProtocol {
     /// Remove a manually added player from user defaults
     ///
     /// - Parameter player: the player to remove
-    func removePlayer(_ player: PlayerProtocol)
+    func removePlayer(_ player: any PlayerProtocol)
 }

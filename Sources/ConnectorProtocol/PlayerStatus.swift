@@ -26,37 +26,37 @@
 
 import Foundation
 
-public enum PlayPauseMode {
+public enum PlayPauseMode: Sendable {
     case paused
     case playing
     case stopped
 }
 
-public enum RandomMode {
+public enum RandomMode: Sendable {
     case off
     case on
 }
 
-public enum ShuffleMode {
+public enum ShuffleMode: Sendable {
     case off
     case on
 }
 
-public enum RepeatMode {
+public enum RepeatMode: Sendable {
     case off
     case single
     case all
     case album
 }
 
-public enum ConsumeMode {
+public enum ConsumeMode: Sendable {
     case off
     case on
 }
 
 // MARK: - TimeStatus struct
 
-public struct TimeStatus {
+public struct TimeStatus: Sendable {
     public var elapsedTime = Int(0)
     public var trackTime = Int(0)
     
@@ -325,7 +325,7 @@ extension QualityStatus: CustomDebugStringConvertible {
 
 // MARK: - PlayqueueStatus Struct
 
-public struct PlayqueueStatus {
+public struct PlayqueueStatus: Sendable {
     public var songIndex = 0
     public var version = 0
     public var length = 0
@@ -364,7 +364,7 @@ extension PlayqueueStatus: CustomDebugStringConvertible {
 
 // MARK: - PlayStatus Struct
 
-public struct PlayStatus {
+public struct PlayStatus: Sendable {
     public var playPauseMode = PlayPauseMode.paused
     public var randomMode = RandomMode.off
     public var repeatMode = RepeatMode.off
@@ -432,7 +432,7 @@ extension PlayStatus: CustomDebugStringConvertible {
 
 // MARK: - Output Struct
 
-public struct Output {
+public struct Output: Sendable {
     /// A unique id for the output. Usage depends on library implementation.
     public var id = ""
     
@@ -477,7 +477,7 @@ extension Output: CustomDebugStringConvertible {
 
 
 /// A PlayerStatus object containing all relevant status elements
-public struct PlayerStatus {
+public struct PlayerStatus: Sendable {
     public var lastUpdateTime = Date(timeIntervalSince1970: 0)
     public var time = TimeStatus()
     public var currentSong = Song()

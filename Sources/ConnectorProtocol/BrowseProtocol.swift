@@ -108,7 +108,7 @@ public struct Result<T> {
 }
 
 /// A protocol to provide a generic interface to a music library.
-public protocol BrowseProtocol {
+public protocol BrowseProtocol: Sendable {
     /// Name of browser
     var name: String { get }
 

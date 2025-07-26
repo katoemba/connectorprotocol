@@ -39,7 +39,7 @@ public enum ConnectionStatus {
 }
 
 /// A protocol to provide a generic interface to observe / read the status from a music player.
-public protocol StatusProtocol {
+public protocol StatusProtocol: Sendable {
     var connectionStatusPublisher: AnyPublisher<ConnectionStatus, Never> { get }
     var connectionStatusStream: AsyncStream<ConnectionStatus> { get }
     

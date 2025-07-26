@@ -26,14 +26,14 @@
 
 import Foundation
 
-public enum AddMode: String, Codable {
+public enum AddMode: String, Codable, Sendable {
     case replace
     case addNext
     case addNextAndPlay
     case addAtEnd
 }
 
-public struct AddDetails {
+public struct AddDetails: Sendable {
     public let addMode: AddMode
     public let shuffle: Bool
     public let startWithSong: UInt32
@@ -52,7 +52,7 @@ public enum ControlError: Error {
 }
 
 /// A protocol to provide a generic interface to control a music player.
-public protocol ControlProtocol {
+public protocol ControlProtocol: Sendable {
     func play() async throws
 
     func play(index: Int) async throws
