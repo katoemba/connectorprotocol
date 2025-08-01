@@ -143,12 +143,13 @@ public protocol PlayerProtocol: AnyObject {
     func ping() async -> Bool
 }
 
-public protocol PlayerBrowserProtocol {
+public protocol PlayerBrowserProtocol: ObservableObject {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
 
     // var addPlayerStream: AsyncStream<PlayerProtocol> { get }
     // var removePlayerStream: AsyncStream<PlayerProtocol> { get }
+    var players: [PlayerProtocol] { get }
 
     /// Start listening for players on the network.
     func startListening() async

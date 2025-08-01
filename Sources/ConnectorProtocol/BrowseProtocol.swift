@@ -68,6 +68,7 @@ public enum SearchItem {
     case album(title: String, artist: String?)
     case artistAlbum(artist: String, sort: SortType)
     case playlist(name: String)
+    case decade(decade: Int)
 }
 
 public enum FoundItem: Hashable, Equatable {
@@ -134,6 +135,8 @@ public protocol BrowseProtocol: Sendable {
     func albums() async throws -> [Album]
     
     func albums(genre: Genre?) async throws -> [Album]
+    
+    func albumsByDecade(_ decade: Int) async throws -> [Album]
     
     func existingArtists(artists: [Artist]) async throws -> [Artist]
 
