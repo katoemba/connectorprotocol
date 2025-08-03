@@ -25,14 +25,13 @@
 //
 
 import Foundation
-import Combine
 
 /// The connection status
 ///
 /// - Unknown: The status is unknown (probably not yet checked)
 /// - Online: The player can be reached.
 /// - Offline: The player is unreachable.
-public enum ConnectionStatus {
+public enum ConnectionStatus: Sendable {
     case unknown
     case online
     case offline
@@ -40,11 +39,9 @@ public enum ConnectionStatus {
 
 /// A protocol to provide a generic interface to observe / read the status from a music player.
 public protocol StatusProtocol: Sendable {
-    var connectionStatusPublisher: AnyPublisher<ConnectionStatus, Never> { get }
-    var connectionStatusStream: AsyncStream<ConnectionStatus> { get }
+    var connectionStatusStream: AsyncValueBroadcaster<ConnectionStatus> { get }
     
-    var playerStatusPublisher: AnyPublisher<PlayerStatus, Never> { get }
-    var playerStatusStream: AsyncStream<PlayerStatus> { get }
+    var statusStream: AsyncValueBroadcaster<PlayerStatus> { get }
     
     var playerStatus: PlayerStatus { get }
     
