@@ -150,6 +150,10 @@ extension Album {
     public mutating func lengthFromSongs(_ songs: [Song]) {
         length = songs.reduce(0, { $0 + $1.length})
     }
+    
+    public var cacheKey: String {
+        "\(artist):\(title)"
+    }
 }
 
 extension Album: CustomStringConvertible {

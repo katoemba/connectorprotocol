@@ -169,7 +169,11 @@ public protocol BrowseProtocol: Sendable {
     
     func coverData(_ album: Album) async throws -> Data
     
+    func coverData(_ album: Album, cacheValidator: @escaping (String) -> Data?) async throws -> Data
+
     func coverData(_ song: Song) async throws -> Data
-    
+
+    func coverData(_ song: Song, cacheValidator: @escaping (String) -> Data?) async throws -> Data
+
     func genres() async throws -> [Genre]
 }

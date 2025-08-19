@@ -261,6 +261,10 @@ public extension Song {
         sortAlbum != "" ? sortAlbum : album
     }
     
+    var cacheKey: String {
+        "\(extendedAlbumArtist):\(album)"
+    }
+    
     func createAlbum(idCreator: SongToStringConvertor? = nil,
                      locationCreator: SongToStringConvertor? = nil) -> Album {
         let id = idCreator?(self) ?? "\(source.rawValue)::\(extendedAlbumArtist)::\(album)"
