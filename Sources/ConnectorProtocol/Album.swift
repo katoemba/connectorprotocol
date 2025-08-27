@@ -70,6 +70,8 @@ public struct Album: Codable, Identifiable, Sendable {
     public var quality = QualityStatus()
     
     public var albumDescription = ""
+    
+    public var fullyLoaded = false
 
     public init() {
     }
