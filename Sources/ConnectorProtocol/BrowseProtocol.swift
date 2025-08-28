@@ -128,6 +128,8 @@ public protocol BrowseProtocol: Sendable {
 
     func recentAlbums(numberOfAlbums: Int) async throws -> [Album]
     
+    func recentSongs() async throws -> [Song]
+    
     func artists(type: ArtistType) async throws -> [Artist]
 
     func artists(genre: Genre) async throws -> [Artist]
@@ -136,7 +138,11 @@ public protocol BrowseProtocol: Sendable {
     
     func albums(genre: Genre?) async throws -> [Album]
     
+    func songs(genre: Genre) async throws -> [Song]
+    
     func albumsByDecade(_ decade: Int) async throws -> [Album]
+    
+    func songsByDecade(_ decade: Int) async throws -> [Song]
     
     func existingArtists(artists: [Artist]) async throws -> [Artist]
 
