@@ -141,6 +141,10 @@ public protocol PlayerProtocol: AnyObject {
     
     /// Check if a player is reachable
     func ping() async -> Bool
+    
+    func encodePlayer() throws -> Data
+    
+    static func decodePlayer(_ data: Data) throws -> Self
 }
 
 public protocol PlayerBrowserProtocol: ObservableObject {
@@ -172,4 +176,6 @@ public protocol PlayerBrowserProtocol: ObservableObject {
     ///
     /// - Parameter player: the player to remove
     func removePlayer(_ player: any PlayerProtocol)
+    
+    func decodePlayer(_ data: Data) throws -> PlayerProtocol
 }
