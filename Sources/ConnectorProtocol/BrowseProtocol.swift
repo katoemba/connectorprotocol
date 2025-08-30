@@ -164,6 +164,8 @@ public protocol BrowseProtocol: Sendable {
     /// - Returns: an observable array of results
     func search(searchItem: SearchItem) async throws -> [FoundItem]
     
+    func search(_ search: String, limit: Int, filter: [SourceType]) async throws -> SearchResult
+    
     /// Select a number of random songs from the collection
     /// - Parameter count: the number of songs to return
     /// - Returns: an array of songs
