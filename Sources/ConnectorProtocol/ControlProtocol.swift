@@ -49,6 +49,7 @@ public struct AddDetails: Sendable {
 
 public enum ControlError: Error {
     case notImplemented(function: String)
+    case notFound(item: String)
 }
 
 /// A protocol to provide a generic interface to control a music player.
