@@ -376,14 +376,14 @@ public protocol BrowseProtocol {
     ///
     /// - Parameter uri: the path where the the data can be taken from
     /// - Returns: an observable String containing the image data
-    func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?>
-    
+    func imageDataFromCoverURI(_ coverURI: CoverURI, cacheValidator: @escaping (String) -> Data?) -> Observable<Data?>
+
     /// Get embedded binary data for an album cover based on it's uri
     /// This is primarily meant for cover-art retrieval in mpd
     ///
     /// - Parameter uri: the path where the the data can be taken from
     /// - Returns: an observable String containing the image data
-    func embeddedImageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?>
+    func embeddedImageDataFromCoverURI(_ coverURI: CoverURI, cacheValidator: @escaping (String) -> Data?) -> Observable<Data?>
     
     /// Filter artists that exist in the library
     /// - Parameter artist: the set of artists to check
@@ -431,11 +431,11 @@ extension BrowseProtocol {
         return Observable.just(coverURI)
     }
     
-    public func imageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
+    public func imageDataFromCoverURI(_ coverURI: CoverURI, cacheValidator: @escaping (String) -> Data?) -> Observable<Data?> {
         return Observable.just(nil)
     }
     
-    public func embeddedImageDataFromCoverURI(_ coverURI: CoverURI) -> Observable<Data?> {
+    public func embeddedImageDataFromCoverURI(_ coverURI: CoverURI, cacheValidator: @escaping (String) -> Data?) -> Observable<Data?> {
         return Observable.just(nil)
     }
     
