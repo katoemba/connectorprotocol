@@ -25,6 +25,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 public enum ConnectionProperties: String {
     case controllerType = "ControllerType"
@@ -144,7 +145,10 @@ public protocol PlayerProtocol: AnyObject {
     
     func encodePlayer() throws -> Data
     
-    static func decodePlayer(_ data: Data) throws -> Self
+    static func decodePlayer(_ data: Data) async throws -> Self
+    
+    associatedtype SettingsView: View
+    @ViewBuilder func settingsView() -> SettingsView
 }
 
 public protocol PlayerBrowserProtocol: ObservableObject {
@@ -153,7 +157,7 @@ public protocol PlayerBrowserProtocol: ObservableObject {
 
     // var addPlayerStream: AsyncStream<PlayerProtocol> { get }
     // var removePlayerStream: AsyncStream<PlayerProtocol> { get }
-    var players: [PlayerProtocol] { get }
+    var players: [any PlayerProtocol] { get }
 
     /// Start listening for players on the network.
     func startListening() async
@@ -177,5 +181,8 @@ public protocol PlayerBrowserProtocol: ObservableObject {
     /// - Parameter player: the player to remove
     func removePlayer(_ player: any PlayerProtocol)
     
-    func decodePlayer(_ data: Data) throws -> PlayerProtocol
+    func decodePlayer(_ data: Data) async throws -> any PlayerProtocol
+    
+    associatedtype ManualAddPlayerView: View
+    @ViewBuilder func manualAddPlayerView() -> ManualAddPlayerView
 }
