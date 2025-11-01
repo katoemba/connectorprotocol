@@ -151,6 +151,12 @@ public protocol PlayerProtocol: AnyObject {
     @ViewBuilder func settingsView() -> SettingsView
 }
 
+extension PlayerProtocol {
+    public func defaultsKey(_ key: String) -> String {
+        key + "." + uniqueID
+    }
+}
+
 public protocol PlayerBrowserProtocol: ObservableObject {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
