@@ -184,4 +184,6 @@ public protocol BrowseProtocol: Sendable {
     func coverData(_ song: Song, cacheValidator: @escaping (String) -> Data?) async throws -> Data
 
     func genres() async throws -> [Genre]
+    
+    func folderContents(_ folder: Folder) async throws -> [FolderContent]
 }
