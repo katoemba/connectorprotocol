@@ -47,10 +47,10 @@ public struct Playlist: Codable, Sendable {
     public var numberOfSongs: UInt32?
     
     /// An image to show for this playlist
-    public var image: CoverURI?
+    public var imageURL: String?
 
     /// A small image to show for this playlist
-    public var miniImage: CoverURI?
+    public var miniImageURL: String?
 
     /// A list of genres included in this playlist
     public var genres: [String]?
@@ -71,8 +71,8 @@ public struct Playlist: Codable, Sendable {
                 editable: Bool = true,
                 duration: UInt32? = nil,
                 numberOfSongs: UInt32? = nil,
-                image: CoverURI? = nil,
-                miniImage: CoverURI? = nil,
+                imageURL: String? = nil,
+                miniImageURL: String? = nil,
                 genres: [String]? = nil,
                 description: String? = nil) {
         self.id = id
@@ -82,8 +82,8 @@ public struct Playlist: Codable, Sendable {
         self.editable = editable
         self.duration = duration
         self.numberOfSongs = numberOfSongs
-        self.image = image
-        self.miniImage = miniImage
+        self.imageURL = imageURL
+        self.miniImageURL = miniImageURL
         self.genres = genres
         self.description = description
     }
