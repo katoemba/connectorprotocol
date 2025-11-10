@@ -119,11 +119,13 @@ public protocol BrowseProtocol: Sendable {
     func songsByArtist(_ artist: Artist) async throws -> [Song]
  
     func albumsByArtist(_ artist: Artist, sort: SortType) async throws -> [Album]
+
+    func playlists() async throws -> [Playlist]
+    
+    func songsInPlaylist(_ playlist: Playlist) async throws -> [Song]
     
     func songsOnAlbum(_ album: Album) async throws -> [Song]
 
-    func songsInPlaylist(_ playlist: Playlist) async throws -> [Song]
-    
     func recentAlbums() async throws -> [Album]
 
     func recentAlbums(numberOfAlbums: Int) async throws -> [Album]
