@@ -36,14 +36,14 @@ public enum LoadStatus {
     case complete               // All data is available
 }
 
-public enum SortType: String {
+public enum SortType: String, Sendable {
     case artist
     case year
     case yearReverse
     case title
 }
 
-public enum BrowseFilter: Sendable{
+public enum BrowseFilter: Sendable {
     case genre(Genre)
     case artist(Artist)
     case album(Album)
@@ -61,7 +61,7 @@ public enum BrowseFilter: Sendable{
     case tip
 }
 
-public enum SearchItem {
+public enum SearchItem: Sendable {
     case genre(name: String)
     case artist(name: String)
     case song(title: String, artist: String?)
@@ -93,6 +93,8 @@ public enum FolderContent: Sendable {
     case playlist(Playlist)
 }
 
+// A sendable function type for cache validation callbacks
+public typealias CacheValidator = @Sendable (String) -> Data?
 
 public struct Result<T> {
     public init(total: UInt32, offset: UInt32, limit: UInt32, items: [T]) {
@@ -187,11 +189,11 @@ public protocol BrowseProtocol: Sendable {
     
     func coverData(_ album: Album) async throws -> Data
     
-    func coverData(_ album: Album, cacheValidator: @escaping (String) -> Data?) async throws -> Data
+    func coverData(_ album: Album, cacheValidator: @escaping CacheValidator) async throws -> Data
 
     func coverData(_ song: Song) async throws -> Data
 
-    func coverData(_ song: Song, cacheValidator: @escaping (String) -> Data?) async throws -> Data
+    func coverData(_ song: Song, cacheValidator: @escaping CacheValidator) async throws -> Data
 
     func genres() async throws -> [Genre]
     
