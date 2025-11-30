@@ -43,7 +43,7 @@ public enum SortType: String {
     case title
 }
 
-public enum BrowseFilter {
+public enum BrowseFilter: Sendable{
     case genre(Genre)
     case artist(Artist)
     case album(Album)
@@ -71,7 +71,7 @@ public enum SearchItem {
     case decade(decade: Int)
 }
 
-public enum FoundItem: Hashable, Equatable {
+public enum FoundItem: Hashable, Equatable, Sendable {
     case genre(Genre)
     case artist(Artist)
     case song(Song)
@@ -87,7 +87,7 @@ public enum LoadProgress {
     case allDataLoaded
 }
 
-public enum FolderContent {
+public enum FolderContent: Sendable {
     case folder(Folder)
     case song(Song)
     case playlist(Playlist)

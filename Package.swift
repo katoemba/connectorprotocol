@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "ConnectorProtocol",
-    platforms: [.macOS(.v12), .iOS(.v14), .watchOS(.v10)],
+    platforms: [.macOS(.v15), .iOS(.v18), .watchOS(.v11), .tvOS(.v18)],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(name: "ConnectorProtocol", targets: ["ConnectorProtocol"])
