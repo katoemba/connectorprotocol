@@ -72,8 +72,7 @@ public enum Functions: CaseIterable {
 
 /// A protocol to provide a generic interface to control a network music player.
 ///
-@preconcurrency
-public protocol PlayerProtocol: AnyObject {
+public protocol PlayerProtocol: Sendable {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
     
@@ -158,7 +157,7 @@ extension PlayerProtocol {
     }
 }
 
-public protocol PlayerBrowserProtocol: ObservableObject {
+public protocol PlayerBrowserProtocol: Sendable {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
 
