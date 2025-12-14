@@ -68,6 +68,7 @@ public enum Functions: CaseIterable {
     case volumeAdjustment
     case mediaServerBrowsing
     case consume
+    case repeatSingle
 }
 
 /// A protocol to provide a generic interface to control a network music player.
