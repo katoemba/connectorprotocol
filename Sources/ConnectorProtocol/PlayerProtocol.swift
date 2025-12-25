@@ -71,6 +71,12 @@ public enum Functions: CaseIterable {
     case repeatSingle
 }
 
+public struct PlayerDefinition: Identifiable, Equatable, Hashable, Sendable, Codable {
+    public var id: String
+    public var name: String
+    public var typeSpecificData: Data
+}
+
 /// A protocol to provide a generic interface to control a network music player.
 ///
 @preconcurrency
@@ -92,6 +98,9 @@ public protocol PlayerProtocol: AnyObject {
     
     /// Description of the model of an associated media player. Implementation will be backend specific.
     var mediaServerModel: String { get }
+
+    /// Whether the player shall be hidden.
+    var hidden: Bool { get }
     
     /// A list of functions supported by the player
     var supportedFunctions: [Functions] { get }
@@ -148,6 +157,10 @@ public protocol PlayerProtocol: AnyObject {
     func encodePlayer() throws -> Data
     
     static func decodePlayer(_ data: Data) async throws -> Self
+    
+    var playerDefinition: PlayerDefinition { get }
+    
+    static func createFrom(playerDefinition: PlayerDefinition) async throws -> Self
     
     associatedtype SettingsView: View
     @ViewBuilder func settingsView() -> SettingsView
