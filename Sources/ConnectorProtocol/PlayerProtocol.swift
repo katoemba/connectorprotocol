@@ -164,7 +164,7 @@ public protocol PlayerProtocol: AnyObject {
     
     static func decodePlayer(_ data: Data) async throws -> Self
     
-    var playerDefinition: PlayerDefinition { get }
+    func playerDefinition() throws -> PlayerDefinition
     
     static func createFrom(playerDefinition: PlayerDefinition) async throws -> Self
     
