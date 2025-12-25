@@ -75,6 +75,12 @@ public struct PlayerDefinition: Identifiable, Equatable, Hashable, Sendable, Cod
     public var id: String
     public var name: String
     public var typeSpecificData: Data
+    
+    public init(id: String, name: String, typeSpecificData: Data) {
+        self.id = id
+        self.name = name
+        self.typeSpecificData = typeSpecificData
+    }
 }
 
 /// A protocol to provide a generic interface to control a network music player.
