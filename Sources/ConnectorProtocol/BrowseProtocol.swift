@@ -132,6 +132,8 @@ public protocol BrowseProtocol: Sendable {
     
     func delete(_ playlist: Playlist) async throws
     
+    func rename(_ playlist: Playlist, newName: String) async throws
+    
     func songsOnAlbum(_ album: Album) async throws -> [Song]
 
     func recentAlbums() async throws -> [Album]
