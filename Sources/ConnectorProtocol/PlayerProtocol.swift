@@ -27,19 +27,6 @@
 import Foundation
 import SwiftUI
 
-public enum ConnectionProperties: String {
-    case controllerType = "ControllerType"
-    case name = "Name"
-    case host = "Host"
-    case port = "Port"
-    case password = "Password"
-    case binaryCoverArt = "BinaryCoverArt"
-    case embeddedCoverArt = "EmbeddedCoverArt"
-    case urlCoverArt = "URLCoverArt"
-    case discogsCoverArt = "DiscogsCoverArt"
-    case musicbrainzCoverArt = "MusicbrainzCoverArt"
-}
-
 public enum DiscoverMode: String {
     case automatic = "automatic"
     case manual = "manual"
@@ -74,11 +61,13 @@ public enum Functions: CaseIterable {
 public struct PlayerDefinition: Identifiable, Equatable, Hashable, Sendable, Codable {
     public var id: String
     public var name: String
+    public var type: String
     public var typeSpecificData: Data
     
-    public init(id: String, name: String, typeSpecificData: Data) {
+    public init(id: String, name: String, type: String, typeSpecificData: Data) {
         self.id = id
         self.name = name
+        self.type = type
         self.typeSpecificData = typeSpecificData
     }
 }
@@ -110,9 +99,6 @@ public protocol PlayerProtocol: AnyObject {
     
     /// A list of functions supported by the player
     var supportedFunctions: [Functions] { get }
-    
-    /// Property to get the connection parameters so they can be stored in User Defaults
-    var connectionProperties: [String: Any] { get }
     
     /// Optional description of the player
     var description: String { get }
@@ -160,13 +146,7 @@ public protocol PlayerProtocol: AnyObject {
     /// Check if a player is reachable
     func ping() async -> Bool
     
-    func encodePlayer() throws -> Data
-    
-    static func decodePlayer(_ data: Data) async throws -> Self
-    
     func playerDefinition() throws -> PlayerDefinition
-    
-    static func createFrom(playerDefinition: PlayerDefinition) async throws -> Self
     
     associatedtype SettingsView: View
     @ViewBuilder func settingsView() -> SettingsView
@@ -192,23 +172,7 @@ public protocol PlayerBrowserProtocol: ObservableObject {
     /// Stop listening for players on the network.
     func stopListening() async
 
-    /// Manually create a player based on the connection properties
-    ///
-    /// - Parameter connectionProperties: dictionary of connection properties
-    /// - Returns: An observable on which a created Player can published.
-    func playerForConnectionProperties(_ connectionProperties: [String: Any]) async throws -> any PlayerProtocol
-    
-    /// Persist a manually added player in user defaults
-    ///
-    /// - Parameter connectionProperties: the connection properties for the player
-    func persistPlayer(_ connectionProperties: [String: Any])
-
-    /// Remove a manually added player from user defaults
-    ///
-    /// - Parameter player: the player to remove
-    func removePlayer(_ player: any PlayerProtocol)
-    
-    func decodePlayer(_ data: Data) async throws -> any PlayerProtocol
+    func decodePlayer(_ playerDefinition: PlayerDefinition) async throws -> any PlayerProtocol
     
     associatedtype ManualAddPlayerView: View
     @ViewBuilder func manualAddPlayerView() -> ManualAddPlayerView
