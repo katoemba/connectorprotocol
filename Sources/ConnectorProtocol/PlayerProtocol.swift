@@ -167,7 +167,7 @@ public protocol PlayerBrowserProtocol: ObservableObject {
     var players: [any PlayerProtocol] { get }
 
     /// Start listening for players on the network.
-    func startListening() async
+    func startListening(predefinedPlayers: [PlayerDefinition]) async
     
     /// Stop listening for players on the network.
     func stopListening() async
