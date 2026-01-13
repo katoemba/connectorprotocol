@@ -70,6 +70,15 @@ public struct PlayerDefinition: Identifiable, Equatable, Hashable, Sendable, Cod
         self.type = type
         self.typeSpecificData = typeSpecificData
     }
+    
+    public static func == (lhs: PlayerDefinition, rhs: PlayerDefinition) -> Bool {
+        return lhs.id == rhs.id && lhs.type == rhs.type
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(type)
+    }
 }
 
 /// A protocol to provide a generic interface to control a network music player.
