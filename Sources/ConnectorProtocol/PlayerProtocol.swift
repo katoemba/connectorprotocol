@@ -158,7 +158,8 @@ public protocol PlayerProtocol: AnyObject {
     func playerDefinition() throws -> PlayerDefinition
     
     associatedtype SettingsView: View
-    @ViewBuilder func settingsView(deleteAction: ((any PlayerProtocol) -> ())?) -> SettingsView
+    @ViewBuilder func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
+                                   hideAction: ((any PlayerProtocol) -> ())?) -> SettingsView
 }
 
 extension PlayerProtocol {
