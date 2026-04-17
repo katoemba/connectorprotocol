@@ -56,6 +56,7 @@ public enum Functions: CaseIterable {
     case mediaServerBrowsing
     case consume
     case repeatSingle
+    case playRecursiveFolder
 }
 
 public struct PlayerDefinition: Identifiable, Equatable, Hashable, Sendable, Codable {
