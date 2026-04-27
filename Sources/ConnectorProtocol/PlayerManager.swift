@@ -339,9 +339,8 @@ public final class PlayerManager {
                          lastSeen: now)
             await refreshReachability(for: key)
 
-        case .removed(let definition):
-            let key = Self.playerKey(for: definition)
-            if let index = players.firstIndex(where: { $0.id == key }) {
+        case .removed(let uniqueID):
+            if let index = players.firstIndex(where: { $0.id == uniqueID }) {
                 players[index].isDetected = false
             }
         }

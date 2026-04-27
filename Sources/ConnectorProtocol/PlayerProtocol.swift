@@ -192,6 +192,6 @@ public protocol PlayerBrowserProtocol {
 
 public enum PlayerBrowserEvent {
     case added(any PlayerProtocol)
-    case removed(PlayerDefinition)
+    case removed(_ uniqueID: String)
     case updated(any PlayerProtocol)
 }
