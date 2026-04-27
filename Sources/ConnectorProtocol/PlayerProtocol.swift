@@ -169,12 +169,13 @@ extension PlayerProtocol {
     }
 }
 
-public protocol PlayerBrowserProtocol: ObservableObject {
+public protocol PlayerBrowserProtocol {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
 
-    // var addPlayerStream: AsyncStream<PlayerProtocol> { get }
-    // var removePlayerStream: AsyncStream<PlayerProtocol> { get }
+    /// Stream with player discovery lifecycle events.
+    var playerEventStream: AsyncStream<PlayerBrowserEvent> { get }
+
     var players: [any PlayerProtocol] { get }
 
     /// Start listening for players on the network.
@@ -187,4 +188,10 @@ public protocol PlayerBrowserProtocol: ObservableObject {
     
     associatedtype ManualAddPlayerView: View
     @ViewBuilder func manualAddPlayerView() -> ManualAddPlayerView
+}
+
+public enum PlayerBrowserEvent {
+    case added(any PlayerProtocol)
+    case removed(PlayerDefinition)
+    case updated(any PlayerProtocol)
 }
