@@ -7,19 +7,16 @@ import UIKit
 
 public final class AnyPlayerBrowser {
     private let _controllerType: () -> String
-    private let _players: () -> [any PlayerProtocol]
     private let _playerEventStream: () -> AsyncStream<PlayerBrowserEvent>
     private let _startListening: ([PlayerDefinition]) async -> Void
     private let _stopListening: () async -> Void
     private let _decodePlayer: (PlayerDefinition) async throws -> any PlayerProtocol
 
     public var controllerType: String { _controllerType() }
-    public var players: [any PlayerProtocol] { _players() }
     public var playerEventStream: AsyncStream<PlayerBrowserEvent> { _playerEventStream() }
 
     public init<Browser: PlayerBrowserProtocol>(_ browser: Browser) {
         _controllerType = { browser.controllerType }
-        _players = { browser.players }
         _playerEventStream = { browser.playerEventStream }
         _startListening = { predefinedPlayers in
             await browser.startListening(predefinedPlayers: predefinedPlayers)
@@ -137,10 +134,11 @@ public final class PlayerManager {
         }
 
         isListening = true
+        startBrowserEventSubscriptions()
+
         await restorePlayersFromPersistence()
         await startBrowsersListening()
-        await ingestCurrentBrowserPlayers()
-        startBrowserEventSubscriptions()
+        //await ingestCurrentBrowserPlayers()
         startReachabilityRefreshLoop()
     }
 
@@ -277,24 +275,24 @@ public final class PlayerManager {
         }
     }
 
-    private func ingestCurrentBrowserPlayers() async {
-        let now = Date()
-        for browser in browsers {
-            for player in browser.players {
-                let definition = makeDefinition(for: player)
-                let key = Self.playerKey(for: definition)
-                upsertPlayer(player,
-                             definition: definition,
-                             key: key,
-                             isDetected: true,
-                             lastSeen: now)
-                await refreshReachability(for: key)
-            }
-        }
-
-        removeStalePlayers(referenceDate: now)
-        persistState()
-    }
+//    private func ingestCurrentBrowserPlayers() async {
+//        let now = Date()
+//        for browser in browsers {
+//            for player in browser.players {
+//                let definition = makeDefinition(for: player)
+//                let key = Self.playerKey(for: definition)
+//                upsertPlayer(player,
+//                             definition: definition,
+//                             key: key,
+//                             isDetected: true,
+//                             lastSeen: now)
+//                await refreshReachability(for: key)
+//            }
+//        }
+//
+//        removeStalePlayers(referenceDate: now)
+//        persistState()
+//    }
 
     private func startBrowserEventSubscriptions() {
         for (index, browser) in browsers.enumerated() {

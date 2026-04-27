@@ -176,8 +176,6 @@ public protocol PlayerBrowserProtocol {
     /// Stream with player discovery lifecycle events.
     var playerEventStream: AsyncStream<PlayerBrowserEvent> { get }
 
-    var players: [any PlayerProtocol] { get }
-
     /// Start listening for players on the network.
     func startListening(predefinedPlayers: [PlayerDefinition]) async
     
