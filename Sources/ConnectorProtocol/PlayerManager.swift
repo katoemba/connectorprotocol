@@ -365,11 +365,15 @@ public final class PlayerManager {
     }
 
     private func refreshReachability(for key: String) async {
+        guard let player = players.first(where: { $0.id == key })?.player else {
+            return
+        }
+
+        let isReachable = await Task.detached { await player.ping() }.value
         guard let index = players.firstIndex(where: { $0.id == key }) else {
             return
         }
 
-        let isReachable = await players[index].player.ping()
         players[index].isReachable = isReachable
     }
 
