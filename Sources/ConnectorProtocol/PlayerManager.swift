@@ -1,9 +1,7 @@
 import Foundation
 import Observation
-
-#if os(iOS)
-import UIKit
-#endif
+import SwiftUI
+import os.log
 
 public final class AnyPlayerBrowser {
     private let _controllerType: () -> String
@@ -12,10 +10,12 @@ public final class AnyPlayerBrowser {
     private let _stopListening: () async -> Void
     private let _decodePlayer: (PlayerDefinition) async throws -> any PlayerProtocol
 
+    public let browser: (any PlayerBrowserProtocol)
     public var controllerType: String { _controllerType() }
     public var playerEventStream: AsyncStream<PlayerBrowserEvent> { _playerEventStream() }
 
     public init<Browser: PlayerBrowserProtocol>(_ browser: Browser) {
+        self.browser = browser
         _controllerType = { browser.controllerType }
         _playerEventStream = { browser.playerEventStream }
         _startListening = { predefinedPlayers in
@@ -42,13 +42,14 @@ public final class AnyPlayerBrowser {
     }
 }
 
-public struct ManagedPlayer: Identifiable {
+public struct ManagedPlayer: Identifiable, Equatable, Hashable {
     public let id: String
     public var definition: PlayerDefinition
     public var player: any PlayerProtocol
     public var isReachable: Bool
     public var isDetected: Bool
     public var lastSeen: Date
+    private let _settingsView: (((any PlayerProtocol) -> Void)?, ((any PlayerProtocol) -> Void)?) -> AnyView
 
     public init(id: String,
                 definition: PlayerDefinition,
@@ -62,51 +63,39 @@ public struct ManagedPlayer: Identifiable {
         self.isReachable = isReachable
         self.isDetected = isDetected
         self.lastSeen = lastSeen
-    }
-}
-
-public struct PlayerManagerDiagnostics: Sendable {
-    public struct Entry: Sendable {
-        public let key: String
-        public let definition: PlayerDefinition
-        public let lastSeen: Date
-        public let isDetected: Bool
-
-        public init(key: String, definition: PlayerDefinition, lastSeen: Date, isDetected: Bool) {
-            self.key = key
-            self.definition = definition
-            self.lastSeen = lastSeen
-            self.isDetected = isDetected
+        _settingsView = { deleteAction, hideAction in
+            AnyView(player.settingsView(deleteAction: deleteAction,
+                                        hideAction: hideAction))
         }
     }
-
-    public let selectedPlayerKey: String?
-    public let entries: [Entry]
-
-    public init(selectedPlayerKey: String?, entries: [Entry]) {
-        self.selectedPlayerKey = selectedPlayerKey
-        self.entries = entries
+    
+    public static func == (lhs: ManagedPlayer, rhs: ManagedPlayer) -> Bool {
+        lhs.id == rhs.id
     }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    public func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
+                      hideAction: ((any PlayerProtocol) -> ())?) -> some View {
+        _settingsView(deleteAction, hideAction)
+    }
+
 }
 
-@MainActor
 @Observable
+@MainActor
 public final class PlayerManager {
+    static let logger = os.Logger(subsystem: "com.katoemba.connectorprotocol", category: "playermanager")
+
     public private(set) var players: [ManagedPlayer] = []
     public private(set) var isListening = false
-    public private(set) var selectedPlayerID: String?
-
-    public var selectedPlayer: (any PlayerProtocol)? {
-        guard let selectedPlayerID else {
-            return nil
-        }
-        return players.first(where: { $0.id == selectedPlayerID })?.player
-    }
 
     public let stalePlayerInterval: TimeInterval
     public let reachabilityRefreshInterval: TimeInterval
 
-    private let browsers: [AnyPlayerBrowser]
+    public let browsers: [AnyPlayerBrowser]
     private let userDefaults: UserDefaults
     private let storageKey: String
     private var browserEventTasks: [String: Task<Void, Never>] = [:]
@@ -128,18 +117,25 @@ public final class PlayerManager {
         self.reachabilityRefreshInterval = max(1.0, reachabilityRefreshInterval)
     }
 
-    public func activate() async {
+    public func activate(selectedPlayerID: String?) async {
+        Self.logger.debug("Initializing")
         if isListening {
             return
         }
 
         isListening = true
         startBrowserEventSubscriptions()
+        Self.logger.debug("EventSubscriptions started")
 
-        await restorePlayersFromPersistence()
+        await restorePlayersFromPersistence(selectedPlayerID: selectedPlayerID)
+        Self.logger.debug("Players restored from persistence")
+        
         await startBrowsersListening()
+        Self.logger.debug("Browser are listening")
+
         //await ingestCurrentBrowserPlayers()
         startReachabilityRefreshLoop()
+        Self.logger.debug("Reachability refresh loop started")
     }
 
     public func deactivate() async {
@@ -189,36 +185,7 @@ public final class PlayerManager {
 
     public func removePlayer(id: String) {
         players.removeAll(where: { $0.id == id })
-        if selectedPlayerID == id {
-            selectedPlayerID = nil
-        }
         persistState()
-    }
-
-    public func selectPlayer(id: String?) {
-        selectedPlayerID = id
-        persistState()
-        if let id {
-            Task { @MainActor in
-                await self.refreshReachability(for: id)
-                self.persistState()
-            }
-        }
-    }
-
-    public func diagnostics() -> PlayerManagerDiagnostics {
-        let persisted = loadState()
-        let entries = persisted.players.map { persistedEntry in
-            let key = Self.playerKey(for: persistedEntry.definition)
-            let isDetected = players.first(where: { $0.id == key })?.isDetected ?? false
-            return PlayerManagerDiagnostics.Entry(key: key,
-                                                  definition: persistedEntry.definition,
-                                                  lastSeen: persistedEntry.lastSeen,
-                                                  isDetected: isDetected)
-        }
-
-        return PlayerManagerDiagnostics(selectedPlayerKey: persisted.selectedPlayerKey,
-                                        entries: entries)
     }
 
     #if os(iOS)
@@ -275,25 +242,6 @@ public final class PlayerManager {
         }
     }
 
-//    private func ingestCurrentBrowserPlayers() async {
-//        let now = Date()
-//        for browser in browsers {
-//            for player in browser.players {
-//                let definition = makeDefinition(for: player)
-//                let key = Self.playerKey(for: definition)
-//                upsertPlayer(player,
-//                             definition: definition,
-//                             key: key,
-//                             isDetected: true,
-//                             lastSeen: now)
-//                await refreshReachability(for: key)
-//            }
-//        }
-//
-//        removeStalePlayers(referenceDate: now)
-//        persistState()
-//    }
-
     private func startBrowserEventSubscriptions() {
         for (index, browser) in browsers.enumerated() {
             let taskKey = "\(browser.controllerType)::\(index)"
@@ -347,7 +295,7 @@ public final class PlayerManager {
         persistState()
     }
 
-    private func restorePlayersFromPersistence() async {
+    private func restorePlayersFromPersistence(selectedPlayerID: String?) async {
         var state = loadState()
         let now = Date()
 
@@ -356,21 +304,24 @@ public final class PlayerManager {
         }
 
         players.removeAll()
-        selectedPlayerID = nil
 
-        if let selectedKey = state.selectedPlayerKey,
-           let selectedPersisted = state.players.first(where: { Self.playerKey(for: $0.definition) == selectedKey }),
+        Self.logger.debug("Before hitting the selected player \(selectedPlayerID ?? "none")")
+        if let selectedPlayerID,
+           let selectedPersisted = state.players.first(where: { Self.playerKey(for: $0.definition) == selectedPlayerID }),
            let selectedPlayer = try? await decodePlayer(from: selectedPersisted.definition) {
+            Self.logger.debug("Before upserting the selected player")
             upsertPlayer(selectedPlayer,
                          definition: selectedPersisted.definition,
-                         key: selectedKey,
+                         key: selectedPlayerID,
                          isDetected: false,
                          lastSeen: selectedPersisted.lastSeen)
-            selectedPlayerID = selectedKey
-            await refreshReachability(for: selectedKey)
+            Self.logger.debug("Before checking reachability of the selected player")
+            await refreshReachability(for: selectedPlayerID)
         }
+        Self.logger.debug("After hitting the selected player")
 
         for persisted in state.players {
+            Self.logger.debug("Hitting player \(persisted.definition.name)")
             let key = Self.playerKey(for: persisted.definition)
             if key == selectedPlayerID {
                 continue
@@ -386,6 +337,7 @@ public final class PlayerManager {
                          isDetected: false,
                          lastSeen: persisted.lastSeen)
             await refreshReachability(for: key)
+            Self.logger.debug("Reachability completed for player \(persisted.definition.name)")
         }
 
         removeStalePlayers(referenceDate: now)
@@ -425,11 +377,6 @@ public final class PlayerManager {
         players.removeAll {
             !($0.isDetected) && referenceDate.timeIntervalSince($0.lastSeen) > stalePlayerInterval
         }
-
-        if let selectedPlayerID,
-           !players.contains(where: { $0.id == selectedPlayerID }) {
-            self.selectedPlayerID = nil
-        }
     }
 
     private func upsertPlayer(_ player: any PlayerProtocol,
@@ -437,24 +384,29 @@ public final class PlayerManager {
                               key: String,
                               isDetected: Bool,
                               lastSeen: Date) {
-        if let index = players.firstIndex(where: { $0.id == key }) {
-            players[index].player = player
-            players[index].definition = definition
-            players[index].isDetected = isDetected
-            players[index].lastSeen = max(players[index].lastSeen, lastSeen)
-        } else {
-            players.append(ManagedPlayer(id: key,
-                                         definition: definition,
-                                         player: player,
-                                         isReachable: false,
-                                         isDetected: isDetected,
-                                         lastSeen: lastSeen))
+        DispatchQueue.main.async {
+            if let index = self.players.firstIndex(where: { $0.id == key }) {
+                self.players[index].player = player
+                self.players[index].definition = definition
+                self.players[index].isDetected = isDetected
+                self.players[index].lastSeen = max(self.players[index].lastSeen, lastSeen)
+            } else {
+                var players = self.players
+                players.append(ManagedPlayer(id: key,
+                                             definition: definition,
+                                             player: player,
+                                             isReachable: false,
+                                             isDetected: isDetected,
+                                             lastSeen: lastSeen))
+                self.players = players.sorted(by: {
+                    $0.player.name < $1.player.name
+                })
+            }
         }
     }
 
     private func persistState() {
-        let state = PersistedState(selectedPlayerKey: selectedPlayerID,
-                                   players: players.map { persistedPlayer in
+        let state = PersistedState(players: players.map { persistedPlayer in
             PersistedPlayer(definition: persistedPlayer.definition,
                             lastSeen: persistedPlayer.lastSeen)
         })
@@ -467,7 +419,7 @@ public final class PlayerManager {
     private func loadState() -> PersistedState {
         guard let data = userDefaults.data(forKey: storageKey),
               let state = try? JSONDecoder().decode(PersistedState.self, from: data) else {
-            return PersistedState(selectedPlayerKey: nil, players: [])
+            return PersistedState(players: [])
         }
         return state
     }
@@ -484,7 +436,7 @@ public final class PlayerManager {
     }
 
     private static func playerKey(for definition: PlayerDefinition) -> String {
-        definition.type + "::" + definition.id
+        definition.id
     }
 }
 
@@ -498,6 +450,5 @@ private struct PersistedPlayer: Codable {
 }
 
 private struct PersistedState: Codable {
-    var selectedPlayerKey: String?
     var players: [PersistedPlayer]
 }

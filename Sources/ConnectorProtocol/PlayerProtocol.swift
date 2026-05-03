@@ -158,9 +158,21 @@ public protocol PlayerProtocol: AnyObject {
     
     func playerDefinition() throws -> PlayerDefinition
     
+    var diagnosticsInfo: [DiagnosticsItem] { get }
+    
     associatedtype SettingsView: View
     @ViewBuilder func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
                                    hideAction: ((any PlayerProtocol) -> ())?) -> SettingsView
+}
+
+public struct DiagnosticsItem: Identifiable, Equatable, Hashable {
+    public init(id: String, description: String) {
+        self.id = id
+        self.description = description
+    }
+    
+    public let id: String
+    public let description: String
 }
 
 extension PlayerProtocol {
