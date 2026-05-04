@@ -189,7 +189,7 @@ public final class PlayerManager {
     }
 
     #if os(iOS)
-    public func startApplicationLifecycleMonitoring(notificationCenter: NotificationCenter = .default) {
+    public func startApplicationLifecycleMonitoring(notificationCenter: NotificationCenter = .default, selectedPlayerIDDefaultKey: String) {
         guard lifecycleObservers.isEmpty else {
             return
         }
@@ -199,7 +199,7 @@ public final class PlayerManager {
                                                               queue: nil) { [weak self] _ in
             guard let self else { return }
             Task { @MainActor in
-                await self.activate()
+                await self.activate(selectedPlayerID: self.userDefaults.string(forKey: selectedPlayerIDDefaultKey))
             }
         }
 
@@ -208,6 +208,8 @@ public final class PlayerManager {
                                                                 queue: nil) { [weak self] _ in
             guard let self else { return }
             Task { @MainActor in
+                // Wait 5 seconds before deactivating, to allow playqueue commands to complete
+                try? await Task.sleep(nanoseconds: 5_000_000_000)
                 await self.deactivate()
             }
         }
@@ -216,7 +218,7 @@ public final class PlayerManager {
 
         if UIApplication.shared.applicationState == .active {
             Task { @MainActor in
-                await self.activate()
+                await self.activate(selectedPlayerID: self.userDefaults.string(forKey: selectedPlayerIDDefaultKey))
             }
         }
     }
