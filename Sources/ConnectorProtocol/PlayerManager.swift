@@ -392,7 +392,6 @@ public final class PlayerManager {
                               lastSeen: Date) {
         DispatchQueue.main.async {
             if let index = self.players.firstIndex(where: { $0.id == key }) {
-                self.players[index].player = player
                 self.players[index].definition = definition
                 self.players[index].isDetected = isDetected
                 self.players[index].lastSeen = max(self.players[index].lastSeen, lastSeen)
