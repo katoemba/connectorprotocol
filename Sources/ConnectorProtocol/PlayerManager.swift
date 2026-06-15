@@ -101,6 +101,11 @@ public final class PlayerManager {
     private var browserEventTasks: [String: Task<Void, Never>] = [:]
     private var reachabilityTask: Task<Void, Never>?
 
+    /// Persisted players that could not be decoded/revived yet (e.g. an OpenHome device that did not answer
+    /// its HTTP description request in time). They are retained so they are neither lost from persistence nor
+    /// forgotten, and are retried on every reachability cycle until the device becomes available.
+    private var unrevivedPlayers: [PersistedPlayer] = []
+
     #if os(iOS)
     private var lifecycleObservers: [NSObjectProtocol] = []
     #endif
@@ -185,6 +190,7 @@ public final class PlayerManager {
 
     public func removePlayer(id: String) {
         players.removeAll(where: { $0.id == id })
+        unrevivedPlayers.removeAll { Self.playerKey(for: $0.definition) == id }
         persistState()
     }
 
@@ -266,6 +272,7 @@ public final class PlayerManager {
             guard let self else { return }
 
             while !Task.isCancelled {
+                await self.reviveUnrevivedPlayers()
                 await self.refreshReachabilityForAllPlayers()
                 let sleepNanos = UInt64(self.reachabilityRefreshInterval * 1_000_000_000)
                 try? await Task.sleep(nanoseconds: sleepNanos)
@@ -280,6 +287,8 @@ public final class PlayerManager {
         case .added(let player), .updated(let player):
             let definition = makeDefinition(for: player)
             let key = Self.playerKey(for: definition)
+            // The player has now been discovered for real, so it no longer needs to be revived from persistence.
+            unrevivedPlayers.removeAll { Self.playerKey(for: $0.definition) == key }
             upsertPlayer(player,
                          definition: definition,
                          key: key,
@@ -306,19 +315,24 @@ public final class PlayerManager {
         }
 
         players.removeAll()
+        unrevivedPlayers.removeAll()
 
         Self.logger.debug("Before hitting the selected player \(selectedPlayerID ?? "none")")
         if let selectedPlayerID,
-           let selectedPersisted = state.players.first(where: { Self.playerKey(for: $0.definition) == selectedPlayerID }),
-           let selectedPlayer = try? await decodePlayer(from: selectedPersisted.definition) {
-            Self.logger.debug("Before upserting the selected player")
-            upsertPlayer(selectedPlayer,
-                         definition: selectedPersisted.definition,
-                         key: selectedPlayerID,
-                         isDetected: false,
-                         lastSeen: selectedPersisted.lastSeen)
-            Self.logger.debug("Before checking reachability of the selected player")
-            await refreshReachability(for: selectedPlayerID)
+           let selectedPersisted = state.players.first(where: { Self.playerKey(for: $0.definition) == selectedPlayerID }) {
+            if let selectedPlayer = try? await decodePlayer(from: selectedPersisted.definition) {
+                Self.logger.debug("Before upserting the selected player")
+                upsertPlayer(selectedPlayer,
+                             definition: selectedPersisted.definition,
+                             key: selectedPlayerID,
+                             isDetected: false,
+                             lastSeen: selectedPersisted.lastSeen)
+                Self.logger.debug("Before checking reachability of the selected player")
+                await refreshReachability(for: selectedPlayerID)
+            } else {
+                // Keep it around so it is retried and not erased from persistence.
+                unrevivedPlayers.append(selectedPersisted)
+            }
         }
         Self.logger.debug("After hitting the selected player")
 
@@ -330,6 +344,10 @@ public final class PlayerManager {
             }
 
             guard let restoredPlayer = try? await decodePlayer(from: persisted.definition) else {
+                // Revival failed (e.g. an OpenHome device that did not answer in time). Retain the persisted
+                // definition so it stays in persistence and is retried, instead of being lost forever.
+                unrevivedPlayers.append(persisted)
+                Self.logger.debug("Could not revive player \(persisted.definition.name) yet, will retry")
                 continue
             }
 
@@ -390,35 +408,70 @@ public final class PlayerManager {
                               key: String,
                               isDetected: Bool,
                               lastSeen: Date) {
-        DispatchQueue.main.async {
-            if let index = self.players.firstIndex(where: { $0.id == key }) {
-                self.players[index].definition = definition
-                self.players[index].isDetected = isDetected
-                self.players[index].lastSeen = max(self.players[index].lastSeen, lastSeen)
-            } else {
-                var players = self.players
-                players.append(ManagedPlayer(id: key,
-                                             definition: definition,
-                                             player: player,
-                                             isReachable: false,
-                                             isDetected: isDetected,
-                                             lastSeen: lastSeen))
-                self.players = players.sorted(by: {
-                    $0.player.name < $1.player.name
-                })
-            }
+        // Already on the main actor: mutate synchronously so callers that immediately follow with
+        // `refreshReachability(for:)` observe the inserted player rather than racing a deferred block.
+        if let index = players.firstIndex(where: { $0.id == key }) {
+            players[index].definition = definition
+            players[index].isDetected = isDetected
+            players[index].lastSeen = max(players[index].lastSeen, lastSeen)
+        } else {
+            players.append(ManagedPlayer(id: key,
+                                         definition: definition,
+                                         player: player,
+                                         isReachable: false,
+                                         isDetected: isDetected,
+                                         lastSeen: lastSeen))
+            players.sort(by: { $0.player.name < $1.player.name })
         }
     }
 
     private func persistState() {
-        let state = PersistedState(players: players.map { persistedPlayer in
+        var persistedPlayers = players.map { persistedPlayer in
             PersistedPlayer(definition: persistedPlayer.definition,
                             lastSeen: persistedPlayer.lastSeen)
-        })
+        }
+
+        // Retain definitions that could not be revived yet so a temporarily unreachable player
+        // (typically OpenHome) is not erased from persistence. Skip any that are already live.
+        let liveKeys = Set(players.map(\.id))
+        for pending in unrevivedPlayers where !liveKeys.contains(Self.playerKey(for: pending.definition)) {
+            persistedPlayers.append(pending)
+        }
+
+        let state = PersistedState(players: persistedPlayers)
 
         if let data = try? JSONEncoder().encode(state) {
             userDefaults.set(data, forKey: storageKey)
         }
+    }
+
+    /// Retry decoding/reviving any persisted players that could not be revived earlier. Devices such as
+    /// OpenHome players only decode successfully once they answer their HTTP description request, which may
+    /// happen seconds after launch. This is invoked from the reachability refresh loop.
+    private func reviveUnrevivedPlayers() async {
+        guard !unrevivedPlayers.isEmpty else {
+            return
+        }
+
+        var stillPending: [PersistedPlayer] = []
+        for pending in unrevivedPlayers {
+            let key = Self.playerKey(for: pending.definition)
+            guard let player = try? await decodePlayer(from: pending.definition) else {
+                stillPending.append(pending)
+                continue
+            }
+
+            upsertPlayer(player,
+                         definition: pending.definition,
+                         key: key,
+                         isDetected: false,
+                         lastSeen: pending.lastSeen)
+            await refreshReachability(for: key)
+            Self.logger.debug("Revived previously unreachable player \(pending.definition.name)")
+        }
+
+        unrevivedPlayers = stillPending
+        persistState()
     }
 
     private func loadState() -> PersistedState {
