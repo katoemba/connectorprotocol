@@ -116,6 +116,9 @@ public protocol PlayerProtocol: AnyObject {
     /// Property to get the version of a specific player
     var version: String { get }
     
+    /// Property to update the version of a player
+    func updateVersion(_ version: String)
+    
     /// Property to get an optional connection warning of a specific player, like incompatible version
     var connectionWarning: String? { get }
     

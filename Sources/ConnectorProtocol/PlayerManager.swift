@@ -414,6 +414,7 @@ public final class PlayerManager {
             players[index].definition = definition
             players[index].isDetected = isDetected
             players[index].lastSeen = max(players[index].lastSeen, lastSeen)
+            players[index].player.updateVersion(player.version)
         } else {
             players.append(ManagedPlayer(id: key,
                                          definition: definition,
