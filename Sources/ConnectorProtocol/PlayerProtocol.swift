@@ -46,6 +46,7 @@ public enum Functions: CaseIterable {
     case recentlyPlayedSongs
     case binaryImageRetrieval
     case embeddedImageRetrieval
+    case httpImageRetrieval
     case stream
     case favourites
     case playlists
