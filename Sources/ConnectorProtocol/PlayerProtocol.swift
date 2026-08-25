@@ -51,6 +51,7 @@ public enum Functions: CaseIterable {
     case favourites
     case playlists
     case tidal
+    case appleMusic
     case qobuz
     case radio
     case volumeAdjustment
