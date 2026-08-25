@@ -27,7 +27,7 @@
 import Foundation
 
 public enum SourceType: String, Codable, Sendable {
-    case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast, UPnP, Tidal, Qobuz, Radio
+    case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast, UPnP, Tidal, Qobuz, Radio, AppleMusic
 }
 
 public enum LoadStatus {
