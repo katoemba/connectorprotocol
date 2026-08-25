@@ -214,6 +214,33 @@ public protocol BrowseProtocol: Sendable {
     /// The radio station collections that this browser can present, like local or popular stations.
     /// - Returns: an array of streaming collections, empty if the browser doesn't support radio station collections
     func radioStationCollections() async throws -> [StreamingCollection]
+
+    /// Get the albums in a collection, optionally limited to a genre.
+    /// - Parameters:
+    ///   - genre: the genre to filter on, nil to get albums for all genres
+    ///   - collection: the collection to get albums from, nil to use the default collection of the browser
+    ///   - offset: the index of the first album to return
+    ///   - limit: the maximum number of albums to return
+    /// - Returns: a result containing the requested albums
+    func albums(genre: Genre?, collection: StreamingCollection, offset: UInt32, limit: UInt32) async throws -> Result<Album>
+
+    /// Get the playlists in a collection, optionally limited to a genre.
+    /// - Parameters:
+    ///   - genre: the genre to filter on, nil to get playlists for all genres
+    ///   - collection: the collection to get playlists from, nil to use the default collection of the browser
+    ///   - offset: the index of the first playlist to return
+    ///   - limit: the maximum number of playlists to return
+    /// - Returns: a result containing the requested playlists
+    func playlists(genre: Genre?, collection: StreamingCollection, offset: UInt32, limit: UInt32) async throws -> Result<Playlist>
+
+    /// Get the songs in a collection, optionally limited to a genre.
+    /// - Parameters:
+    ///   - genre: the genre to filter on, nil to get songs for all genres
+    ///   - collection: the collection to get songs from, nil to use the default collection of the browser
+    ///   - offset: the index of the first song to return
+    ///   - limit: the maximum number of songs to return
+    /// - Returns: a result containing the requested songs
+    func songs(genre: Genre?, collection: StreamingCollection, offset: UInt32, limit: UInt32) async throws -> Result<Song>
 }
 
 public extension BrowseProtocol {
@@ -231,5 +258,17 @@ public extension BrowseProtocol {
 
     func radioStationCollections() async throws -> [StreamingCollection] {
         []
+    }
+
+    func albums(genre: Genre?, collection: StreamingCollection, offset: UInt32, limit: UInt32) async throws -> Result<Album> {
+        throw ControlError.notImplemented(function: "albums(genre:collection:offset:limit:)")
+    }
+
+    func playlists(genre: Genre?, collection: StreamingCollection, offset: UInt32, limit: UInt32) async throws -> Result<Playlist> {
+        throw ControlError.notImplemented(function: "playlists(genre:collection:offset:limit:)")
+    }
+
+    func songs(genre: Genre?, collection: StreamingCollection, offset: UInt32, limit: UInt32) async throws -> Result<Song> {
+        throw ControlError.notImplemented(function: "songs(genre:collection:offset:limit:)")
     }
 }
