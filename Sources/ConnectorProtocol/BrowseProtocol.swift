@@ -198,4 +198,38 @@ public protocol BrowseProtocol: Sendable {
     func genres() async throws -> [Genre]
     
     func folderContents(_ folder: Folder) async throws -> [FolderContent]
+    
+    /// The album collections that this browser can present, like new releases, best sellers or press awards.
+    /// - Returns: an array of streaming collections, empty if the browser doesn't support album collections
+    func albumCollections() async throws -> [StreamingCollection]
+
+    /// The playlist collections that this browser can present, like editor picks or last created.
+    /// - Returns: an array of streaming collections, empty if the browser doesn't support playlist collections
+    func playlistCollections() async throws -> [StreamingCollection]
+
+    /// The song collections that this browser can present, like most streamed or favorites.
+    /// - Returns: an array of streaming collections, empty if the browser doesn't support song collections
+    func songCollections() async throws -> [StreamingCollection]
+
+    /// The radio station collections that this browser can present, like local or popular stations.
+    /// - Returns: an array of streaming collections, empty if the browser doesn't support radio station collections
+    func radioStationCollections() async throws -> [StreamingCollection]
+}
+
+public extension BrowseProtocol {
+    func albumCollections() async throws -> [StreamingCollection] {
+        []
+    }
+
+    func playlistCollections() async throws -> [StreamingCollection] {
+        []
+    }
+
+    func songCollections() async throws -> [StreamingCollection] {
+        []
+    }
+
+    func radioStationCollections() async throws -> [StreamingCollection] {
+        []
+    }
 }
