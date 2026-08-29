@@ -185,12 +185,9 @@ public struct Song: Codable, Identifiable, Sendable {
 
 extension Song: Equatable {}
 public func ==(lhs: Song, rhs: Song) -> Bool {
-    if let lplayqueueId = lhs.playqueueId, let rplayqueueId = rhs.playqueueId {
-        return lplayqueueId == rplayqueueId
-    }
-    
     return lhs.id == rhs.id && lhs.source == rhs.source &&
-        lhs.title == rhs.title && lhs.album == rhs.album && lhs.artist == rhs.artist
+        lhs.title == rhs.title && lhs.album == rhs.album && lhs.artist == rhs.artist &&
+        (lhs.playqueueId ?? "") == (rhs.playqueueId ?? "")
 }
 
 extension Song: Hashable {
