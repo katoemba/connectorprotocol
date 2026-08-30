@@ -259,7 +259,7 @@ public extension Song {
     }
     
     var cacheKey: String {
-        "\(extendedAlbumArtist):\(album)"
+        source == .Radio ? name : "\(extendedAlbumArtist):\(album)"
     }
     
     func createAlbum(idCreator: SongToStringConvertor? = nil,
