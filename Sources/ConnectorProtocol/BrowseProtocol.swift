@@ -28,6 +28,15 @@ import Foundation
 
 public enum SourceType: String, Codable, Sendable {
     case Unknown, Local, Spotify, TuneIn, Podcast, Shoutcast, UPnP, Tidal, Qobuz, Radio, AppleMusic
+    
+    var isLocal: Bool {
+        switch self {
+        case .Local, .UPnP:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 public enum LoadStatus {
