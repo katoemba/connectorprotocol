@@ -167,7 +167,16 @@ public struct QualityStatus: Codable, Sendable {
     }
     public var channels: String {
         guard let rawChannels = rawChannels, rawChannels > 0 else { return "" }
-        return "\(rawChannels)"
+        if rawChannels == 1 {
+            return "Mono"
+        }
+        else if rawChannels == 2 {
+            return "Stereo"
+        }
+        else if rawChannels == 6 {
+            return "5.1"
+        }
+        return ""
     }
     public var uiDescription: String {
         var descr = ""
@@ -186,6 +195,10 @@ public struct QualityStatus: Codable, Sendable {
         }
         if samplerate != "" {
             descr += separator + samplerate
+            separator = " - "
+        }
+        if channels != "" {
+            descr += separator + channels
             separator = " - "
         }
         
