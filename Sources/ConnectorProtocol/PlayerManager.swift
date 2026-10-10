@@ -287,6 +287,11 @@ public final class PlayerManager {
         case .added(let player), .updated(let player):
             let definition = makeDefinition(for: player)
             let key = Self.playerKey(for: definition)
+            if case .updated = event {
+                // An explicit update (e.g. a manually added player) replaces any existing entry with the
+                // same key, instead of keeping the previously detected player object and its settings.
+                players.removeAll { $0.id == key }
+            }
             // The player has now been discovered for real, so it no longer needs to be revived from persistence.
             unrevivedPlayers.removeAll { Self.playerKey(for: $0.definition) == key }
             upsertPlayer(player,
