@@ -153,15 +153,22 @@ public final class PlayerManager {
         Self.logger.debug("Reachability refresh loop started")
     }
 
+    /// Forget all loaded players and start over: persisted players are restored again and the browsers search the
+    /// network afresh. Unlike a plain deactivate/activate cycle, this visibly rebuilds the list.
+    public func rediscover(selectedPlayerID: String?) async {
+        await deactivate()
+        players.removeAll()
+        unrevivedPlayers.removeAll()
+        await activate(selectedPlayerID: selectedPlayerID)
+    }
+
     public func deactivate() async {
         if !isListening {
             return
         }
 
-        for task in browserEventTasks.values {
-            task.cancel()
-        }
-        browserEventTasks.removeAll()
+        // The event tasks are kept running: a browser's event stream is created once, and cancelling the task
+        // that iterates it terminates the stream for good, so a later activate() would never see any event.
         reachabilityTask?.cancel()
         reachabilityTask = nil
 
@@ -264,7 +271,9 @@ public final class PlayerManager {
     private func startBrowserEventSubscriptions() {
         for (index, browser) in browsers.enumerated() {
             let taskKey = "\(browser.controllerType)::\(index)"
-            browserEventTasks[taskKey]?.cancel()
+            if browserEventTasks[taskKey] != nil {
+                continue
+            }
             browserEventTasks[taskKey] = Task { [weak self] in
                 guard let self else { return }
                 for await event in browser.playerEventStream {
@@ -332,7 +341,10 @@ public final class PlayerManager {
             !$0.definition.isManual && now.timeIntervalSince($0.lastSeen) > stalePlayerInterval
         }
 
-        players.removeAll()
+        // On a re-activation (e.g. "Rediscover Players") the loaded players are kept, so the list doesn't empty
+        // out and players in use aren't replaced by new objects. Only missing ones are restored.
+        let loadedKeys = Set(players.map(\.id))
+        state.players.removeAll { loadedKeys.contains(Self.playerKey(for: $0.definition)) }
         unrevivedPlayers.removeAll()
         dormantPlayers.removeAll()
 

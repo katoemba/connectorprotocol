@@ -203,4 +203,50 @@ final class PlayerManagerPersistenceTests: XCTestCase {
         let payload = try XCTUnwrap(definition["typeSpecificData"] as? String)
         XCTAssertEqual(Data(base64Encoded: payload), Data("with-password".utf8))
     }
+
+    func testRediscoverKeepsPlayersAndDeliversNewEvents() async throws {
+        let browser = EventBrowser()
+        let manager = PlayerManager(browsers: [AnyPlayerBrowser(browser)],
+                                    userDefaults: userDefaults,
+                                    userDefaultsKey: storageKey)
+        await manager.activate(selectedPlayerID: nil)
+        browser.continuation.yield(.added(FakePlayer(id: "a:1", isManual: false, payload: "")))
+        for _ in 0..<100 where manager.players.isEmpty {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+        XCTAssertEqual(manager.players.map(\.id), ["a:1"])
+
+        // "Rediscover players"
+        await manager.deactivate()
+        await manager.activate(selectedPlayerID: nil)
+        XCTAssertEqual(manager.players.map(\.id), ["a:1"], "persisted players are restored")
+
+        // Events from the browser must still arrive after reactivation.
+        browser.continuation.yield(.added(FakePlayer(id: "b:2", isManual: false, payload: "")))
+        for _ in 0..<100 where manager.players.count < 2 {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+        XCTAssertEqual(Set(manager.players.map(\.id)), ["a:1", "b:2"])
+        await manager.deactivate()
+    }
+
+    func testRediscoverRebuildsTheList() async throws {
+        let browser = EventBrowser()
+        let manager = PlayerManager(browsers: [AnyPlayerBrowser(browser)],
+                                    userDefaults: userDefaults,
+                                    userDefaultsKey: storageKey)
+        await manager.activate(selectedPlayerID: nil)
+        browser.continuation.yield(.added(FakePlayer(id: "a:1", isManual: false, payload: "")))
+        for _ in 0..<100 where manager.players.isEmpty {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+        let before = try XCTUnwrap(manager.players.first?.player)
+
+        await manager.rediscover(selectedPlayerID: nil)
+
+        // Restored from persistence as a new object, so the list was really rebuilt.
+        XCTAssertEqual(manager.players.map(\.id), ["a:1"])
+        XCTAssertFalse(manager.players.first?.player === before)
+        await manager.deactivate()
+    }
 }
