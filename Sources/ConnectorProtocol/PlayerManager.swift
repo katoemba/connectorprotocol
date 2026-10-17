@@ -106,6 +106,14 @@ public final class PlayerManager {
     /// forgotten, and are retried on every reachability cycle until the device becomes available.
     private var unrevivedPlayers: [PersistedPlayer] = []
 
+    /// When false, persisted non-manual players are not restored at startup and only found through live
+    /// discovery. Manual players are always restored.
+    public let restoreCachedPlayers: Bool
+
+    /// Persisted non-manual players deliberately not restored (see `restoreCachedPlayers`). They are kept in
+    /// persistence, so re-enabling the setting brings them back, until they go stale or are discovered live.
+    private var dormantPlayers: [PersistedPlayer] = []
+
     #if os(iOS)
     private var lifecycleObservers: [NSObjectProtocol] = []
     #endif
@@ -114,7 +122,9 @@ public final class PlayerManager {
                 userDefaults: UserDefaults = .standard,
                 userDefaultsKey: String = "ConnectorProtocol.PlayerManager.v1",
                 stalePlayerInterval: TimeInterval = 14 * 24 * 60 * 60,
-                reachabilityRefreshInterval: TimeInterval = 5.0) {
+                reachabilityRefreshInterval: TimeInterval = 5.0,
+                restoreCachedPlayers: Bool = true) {
+        self.restoreCachedPlayers = restoreCachedPlayers
         self.browsers = browsers
         self.userDefaults = userDefaults
         self.storageKey = userDefaultsKey
@@ -191,6 +201,7 @@ public final class PlayerManager {
     public func removePlayer(id: String) {
         players.removeAll(where: { $0.id == id })
         unrevivedPlayers.removeAll { Self.playerKey(for: $0.definition) == id }
+        dormantPlayers.removeAll { Self.playerKey(for: $0.definition) == id }
         persistState()
     }
 
@@ -238,7 +249,7 @@ public final class PlayerManager {
     #endif
 
     private func startBrowsersListening() async {
-        let predefinedPlayers = loadState().players.map(\.definition)
+        let predefinedPlayers = loadState().players.map(\.definition).filter { restoreCachedPlayers || $0.isManual }
         for browser in browsers {
             await browser.startListening(predefinedPlayers: predefinedPlayers)
         }
@@ -294,6 +305,7 @@ public final class PlayerManager {
             }
             // The player has now been discovered for real, so it no longer needs to be revived from persistence.
             unrevivedPlayers.removeAll { Self.playerKey(for: $0.definition) == key }
+            dormantPlayers.removeAll { Self.playerKey(for: $0.definition) == key }
             upsertPlayer(player,
                          definition: definition,
                          key: key,
@@ -315,12 +327,19 @@ public final class PlayerManager {
         var state = loadState()
         let now = Date()
 
+        // Manual players can't be rediscovered, so they never go stale.
         state.players.removeAll {
-            now.timeIntervalSince($0.lastSeen) > stalePlayerInterval
+            !$0.definition.isManual && now.timeIntervalSince($0.lastSeen) > stalePlayerInterval
         }
 
         players.removeAll()
         unrevivedPlayers.removeAll()
+        dormantPlayers.removeAll()
+
+        if !restoreCachedPlayers {
+            dormantPlayers = state.players.filter { !$0.definition.isManual }
+            state.players.removeAll { !$0.definition.isManual }
+        }
 
         Self.logger.debug("Before hitting the selected player \(selectedPlayerID ?? "none")")
         if let selectedPlayerID,
@@ -404,7 +423,7 @@ public final class PlayerManager {
 
     private func removeStalePlayers(referenceDate: Date) {
         players.removeAll {
-            !($0.isDetected) && referenceDate.timeIntervalSince($0.lastSeen) > stalePlayerInterval
+            !($0.isDetected) && !$0.definition.isManual && referenceDate.timeIntervalSince($0.lastSeen) > stalePlayerInterval
         }
     }
 
@@ -444,6 +463,14 @@ public final class PlayerManager {
             persistedPlayers.append(pending)
         }
 
+        // Keep cached players that were deliberately not restored, unless they went stale or are live now.
+        let now = Date()
+        for dormant in dormantPlayers
+        where !liveKeys.contains(Self.playerKey(for: dormant.definition))
+            && now.timeIntervalSince(dormant.lastSeen) <= stalePlayerInterval {
+            persistedPlayers.append(dormant)
+        }
+
         let state = PersistedState(players: persistedPlayers)
 
         if let data = try? JSONEncoder().encode(state) {
@@ -481,8 +508,17 @@ public final class PlayerManager {
     }
 
     private func loadState() -> PersistedState {
-        guard let data = userDefaults.data(forKey: storageKey),
-              let state = try? JSONDecoder().decode(PersistedState.self, from: data) else {
+        guard let data = userDefaults.data(forKey: storageKey) else {
+            return PersistedState(players: [])
+        }
+        guard let state = try? JSONDecoder().decode(PersistedState.self, from: data) else {
+            // Unreadable as a whole: keep a copy, because the next persistState() would overwrite it with an
+            // empty list and lose every player (manual ones can't be rediscovered).
+            let backupKey = storageKey + ".unreadable"
+            if userDefaults.data(forKey: backupKey) == nil {
+                userDefaults.set(data, forKey: backupKey)
+            }
+            Self.logger.error("Could not decode persisted players, backed up under \(backupKey)")
             return PersistedState(players: [])
         }
         return state
@@ -515,4 +551,31 @@ private struct PersistedPlayer: Codable {
 
 private struct PersistedState: Codable {
     var players: [PersistedPlayer]
+
+    init(players: [PersistedPlayer]) {
+        self.players = players
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case players
+    }
+
+    private struct Skip: Decodable {
+        init(from decoder: Decoder) throws {}
+    }
+
+    // Decode entries one by one, so a single unreadable player doesn't discard all the others.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        var list = try container.nestedUnkeyedContainer(forKey: .players)
+        var decoded: [PersistedPlayer] = []
+        while !list.isAtEnd {
+            if let player = try? list.decode(PersistedPlayer.self) {
+                decoded.append(player)
+            } else {
+                _ = try? list.decode(Skip.self)
+            }
+        }
+        players = decoded
+    }
 }

@@ -66,14 +66,32 @@ public struct PlayerDefinition: Identifiable, Equatable, Hashable, Sendable, Cod
     public var name: String
     public var type: String
     public var typeSpecificData: Data
-    
-    public init(id: String, name: String, type: String, typeSpecificData: Data) {
+    /// True for players the user added by hand. These can't be rediscovered on the network, so they are never
+    /// purged as stale and are restored regardless of the cached-player setting.
+    public var isManual: Bool
+
+    public init(id: String, name: String, type: String, typeSpecificData: Data, isManual: Bool = false) {
         self.id = id
         self.name = name
         self.type = type
         self.typeSpecificData = typeSpecificData
+        self.isManual = isManual
     }
-    
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, type, typeSpecificData, isManual
+    }
+
+    // Custom decoding so state persisted before `isManual` existed still decodes.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        type = try container.decode(String.self, forKey: .type)
+        typeSpecificData = try container.decode(Data.self, forKey: .typeSpecificData)
+        isManual = try container.decodeIfPresent(Bool.self, forKey: .isManual) ?? false
+    }
+
     public static func == (lhs: PlayerDefinition, rhs: PlayerDefinition) -> Bool {
         return lhs.id == rhs.id && lhs.type == rhs.type
     }
