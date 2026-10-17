@@ -24,6 +24,66 @@ private final class StubBrowser: PlayerBrowserProtocol {
     func manualAddPlayerView() -> EmptyView { EmptyView() }
 }
 
+/// Minimal player. Only identity and definition matter to PlayerManager's bookkeeping.
+private final class FakePlayer: PlayerProtocol {
+    let controllerType = "stub"
+    let discoverMode = DiscoverMode.automatic
+    let uniqueID: String
+    let name: String
+    let model = "", mediaServerModel = "", description = ""
+    let hidden = false
+    let supportedFunctions: [Functions] = []
+    var version = "0.0.0"
+    let connectionWarning: String? = nil
+    let mediaAvailable = false
+    let mediaServers: [BrowseProtocol] = []
+    var status: StatusProtocol { fatalError("unused") }
+    var control: ControlProtocol { fatalError("unused") }
+    var browse: BrowseProtocol { fatalError("unused") }
+    let playerStreamURL: URL? = nil
+    let diagnosticsInfo: [DiagnosticsItem] = []
+    let isManual: Bool
+    let payload: Data
+
+    init(id: String, isManual: Bool, payload: String) {
+        uniqueID = id
+        name = id
+        self.isManual = isManual
+        self.payload = Data(payload.utf8)
+    }
+
+    func updateVersion(_ version: String) { self.version = version }
+    func activate() {}
+    func deactivate() {}
+    func browse(source: SourceType) -> BrowseProtocol? { nil }
+    func selectMediaServer(_ mediaServer: BrowseProtocol, source: SourceType) {}
+    func favourites() async throws -> [FoundItem] { [] }
+    func ping() async -> Bool { true }
+    func playerDefinition() throws -> PlayerDefinition {
+        PlayerDefinition(id: uniqueID, name: name, type: controllerType, typeSpecificData: payload, isManual: isManual)
+    }
+    func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
+                      hideAction: ((any PlayerProtocol) -> ())?) -> EmptyView { EmptyView() }
+}
+
+/// Browser whose events are driven by the test.
+private final class EventBrowser: PlayerBrowserProtocol {
+    let controllerType = "stub"
+    let playerEventStream: AsyncStream<PlayerBrowserEvent>
+    let continuation: AsyncStream<PlayerBrowserEvent>.Continuation
+
+    init() {
+        (playerEventStream, continuation) = AsyncStream.makeStream(of: PlayerBrowserEvent.self)
+    }
+
+    func startListening(predefinedPlayers: [PlayerDefinition]) async {}
+    func stopListening() async {}
+    func decodePlayer(_ playerDefinition: PlayerDefinition) async throws -> any PlayerProtocol {
+        FakePlayer(id: playerDefinition.id, isManual: playerDefinition.isManual, payload: "")
+    }
+    func manualAddPlayerView() -> EmptyView { EmptyView() }
+}
+
 @MainActor
 final class PlayerManagerPersistenceTests: XCTestCase {
     private let storageKey = "test.players"
@@ -118,5 +178,29 @@ final class PlayerManagerPersistenceTests: XCTestCase {
         let enabledBrowser = StubBrowser()
         await activateAndDeactivate(restoreCachedPlayers: true, browser: enabledBrowser)
         XCTAssertEqual(Set(enabledBrowser.decodedIDs), ["manual", "detected"])
+    }
+
+    func testDiscoveryDoesNotOverwriteManualDefinition() async throws {
+        let browser = EventBrowser()
+        let manager = PlayerManager(browsers: [AnyPlayerBrowser(browser)],
+                                    userDefaults: userDefaults,
+                                    userDefaultsKey: storageKey)
+        await manager.activate(selectedPlayerID: nil)
+        manager.addManualPlayer(FakePlayer(id: "host:6600", isManual: true, payload: "with-password"))
+
+        // The same host:port is now also found on the network, without the user's password.
+        browser.continuation.yield(.added(FakePlayer(id: "host:6600", isManual: false, payload: "discovered")))
+        for _ in 0..<100 where manager.players.first?.isDetected != true {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+        XCTAssertEqual(manager.players.first?.isDetected, true)
+        await manager.deactivate()
+
+        let data = try XCTUnwrap(userDefaults.data(forKey: storageKey))
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let definition = try XCTUnwrap(((json["players"] as? [[String: Any]])?.first)?["definition"] as? [String: Any])
+        XCTAssertEqual(definition["isManual"] as? Bool, true)
+        let payload = try XCTUnwrap(definition["typeSpecificData"] as? String)
+        XCTAssertEqual(Data(base64Encoded: payload), Data("with-password".utf8))
     }
 }

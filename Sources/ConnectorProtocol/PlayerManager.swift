@@ -435,7 +435,11 @@ public final class PlayerManager {
         // Already on the main actor: mutate synchronously so callers that immediately follow with
         // `refreshReachability(for:)` observe the inserted player rather than racing a deferred block.
         if let index = players.firstIndex(where: { $0.id == key }) {
-            players[index].definition = definition
+            // A discovered player with the same key must not replace a manual definition: that would lose the
+            // manual flag and the user's settings (e.g. password), which discovery doesn't know about.
+            if !(players[index].definition.isManual && !definition.isManual) {
+                players[index].definition = definition
+            }
             players[index].isDetected = isDetected
             players[index].lastSeen = max(players[index].lastSeen, lastSeen)
             players[index].player.updateVersion(player.version)
