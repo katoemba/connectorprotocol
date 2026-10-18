@@ -183,8 +183,8 @@ public protocol PlayerProtocol: AnyObject, Sendable {
     var diagnosticsInfo: [DiagnosticsItem] { get }
     
     associatedtype SettingsView: View
-    @ViewBuilder func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
-                                   hideAction: ((any PlayerProtocol) -> ())?) -> SettingsView
+    @MainActor @ViewBuilder func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
+                                              hideAction: ((any PlayerProtocol) -> ())?) -> SettingsView
 }
 
 public struct DiagnosticsItem: Identifiable, Equatable, Hashable {
@@ -228,7 +228,7 @@ public protocol PlayerBrowserProtocol: Sendable {
     func playerRemoved(_ playerDefinition: PlayerDefinition)
     
     associatedtype ManualAddPlayerView: View
-    @ViewBuilder func manualAddPlayerView() -> ManualAddPlayerView
+    @MainActor @ViewBuilder func manualAddPlayerView() -> ManualAddPlayerView
 }
 
 extension PlayerBrowserProtocol {

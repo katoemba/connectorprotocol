@@ -65,7 +65,7 @@ public struct ManagedPlayer: Identifiable, Equatable, Hashable {
     public var isReachable: Bool
     public var isDetected: Bool
     public var lastSeen: Date
-    private let _settingsView: (((any PlayerProtocol) -> Void)?, ((any PlayerProtocol) -> Void)?) -> AnyView
+    private let _settingsView: @MainActor (((any PlayerProtocol) -> Void)?, ((any PlayerProtocol) -> Void)?) -> AnyView
 
     public init(id: String,
                 definition: PlayerDefinition,
@@ -93,6 +93,7 @@ public struct ManagedPlayer: Identifiable, Equatable, Hashable {
         hasher.combine(id)
     }
     
+    @MainActor
     public func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
                       hideAction: ((any PlayerProtocol) -> ())?) -> some View {
         _settingsView(deleteAction, hideAction)
