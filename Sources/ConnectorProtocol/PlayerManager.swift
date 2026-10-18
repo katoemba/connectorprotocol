@@ -9,6 +9,8 @@ public final class AnyPlayerBrowser {
     private let _startListening: ([PlayerDefinition]) async -> Void
     private let _stopListening: () async -> Void
     private let _decodePlayer: (PlayerDefinition) async throws -> any PlayerProtocol
+    private let _isManualPlayer: (PlayerDefinition) -> Bool
+    private let _playerRemoved: (PlayerDefinition) -> Void
 
     public let browser: (any PlayerBrowserProtocol)
     public var controllerType: String { _controllerType() }
@@ -27,6 +29,12 @@ public final class AnyPlayerBrowser {
         _decodePlayer = { definition in
             try await browser.decodePlayer(definition)
         }
+        _isManualPlayer = { definition in
+            browser.isManualPlayer(definition)
+        }
+        _playerRemoved = { definition in
+            browser.playerRemoved(definition)
+        }
     }
 
     public func startListening(predefinedPlayers: [PlayerDefinition]) async {
@@ -39,6 +47,14 @@ public final class AnyPlayerBrowser {
 
     public func decodePlayer(_ playerDefinition: PlayerDefinition) async throws -> any PlayerProtocol {
         try await _decodePlayer(playerDefinition)
+    }
+
+    public func isManualPlayer(_ playerDefinition: PlayerDefinition) -> Bool {
+        _isManualPlayer(playerDefinition)
+    }
+
+    public func playerRemoved(_ playerDefinition: PlayerDefinition) {
+        _playerRemoved(playerDefinition)
     }
 }
 
@@ -101,10 +117,15 @@ public final class PlayerManager {
     private var browserEventTasks: [String: Task<Void, Never>] = [:]
     private var reachabilityTask: Task<Void, Never>?
 
+    /// The most recently requested lifecycle change (activate, deactivate, rediscover). The next one waits for it.
+    private var lifecycleTail: Task<Void, Never>?
+    private var scheduledDeactivation: Task<Void, Never>?
+
     /// Persisted players that could not be decoded/revived yet (e.g. an OpenHome device that did not answer
     /// its HTTP description request in time). They are retained so they are neither lost from persistence nor
     /// forgotten, and are retried on every reachability cycle until the device becomes available.
     private var unrevivedPlayers: [PersistedPlayer] = []
+    private var isReviving = false
 
     /// When false, persisted non-manual players are not restored at startup and only found through live
     /// discovery. Manual players are always restored.
@@ -113,6 +134,11 @@ public final class PlayerManager {
     /// Persisted non-manual players deliberately not restored (see `restoreCachedPlayers`). They are kept in
     /// persistence, so re-enabling the setting brings them back, until they go stale or are discovered live.
     private var dormantPlayers: [PersistedPlayer] = []
+
+    /// Persisted players that activate() is still restoring. Until then they only exist in storage, so they are
+    /// written back whenever the state is persisted, for example when a browser announces a player halfway
+    /// through the restore. Otherwise a crash at that moment would lose every player not restored yet.
+    private var restoringPlayers: [PersistedPlayer] = []
 
     #if os(iOS)
     private var lifecycleObservers: [NSObjectProtocol] = []
@@ -132,7 +158,62 @@ public final class PlayerManager {
         self.reachabilityRefreshInterval = max(1.0, reachabilityRefreshInterval)
     }
 
+    // MARK: - Lifecycle
+
     public func activate(selectedPlayerID: String?) async {
+        cancelScheduledDeactivation()
+        await runExclusively {
+            await self.performActivate(selectedPlayerID: selectedPlayerID)
+        }
+    }
+
+    /// Forget all loaded players and start over: persisted players are restored again and the browsers search the
+    /// network afresh. Unlike a plain deactivate/activate cycle, this visibly rebuilds the list.
+    public func rediscover(selectedPlayerID: String?) async {
+        cancelScheduledDeactivation()
+        await runExclusively {
+            await self.performDeactivate()
+            self.players.removeAll()
+            self.unrevivedPlayers.removeAll()
+            await self.performActivate(selectedPlayerID: selectedPlayerID)
+        }
+    }
+
+    public func deactivate() async {
+        await runExclusively {
+            await self.performDeactivate()
+        }
+    }
+
+    /// Deactivates after `delay` seconds, unless `activate` or `cancelScheduledDeactivation` is called first.
+    func scheduleDeactivation(after delay: TimeInterval) {
+        scheduledDeactivation?.cancel()
+        scheduledDeactivation = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: UInt64(max(delay, 0) * 1_000_000_000))
+            guard !Task.isCancelled, let self else { return }
+            self.scheduledDeactivation = nil
+            await self.deactivate()
+        }
+    }
+
+    func cancelScheduledDeactivation() {
+        scheduledDeactivation?.cancel()
+        scheduledDeactivation = nil
+    }
+
+    /// Lifecycle changes run one at a time, in the order they were requested. Otherwise a deactivate that arrives
+    /// while a slow activate is still restoring players would be overtaken by it, leaving the browsers running.
+    private func runExclusively(_ operation: @escaping @MainActor () async -> Void) async {
+        let previous = lifecycleTail
+        let task = Task { @MainActor in
+            await previous?.value
+            await operation()
+        }
+        lifecycleTail = task
+        await task.value
+    }
+
+    private func performActivate(selectedPlayerID: String?) async {
         Self.logger.debug("Initializing")
         if isListening {
             return
@@ -142,27 +223,69 @@ public final class PlayerManager {
         startBrowserEventSubscriptions()
         Self.logger.debug("EventSubscriptions started")
 
-        await restorePlayersFromPersistence(selectedPlayerID: selectedPlayerID)
-        Self.logger.debug("Players restored from persistence")
-        
-        await startBrowsersListening()
-        Self.logger.debug("Browser are listening")
+        var state = loadState()
+        if state.formatVersion < PersistedState.currentFormatVersion {
+            upgradeManualFlags(in: &state)
+        }
+        restoringPlayers = state.players
 
-        //await ingestCurrentBrowserPlayers()
-        startReachabilityRefreshLoop()
-        Self.logger.debug("Reachability refresh loop started")
-    }
+        let now = Date()
+        // Manual players can't be rediscovered, so they never go stale.
+        state.players.removeAll {
+            !$0.definition.isManual && now.timeIntervalSince($0.lastSeen) > stalePlayerInterval
+        }
 
-    /// Forget all loaded players and start over: persisted players are restored again and the browsers search the
-    /// network afresh. Unlike a plain deactivate/activate cycle, this visibly rebuilds the list.
-    public func rediscover(selectedPlayerID: String?) async {
-        await deactivate()
-        players.removeAll()
+        // The browsers announce these again, which tells them which of the cached players are actually there.
+        let predefinedPlayers = state.players.map(\.definition).filter { restoreCachedPlayers || $0.isManual }
+
+        // On a re-activation (e.g. returning to the app) the loaded players are kept, so the list doesn't empty
+        // out and players in use aren't replaced by new objects. Only missing ones are restored.
+        let loadedKeys = Set(players.map(\.id))
+        var toRestore = state.players.filter { !loadedKeys.contains(Self.playerKey(for: $0.definition)) }
         unrevivedPlayers.removeAll()
-        await activate(selectedPlayerID: selectedPlayerID)
+        dormantPlayers.removeAll()
+
+        if !restoreCachedPlayers {
+            dormantPlayers = toRestore.filter { !$0.definition.isManual }
+            toRestore.removeAll { !$0.definition.isManual }
+        }
+        restoringPlayers = toRestore
+
+        // The selected player first, so the app can select it right away.
+        if let selectedPlayerID,
+           let index = toRestore.firstIndex(where: { Self.playerKey(for: $0.definition) == selectedPlayerID }) {
+            let selected = toRestore.remove(at: index)
+            let decoded = try? await decodePlayer(from: selected.definition)
+            restorePlayer(selected, decoded: decoded)
+        }
+        Self.logger.debug("Selected player \(selectedPlayerID ?? "none") restored")
+
+        // Start discovery before restoring the rest: decoding a cached player may take a while (OpenHome needs a
+        // network round trip), and that must not hold up the discovery of new players.
+        await startBrowsersListening(predefinedPlayers: predefinedPlayers)
+        Self.logger.debug("Browsers are listening")
+
+        startReachabilityRefreshLoop()
+
+        let remaining = toRestore
+        await withTaskGroup(of: (PersistedPlayer, (any PlayerProtocol)?).self) { group in
+            for persisted in remaining {
+                group.addTask { @MainActor in
+                    (persisted, try? await self.decodePlayer(from: persisted.definition))
+                }
+            }
+            for await (persisted, decoded) in group {
+                restorePlayer(persisted, decoded: decoded)
+            }
+        }
+        Self.logger.debug("Players restored from persistence")
+
+        restoringPlayers.removeAll()
+        removeStalePlayers(referenceDate: now)
+        persistState()
     }
 
-    public func deactivate() async {
+    private func performDeactivate() async {
         if !isListening {
             return
         }
@@ -206,9 +329,18 @@ public final class PlayerManager {
     }
 
     public func removePlayer(id: String) {
+        let definition = players.first(where: { $0.id == id })?.definition
+            ?? (restoringPlayers + unrevivedPlayers + dormantPlayers).first(where: { Self.playerKey(for: $0.definition) == id })?.definition
+        if let definition {
+            for browser in browsers where browser.controllerType == definition.type {
+                browser.playerRemoved(definition)
+            }
+        }
+
         players.removeAll(where: { $0.id == id })
         unrevivedPlayers.removeAll { Self.playerKey(for: $0.definition) == id }
         dormantPlayers.removeAll { Self.playerKey(for: $0.definition) == id }
+        restoringPlayers.removeAll { Self.playerKey(for: $0.definition) == id }
         persistState()
     }
 
@@ -223,6 +355,7 @@ public final class PlayerManager {
                                                               queue: nil) { [weak self] _ in
             guard let self else { return }
             Task { @MainActor in
+                // Also cancels a deactivation scheduled by a short interruption (Control Center, a system alert).
                 await self.activate(selectedPlayerID: self.userDefaults.string(forKey: selectedPlayerIDDefaultKey))
             }
         }
@@ -233,8 +366,7 @@ public final class PlayerManager {
             guard let self else { return }
             Task { @MainActor in
                 // Wait 5 seconds before deactivating, to allow playqueue commands to complete
-                try? await Task.sleep(nanoseconds: 5_000_000_000)
-                await self.deactivate()
+                self.scheduleDeactivation(after: 5)
             }
         }
 
@@ -255,8 +387,7 @@ public final class PlayerManager {
     }
     #endif
 
-    private func startBrowsersListening() async {
-        let predefinedPlayers = loadState().players.map(\.definition).filter { restoreCachedPlayers || $0.isManual }
+    private func startBrowsersListening(predefinedPlayers: [PlayerDefinition]) async {
         for browser in browsers {
             await browser.startListening(predefinedPlayers: predefinedPlayers)
         }
@@ -291,11 +422,22 @@ public final class PlayerManager {
         reachabilityTask = Task { [weak self] in
             guard let self else { return }
 
+            // The first round comes after one interval: players are pinged when they are restored or announced,
+            // so pinging them all again right away only adds to the traffic at start-up.
+            let sleepNanos = UInt64(self.reachabilityRefreshInterval * 1_000_000_000)
             while !Task.isCancelled {
-                await self.reviveUnrevivedPlayers()
-                await self.refreshReachabilityForAllPlayers()
-                let sleepNanos = UInt64(self.reachabilityRefreshInterval * 1_000_000_000)
                 try? await Task.sleep(nanoseconds: sleepNanos)
+                guard !Task.isCancelled else { return }
+
+                // Reviving can take a while (network round trips, timeouts for devices that are off), so it runs
+                // on its own, and the pings don't wait for it.
+                if !self.isReviving {
+                    Task { @MainActor [weak self] in
+                        await self?.reviveUnrevivedPlayers()
+                    }
+                }
+                self.refreshDefinitions()
+                await self.refreshReachabilityForAllPlayers()
             }
         }
     }
@@ -315,16 +457,25 @@ public final class PlayerManager {
             // The player has now been discovered for real, so it no longer needs to be revived from persistence.
             unrevivedPlayers.removeAll { Self.playerKey(for: $0.definition) == key }
             dormantPlayers.removeAll { Self.playerKey(for: $0.definition) == key }
+            let existing = players.first(where: { $0.id == key })
             upsertPlayer(player,
                          definition: definition,
                          key: key,
                          isDetected: true,
                          lastSeen: now)
-            await refreshReachability(for: key)
+            // Not awaited: a ping can take seconds, and the events that follow shouldn't wait for it.
+            if let existing, existing.player !== player, !existing.isReachable {
+                replaceInBackground(key: key, current: existing.player, with: player)
+            }
+            else {
+                refreshReachabilityInBackground(for: key)
+            }
 
         case .removed(let uniqueID):
             if let index = players.firstIndex(where: { $0.id == uniqueID }) {
+                // It was there until now: it only goes stale if it isn't seen again for a while from here.
                 players[index].isDetected = false
+                players[index].lastSeen = now
             }
         }
 
@@ -332,72 +483,54 @@ public final class PlayerManager {
         persistState()
     }
 
-    private func restorePlayersFromPersistence(selectedPlayerID: String?) async {
-        var state = loadState()
-        let now = Date()
-
-        // Manual players can't be rediscovered, so they never go stale.
-        state.players.removeAll {
-            !$0.definition.isManual && now.timeIntervalSince($0.lastSeen) > stalePlayerInterval
-        }
-
-        // On a re-activation (e.g. "Rediscover Players") the loaded players are kept, so the list doesn't empty
-        // out and players in use aren't replaced by new objects. Only missing ones are restored.
-        let loadedKeys = Set(players.map(\.id))
-        state.players.removeAll { loadedKeys.contains(Self.playerKey(for: $0.definition)) }
-        unrevivedPlayers.removeAll()
-        dormantPlayers.removeAll()
-
-        if !restoreCachedPlayers {
-            dormantPlayers = state.players.filter { !$0.definition.isManual }
-            state.players.removeAll { !$0.definition.isManual }
-        }
-
-        Self.logger.debug("Before hitting the selected player \(selectedPlayerID ?? "none")")
-        if let selectedPlayerID,
-           let selectedPersisted = state.players.first(where: { Self.playerKey(for: $0.definition) == selectedPlayerID }) {
-            if let selectedPlayer = try? await decodePlayer(from: selectedPersisted.definition) {
-                Self.logger.debug("Before upserting the selected player")
-                upsertPlayer(selectedPlayer,
-                             definition: selectedPersisted.definition,
-                             key: selectedPlayerID,
-                             isDetected: false,
-                             lastSeen: selectedPersisted.lastSeen)
-                Self.logger.debug("Before checking reachability of the selected player")
-                await refreshReachability(for: selectedPlayerID)
-            } else {
-                // Keep it around so it is retried and not erased from persistence.
-                unrevivedPlayers.append(selectedPersisted)
+    /// State written before `PlayerDefinition.isManual` existed doesn't say which players are manual. That is
+    /// recorded in the type specific data, so ask the browsers. Without this, manual players that haven't been seen
+    /// for a while would be purged as stale, or taken for cached players, by the first launch after an update.
+    /// This must stay cheap, as it holds up the first launch after an update: the browsers only look at the
+    /// definition, they don't decode players (which for some connectors means talking to the device).
+    private func upgradeManualFlags(in state: inout PersistedState) {
+        for index in state.players.indices where !state.players[index].definition.isManual {
+            let definition = state.players[index].definition
+            if browsers.contains(where: { $0.controllerType == definition.type && $0.isManualPlayer(definition) }) {
+                state.players[index].definition.isManual = true
             }
         }
-        Self.logger.debug("After hitting the selected player")
+    }
 
-        for persisted in state.players {
-            Self.logger.debug("Hitting player \(persisted.definition.name)")
-            let key = Self.playerKey(for: persisted.definition)
-            if key == selectedPlayerID {
-                continue
+    /// Put a persisted player in the list, or keep it for a retry when it could not be decoded.
+    private func restorePlayer(_ persisted: PersistedPlayer, decoded: (any PlayerProtocol)?) {
+        let key = Self.playerKey(for: persisted.definition)
+
+        // Gone from restoringPlayers means it was removed by the user while it was being restored.
+        guard restoringPlayers.contains(where: { Self.playerKey(for: $0.definition) == key }) else {
+            return
+        }
+        restoringPlayers.removeAll { Self.playerKey(for: $0.definition) == key }
+
+        // A browser may have announced the player while it was being restored, which is more recent information.
+        // Except when the stored player is a manual one and the announced one is not: discovery found the same
+        // host and port, but doesn't know it was added manually, nor the settings that came with it.
+        if let index = players.firstIndex(where: { $0.id == key }) {
+            if persisted.definition.isManual && !players[index].definition.isManual {
+                players[index].definition = persisted.definition
             }
-
-            guard let restoredPlayer = try? await decodePlayer(from: persisted.definition) else {
-                // Revival failed (e.g. an OpenHome device that did not answer in time). Retain the persisted
-                // definition so it stays in persistence and is retried, instead of being lost forever.
-                unrevivedPlayers.append(persisted)
-                Self.logger.debug("Could not revive player \(persisted.definition.name) yet, will retry")
-                continue
-            }
-
-            upsertPlayer(restoredPlayer,
-                         definition: persisted.definition,
-                         key: key,
-                         isDetected: false,
-                         lastSeen: persisted.lastSeen)
-            await refreshReachability(for: key)
-            Self.logger.debug("Reachability completed for player \(persisted.definition.name)")
+            return
         }
 
-        removeStalePlayers(referenceDate: now)
-        persistState()
+        guard let decoded else {
+            // Revival failed (e.g. an OpenHome device that did not answer in time). Retain the persisted
+            // definition so it stays in persistence and is retried, instead of being lost forever.
+            unrevivedPlayers.append(persisted)
+            Self.logger.debug("Could not revive player \(persisted.definition.name) yet, will retry")
+            return
+        }
+
+        upsertPlayer(decoded,
+                     definition: persisted.definition,
+                     key: key,
+                     isDetected: false,
+                     lastSeen: persisted.lastSeen)
+        refreshReachabilityInBackground(for: key)
     }
 
     private func decodePlayer(from definition: PlayerDefinition) async throws -> any PlayerProtocol {
@@ -414,9 +547,61 @@ public final class PlayerManager {
     }
 
     private func refreshReachabilityForAllPlayers() async {
+        // All at once: a player that doesn't answer takes seconds to time out, and the others shouldn't wait for it.
         let keys = players.map(\.id)
-        for key in keys {
-            await refreshReachability(for: key)
+        await withTaskGroup(of: Void.self) { group in
+            for key in keys {
+                group.addTask { @MainActor in
+                    await self.refreshReachability(for: key)
+                }
+            }
+        }
+    }
+
+    /// The list keeps the object it already has when a player is announced again. But when that object can't reach
+    /// the player (e.g. it was restored with an address that is no longer valid) and the newly announced one can,
+    /// switch to the new one: it carries the connection details discovery just worked out.
+    private func replaceInBackground(key: String, current: any PlayerProtocol, with candidate: any PlayerProtocol) {
+        Task { @MainActor [weak self] in
+            async let currentAnswers = Task.detached { await current.ping() }.value
+            async let candidateAnswers = Task.detached { await candidate.ping() }.value
+            let (currentIsReachable, candidateIsReachable) = await (currentAnswers, candidateAnswers)
+
+            guard let self, let index = self.players.firstIndex(where: { $0.id == key }) else { return }
+            let entry = self.players[index]
+            guard entry.player === current else { return }
+
+            if !currentIsReachable && candidateIsReachable {
+                // The new object carries what discovery just worked out (e.g. a new address), which is what has to
+                // be restored at the next launch. A manual player keeps its own definition, with its manual settings.
+                var definition = entry.definition
+                if !definition.isManual {
+                    let candidateDefinition = self.makeDefinition(for: candidate)
+                    if Self.playerKey(for: candidateDefinition) == entry.id {
+                        definition = candidateDefinition
+                    }
+                }
+                self.players[index] = ManagedPlayer(id: entry.id,
+                                                    definition: definition,
+                                                    player: candidate,
+                                                    isReachable: true,
+                                                    isDetected: entry.isDetected,
+                                                    lastSeen: Date())
+                Self.logger.debug("Replaced unreachable player \(entry.definition.name) by the one just found")
+                self.persistState()
+            }
+            else {
+                self.players[index].isReachable = currentIsReachable
+                if currentIsReachable {
+                    self.players[index].lastSeen = Date()
+                }
+            }
+        }
+    }
+
+    private func refreshReachabilityInBackground(for key: String) {
+        Task { @MainActor [weak self] in
+            await self?.refreshReachability(for: key)
         }
     }
 
@@ -426,11 +611,40 @@ public final class PlayerManager {
         }
 
         let isReachable = await Task.detached { await player.ping() }.value
-        guard let index = players.firstIndex(where: { $0.id == key }) else {
+        // The entry may have switched to another object while pinging (see replaceInBackground); this answer is
+        // about the old one.
+        guard let index = players.firstIndex(where: { $0.id == key }), players[index].player === player else {
             return
         }
 
         players[index].isReachable = isReachable
+        if isReachable {
+            players[index].lastSeen = Date()
+        }
+    }
+
+    /// A player's definition is what gets restored at the next launch. Settings the user changes on the player itself
+    /// (e.g. its type) end up in the player's own definition, and players don't report that, so pick it up here.
+    /// Otherwise a manual player, which is only announced once per launch, restores with the old settings.
+    private func refreshDefinitions() {
+        var changed = false
+        for index in players.indices {
+            let current = players[index].definition
+            guard let definition = try? players[index].player.playerDefinition(),
+                  definition.id == players[index].id,
+                  definition.typeSpecificData != current.typeSpecificData || definition.name != current.name else {
+                continue
+            }
+            // A discovered object standing in for a manual player doesn't carry the manual settings.
+            guard definition.isManual || !current.isManual else {
+                continue
+            }
+            players[index].definition = definition
+            changed = true
+        }
+        if changed {
+            persistState()
+        }
     }
 
     private func removeStalePlayers(referenceDate: Date) {
@@ -471,20 +685,22 @@ public final class PlayerManager {
             PersistedPlayer(definition: persistedPlayer.definition,
                             lastSeen: persistedPlayer.lastSeen)
         }
+        var persistedKeys = Set(players.map(\.id))
 
-        // Retain definitions that could not be revived yet so a temporarily unreachable player
-        // (typically OpenHome) is not erased from persistence. Skip any that are already live.
-        let liveKeys = Set(players.map(\.id))
-        for pending in unrevivedPlayers where !liveKeys.contains(Self.playerKey(for: pending.definition)) {
-            persistedPlayers.append(pending)
+        // Keep players that are not in the list (yet): the ones still being restored, and the ones that could not
+        // be revived (typically OpenHome), so a temporarily unreachable player is not erased from persistence.
+        for pending in restoringPlayers + unrevivedPlayers {
+            if persistedKeys.insert(Self.playerKey(for: pending.definition)).inserted {
+                persistedPlayers.append(pending)
+            }
         }
 
         // Keep cached players that were deliberately not restored, unless they went stale or are live now.
         let now = Date()
-        for dormant in dormantPlayers
-        where !liveKeys.contains(Self.playerKey(for: dormant.definition))
-            && now.timeIntervalSince(dormant.lastSeen) <= stalePlayerInterval {
-            persistedPlayers.append(dormant)
+        for dormant in dormantPlayers where now.timeIntervalSince(dormant.lastSeen) <= stalePlayerInterval {
+            if persistedKeys.insert(Self.playerKey(for: dormant.definition)).inserted {
+                persistedPlayers.append(dormant)
+            }
         }
 
         let state = PersistedState(players: persistedPlayers)
@@ -498,15 +714,36 @@ public final class PlayerManager {
     /// OpenHome players only decode successfully once they answer their HTTP description request, which may
     /// happen seconds after launch. This is invoked from the reachability refresh loop.
     private func reviveUnrevivedPlayers() async {
-        guard !unrevivedPlayers.isEmpty else {
+        let pendingPlayers = unrevivedPlayers
+        guard !pendingPlayers.isEmpty, !isReviving else {
             return
         }
+        isReviving = true
+        defer { isReviving = false }
 
-        var stillPending: [PersistedPlayer] = []
-        for pending in unrevivedPlayers {
+        // All at once: each one that is still unreachable takes a timeout.
+        let decodedPlayers = await withTaskGroup(of: (PersistedPlayer, (any PlayerProtocol)?).self) { group in
+            for pending in pendingPlayers {
+                group.addTask { @MainActor in
+                    (pending, try? await self.decodePlayer(from: pending.definition))
+                }
+            }
+            var results: [(PersistedPlayer, (any PlayerProtocol)?)] = []
+            for await result in group {
+                results.append(result)
+            }
+            return results
+        }
+
+        var revivedKeys = Set<String>()
+        for (pending, decoded) in decodedPlayers {
             let key = Self.playerKey(for: pending.definition)
-            guard let player = try? await decodePlayer(from: pending.definition) else {
-                stillPending.append(pending)
+            guard let player = decoded else {
+                continue
+            }
+
+            // While decoding, the player may have been removed by the user, or announced by a browser.
+            guard unrevivedPlayers.contains(where: { Self.playerKey(for: $0.definition) == key }) else {
                 continue
             }
 
@@ -515,12 +752,15 @@ public final class PlayerManager {
                          key: key,
                          isDetected: false,
                          lastSeen: pending.lastSeen)
-            await refreshReachability(for: key)
+            revivedKeys.insert(key)
+            refreshReachabilityInBackground(for: key)
             Self.logger.debug("Revived previously unreachable player \(pending.definition.name)")
         }
 
-        unrevivedPlayers = stillPending
-        persistState()
+        if !revivedKeys.isEmpty {
+            unrevivedPlayers.removeAll { revivedKeys.contains(Self.playerKey(for: $0.definition)) }
+            persistState()
+        }
     }
 
     private func loadState() -> PersistedState {
@@ -566,14 +806,19 @@ private struct PersistedPlayer: Codable {
 }
 
 private struct PersistedState: Codable {
+    /// 1: players only (no format version). 2: `PlayerDefinition.isManual` is recorded.
+    static let currentFormatVersion = 2
+
+    var formatVersion: Int
     var players: [PersistedPlayer]
 
     init(players: [PersistedPlayer]) {
+        self.formatVersion = Self.currentFormatVersion
         self.players = players
     }
 
     private enum CodingKeys: String, CodingKey {
-        case players
+        case formatVersion, players
     }
 
     private struct Skip: Decodable {
@@ -583,6 +828,7 @@ private struct PersistedState: Codable {
     // Decode entries one by one, so a single unreadable player doesn't discard all the others.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        formatVersion = (try? container.decodeIfPresent(Int.self, forKey: .formatVersion)) ?? 1
         var list = try container.nestedUnkeyedContainer(forKey: .players)
         var decoded: [PersistedPlayer] = []
         while !list.isAtEnd {

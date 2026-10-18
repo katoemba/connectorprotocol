@@ -218,9 +218,26 @@ public protocol PlayerBrowserProtocol {
     func stopListening() async
 
     func decodePlayer(_ playerDefinition: PlayerDefinition) async throws -> any PlayerProtocol
+
+    /// Whether a persisted player was added manually by the user. Manual players can't be rediscovered, so they
+    /// are never purged as stale. This has to be cheap: look at the definition, don't create the player or
+    /// touch the network. Browsers that don't support manual players can rely on the default, which says no.
+    func isManualPlayer(_ playerDefinition: PlayerDefinition) -> Bool
+
+    /// The user deleted this player. A browser that keeps settings per player should forget them, so that adding
+    /// the same player again starts afresh. The default does nothing.
+    func playerRemoved(_ playerDefinition: PlayerDefinition)
     
     associatedtype ManualAddPlayerView: View
     @ViewBuilder func manualAddPlayerView() -> ManualAddPlayerView
+}
+
+extension PlayerBrowserProtocol {
+    public func isManualPlayer(_ playerDefinition: PlayerDefinition) -> Bool {
+        false
+    }
+
+    public func playerRemoved(_ playerDefinition: PlayerDefinition) {}
 }
 
 public enum PlayerBrowserEvent {
