@@ -28,6 +28,13 @@ import Foundation
 
 /// A struct defining a generic Album object.
 public struct Album: Codable, Identifiable, Sendable {
+    public enum `Type`: Codable, Sendable {
+        case unknown
+        case album
+        case ep
+        case single
+    }
+    
     /// A unique id for the album. Usage depends on library implementation.
     public var id = ""
     
@@ -60,7 +67,10 @@ public struct Album: Codable, Identifiable, Sendable {
 
     /// The total duration of the album in seconds.
     public var length = 0
-    
+
+    /// The number of tracks on the album.
+    public var trackCount = 0
+
     /// URI through which cover art can be fetched.
     public var coverURI = CoverURI.fullPathURI("")
 
@@ -72,6 +82,8 @@ public struct Album: Codable, Identifiable, Sendable {
     public var albumDescription = ""
     
     public var fullyLoaded = false
+    
+    public var type: `Type`? = nil
 
     public init() {
     }
@@ -90,7 +102,9 @@ public struct Album: Codable, Identifiable, Sendable {
                 albumDescription: String = "",
                 lastModified: Date = Date(timeIntervalSince1970: 0),
                 coverURI: CoverURI = CoverURI.fullPathURI(""),
-                quality: QualityStatus = QualityStatus()) {
+                quality: QualityStatus = QualityStatus(),
+                type: Album.`Type`? = nil,
+                trackCount: Int = 0) {
         self.id = id
         self.source = source
         self.location = location
@@ -106,6 +120,8 @@ public struct Album: Codable, Identifiable, Sendable {
         self.lastModified = lastModified
         self.coverURI = coverURI
         self.quality = quality
+        self.type = type
+        self.trackCount = trackCount
     }
 
     public func filter(_ filter: String) -> Bool {
@@ -121,6 +137,26 @@ public func ==(lhs: Album, rhs: Album) -> Bool {
 extension Album: Hashable {
     public func hash(into hasher: inout Hasher) {
         id.hash(into: &hasher)
+    }
+}
+
+extension Album {
+    public func type(singleLimit: UInt32 = 3, epLimit: UInt32 = 6) -> Album.`Type` {
+        if let type, type != .unknown {
+            return type
+        }
+        if trackCount == 0 {
+            return .unknown
+        }
+        else if trackCount <= singleLimit {
+            return .single
+        }
+        else if trackCount <= epLimit {
+            return .ep
+        }
+        else {
+            return .album
+        }
     }
 }
 

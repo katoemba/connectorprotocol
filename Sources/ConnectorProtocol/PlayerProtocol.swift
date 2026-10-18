@@ -27,25 +27,12 @@
 import Foundation
 import SwiftUI
 
-public enum ConnectionProperties: String {
-    case controllerType = "ControllerType"
-    case name = "Name"
-    case host = "Host"
-    case port = "Port"
-    case password = "Password"
-    case binaryCoverArt = "BinaryCoverArt"
-    case embeddedCoverArt = "EmbeddedCoverArt"
-    case urlCoverArt = "URLCoverArt"
-    case discogsCoverArt = "DiscogsCoverArt"
-    case musicbrainzCoverArt = "MusicbrainzCoverArt"
-}
-
-public enum DiscoverMode: String {
+public enum DiscoverMode: String, Sendable {
     case automatic = "automatic"
     case manual = "manual"
 }
 
-public enum Functions: CaseIterable {
+public enum Functions: CaseIterable, Sendable {
     case randomSongs
     case twentyRandomSongs  // Allow to specify a smaller number of random songs for performance reasons
     case randomAlbums
@@ -59,20 +46,65 @@ public enum Functions: CaseIterable {
     case recentlyPlayedSongs
     case binaryImageRetrieval
     case embeddedImageRetrieval
+    case httpImageRetrieval
     case stream
     case favourites
     case playlists
     case tidal
+    case appleMusic
     case qobuz
     case radio
     case volumeAdjustment
     case mediaServerBrowsing
     case consume
+    case repeatSingle
+    case playRecursiveFolder
+}
+
+public struct PlayerDefinition: Identifiable, Equatable, Hashable, Sendable, Codable {
+    public var id: String
+    public var name: String
+    public var type: String
+    public var typeSpecificData: Data
+    /// True for players the user added by hand. These can't be rediscovered on the network, so they are never
+    /// purged as stale and are restored regardless of the cached-player setting.
+    public var isManual: Bool
+
+    public init(id: String, name: String, type: String, typeSpecificData: Data, isManual: Bool = false) {
+        self.id = id
+        self.name = name
+        self.type = type
+        self.typeSpecificData = typeSpecificData
+        self.isManual = isManual
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, type, typeSpecificData, isManual
+    }
+
+    // Custom decoding so state persisted before `isManual` existed still decodes.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        type = try container.decode(String.self, forKey: .type)
+        typeSpecificData = try container.decode(Data.self, forKey: .typeSpecificData)
+        isManual = try container.decodeIfPresent(Bool.self, forKey: .isManual) ?? false
+    }
+
+    public static func == (lhs: PlayerDefinition, rhs: PlayerDefinition) -> Bool {
+        return lhs.id == rhs.id && lhs.type == rhs.type
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(type)
+    }
 }
 
 /// A protocol to provide a generic interface to control a network music player.
 ///
-public protocol PlayerProtocol: Sendable {
+public protocol PlayerProtocol: AnyObject, Sendable {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
     
@@ -90,18 +122,21 @@ public protocol PlayerProtocol: Sendable {
     
     /// Description of the model of an associated media player. Implementation will be backend specific.
     var mediaServerModel: String { get }
+
+    /// Whether the player shall be hidden.
+    var hidden: Bool { get }
     
     /// A list of functions supported by the player
     var supportedFunctions: [Functions] { get }
-    
-    /// Property to get the connection parameters so they can be stored in User Defaults
-    var connectionProperties: [String: Any] { get }
     
     /// Optional description of the player
     var description: String { get }
     
     /// Property to get the version of a specific player
     var version: String { get }
+    
+    /// Property to update the version of a player
+    func updateVersion(_ version: String)
     
     /// Property to get an optional connection warning of a specific player, like incompatible version
     var connectionWarning: String? { get }
@@ -143,12 +178,23 @@ public protocol PlayerProtocol: Sendable {
     /// Check if a player is reachable
     func ping() async -> Bool
     
-    func encodePlayer() throws -> Data
+    func playerDefinition() throws -> PlayerDefinition
     
-    static func decodePlayer(_ data: Data) async throws -> Self
+    var diagnosticsInfo: [DiagnosticsItem] { get }
     
     associatedtype SettingsView: View
-    @ViewBuilder func settingsView() -> SettingsView
+    @ViewBuilder func settingsView(deleteAction: ((any PlayerProtocol) -> ())?,
+                                   hideAction: ((any PlayerProtocol) -> ())?) -> SettingsView
+}
+
+public struct DiagnosticsItem: Identifiable, Equatable, Hashable {
+    public init(id: String, description: String) {
+        self.id = id
+        self.description = description
+    }
+    
+    public let id: String
+    public let description: String
 }
 
 extension PlayerProtocol {
@@ -161,34 +207,40 @@ public protocol PlayerBrowserProtocol: Sendable {
     /// String that identifies the Controller Type.
     var controllerType: String { get }
 
-    // var addPlayerStream: AsyncStream<PlayerProtocol> { get }
-    // var removePlayerStream: AsyncStream<PlayerProtocol> { get }
-    var players: [any PlayerProtocol] { get }
+    /// Stream with player discovery lifecycle events.
+    var playerEventStream: AsyncStream<PlayerBrowserEvent> { get }
 
     /// Start listening for players on the network.
-    func startListening() async
+    func startListening(predefinedPlayers: [PlayerDefinition]) async
     
     /// Stop listening for players on the network.
     func stopListening() async
 
-    /// Manually create a player based on the connection properties
-    ///
-    /// - Parameter connectionProperties: dictionary of connection properties
-    /// - Returns: An observable on which a created Player can published.
-    func playerForConnectionProperties(_ connectionProperties: [String: Any]) async throws -> any PlayerProtocol
-    
-    /// Persist a manually added player in user defaults
-    ///
-    /// - Parameter connectionProperties: the connection properties for the player
-    func persistPlayer(_ connectionProperties: [String: Any])
+    func decodePlayer(_ playerDefinition: PlayerDefinition) async throws -> any PlayerProtocol
 
-    /// Remove a manually added player from user defaults
-    ///
-    /// - Parameter player: the player to remove
-    func removePlayer(_ player: any PlayerProtocol)
-    
-    func decodePlayer(_ data: Data) async throws -> any PlayerProtocol
+    /// Whether a persisted player was added manually by the user. Manual players can't be rediscovered, so they
+    /// are never purged as stale. This has to be cheap: look at the definition, don't create the player or
+    /// touch the network. Browsers that don't support manual players can rely on the default, which says no.
+    func isManualPlayer(_ playerDefinition: PlayerDefinition) -> Bool
+
+    /// The user deleted this player. A browser that keeps settings per player should forget them, so that adding
+    /// the same player again starts afresh. The default does nothing.
+    func playerRemoved(_ playerDefinition: PlayerDefinition)
     
     associatedtype ManualAddPlayerView: View
     @ViewBuilder func manualAddPlayerView() -> ManualAddPlayerView
+}
+
+extension PlayerBrowserProtocol {
+    public func isManualPlayer(_ playerDefinition: PlayerDefinition) -> Bool {
+        false
+    }
+
+    public func playerRemoved(_ playerDefinition: PlayerDefinition) {}
+}
+
+public enum PlayerBrowserEvent: Sendable {
+    case added(any PlayerProtocol)
+    case removed(_ uniqueID: String)
+    case updated(any PlayerProtocol)
 }

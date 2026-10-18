@@ -54,6 +54,24 @@ public enum CoverURI: Codable, Sendable {
         }
     }
     
+    public var imageURLString: String? {
+        switch self {
+        case let .fullPathURI(uri):
+            return uri
+        default:
+            return nil
+        }
+    }
+
+    public var imageURL: URL? {
+        switch self {
+        case let .fullPathURI(uri):
+            return URL(string: uri)
+        default:
+            return nil
+        }
+    }
+
     public var possibleUris: [String] {
         get {
             switch self {

@@ -27,7 +27,7 @@
 import Foundation
 
 /// A struct defining a generic Playlist object.
-public struct Playlist: Codable, Sendable {
+public struct Playlist: Identifiable, Codable, Sendable {
     /// A unique id for the playlist. Usage depends on library implementation.
     public var id = ""
     
@@ -39,6 +39,9 @@ public struct Playlist: Codable, Sendable {
     
     /// The date the playlist was last modified
     public var lastModified = Date(timeIntervalSince1970: 0)
+    
+    /// The possibility to maintain the contents of the playlist, to support local playlists
+    public var songs: [Song]?
     
     /// The total duration of the playlist in seconds
     public var duration: UInt32?
@@ -68,6 +71,7 @@ public struct Playlist: Codable, Sendable {
                 source: SourceType,
                 name: String,
                 lastModified: Date,
+                songs: [Song]? = nil,
                 editable: Bool = true,
                 duration: UInt32? = nil,
                 numberOfSongs: UInt32? = nil,
@@ -79,6 +83,7 @@ public struct Playlist: Codable, Sendable {
         self.source = source
         self.name = name
         self.lastModified = lastModified
+        self.songs = songs
         self.editable = editable
         self.duration = duration
         self.numberOfSongs = numberOfSongs

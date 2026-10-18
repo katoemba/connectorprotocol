@@ -103,17 +103,17 @@ class DataTests: XCTestCase {
     
     func testSongEqualBasedOnPlayqueueId() {
         // When song1 and song2 have the same id and source
-        let song1 = Song(id: "12233",
+        let song1 = Song(id: "123",
                          source: .Local,
                          location: "location",
                          title: "title",
-                         album: "albumx",
-                         artist: "artistx",
+                         album: "album",
+                         artist: "artist",
                          albumartist: "albumartist",
                          composer: "composer",
-                         year: 1000,
+                         year: 1001,
                          genre: ["genre"],
-                         length: 100,
+                         length: 101,
                          quality: QualityStatus(),
                          playqueueId: "1234")
         let song2 = Song(id: "123",
